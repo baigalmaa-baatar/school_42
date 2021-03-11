@@ -1,2 +1,2 @@
 # school_42
-The piscine projects and subjects during attending school 42.
+The piscine projects and other projects, subjects during attending school 42.
