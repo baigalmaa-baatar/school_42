@@ -3,28 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: baigalmaa <marvin@42.fr>                   +#+  +:+       +#+        */
+/*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/18 13:31:37 by baigalmaa         #+#    #+#             */
-/*   Updated: 2021/03/18 13:31:52 by baigalmaa        ###   ########.fr       */
+/*   Created: 2021/02/24 16:00:31 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/05/27 16:09:29 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_atoi(const char *str)
+int	ft_skip_spaces(const char *str)
 {
-	size_t i;
-	size_t len;
-	int res;
-	int neg;
+	int	i;
+
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\n' || str[i] == '\r' || \
+			str[i] == '\t' || str[i] == '\v')
+		i++;
+	return (i);
+}
+
+int	ft_atoi(const char *str)
+{
+	size_t				i;
+	unsigned long long	res;
+	int					neg;
 
 	res = 0;
 	neg = 1;
-	len = 0;
 	i = 0;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
-		i++;
+	i = ft_skip_spaces(str);
 	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
@@ -33,20 +41,12 @@ int ft_atoi(const char *str)
 	}
 	while (str[i] >= 48 && str[i] <= 57)
 	{
-		len++;
+		res = res * 10 + (str[i] - 48);
 		i++;
 	}
-	if (len > 19)
-	{
-		if (neg == 1)
-			return (-1);
-		if (neg == -1)
-			return (0);
-	}
-	while (len > 0)
-	{
-		res = res * 10 + (str[i - len] - 48);
-		len--;
-	}
+	if (res > LLONG_MAX && neg == 1)
+		return (-1);
+	if (res > LLONG_MAX && neg == -1)
+		return (0);
 	return (res * neg);
 }

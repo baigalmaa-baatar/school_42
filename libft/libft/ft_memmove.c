@@ -1,23 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/21 12:07:25 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/05/21 12:12:21 by bbaatar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	unsigned char *ptr_dst;
-	unsigned char *ptr_src;
+	unsigned char	*ptr_dst;
+	unsigned char	*ptr_src;
 
-	ptr_dst = (unsigned char*)dst;
-	ptr_src = (unsigned char*)src;
-
+	ptr_dst = (unsigned char *)dst;
+	ptr_src = (unsigned char *)src;
 	if (!ptr_dst && !ptr_src)
 		return (NULL);
-	
 	if (ptr_dst < ptr_src)
 	{
-		while(len)
+		while (len)
 		{
-			*ptr_dst = *ptr_src;
-			ptr_dst++;
-			ptr_src++;
+			*ptr_dst++ = *ptr_src++;
 			len--;
 		}
 	}
@@ -29,5 +37,5 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 			len--;
 		}
 	}
-	return(dst);
+	return (dst);
 }

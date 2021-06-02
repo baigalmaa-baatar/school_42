@@ -6,18 +6,16 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 11:51:11 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/05/03 11:51:13 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/05/21 13:02:11 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *ft_strncpy(char *dst, const char *src, size_t n)
+char	*ft_strncpy(char *dst, const char *src, size_t n)
 {
-	size_t i;
+	size_t	i;
 
-	if (!n)
-		return(0);
 	i = 0;
 	while (i < n && src[i] != '\0')
 	{

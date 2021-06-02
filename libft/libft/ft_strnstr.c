@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnstr.c                                        :+:      :+:    :+:   */
+/*   ft_strnstr.c                                        :+:      :+:    :+:  */
 /*                                                    +:+ +:+         +:+     */
 /*   By: baigalmaa <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 13:31:37 by baigalmaa         #+#    #+#             */
-/*   Updated: 2021/03/18 13:31:52 by baigalmaa        ###   ########.fr       */
+/*   Updated: 2021/05/27 11:40:30 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,25 @@
 
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
-	size_t i;
-	size_t j;
-	size_t len_haystack;
-	size_t len_needle;
-	char *result;
-	
-	result = (char *)haystack;
-	if (needle[0] == '\0')
-		return (result);
-	len_haystack = ft_strlen(haystack);
-	len_needle = ft_strlen(needle);
-	if (haystack[0] == '\0' || len_haystack < len_needle)
-		return (0);
+	size_t	i;
+	size_t	c;
+	size_t	n_len;
+	char	*hay;
+
 	i = 0;
-	while(len > 0 )
+	hay = (char *)haystack;
+	n_len = ft_strlen(needle);
+	if ((n_len == 0) || (haystack == needle && n_len == len))
+		return (hay);
+	while (hay[i] != '\0' && i < len)
 	{
-		j = 0;
-		while (haystack[i] == needle[j] && needle[j] != '\0')
-		{
-			i++;
-			j++;
-		}
-		if (needle[j] == '\0')
-			return(&result[i - j]);
+		c = 0;
+		while (hay[i + c] != '\0' && needle[c] != '\0' \
+				&& hay[i + c] == needle[c] && i + c < len)
+			c++;
+		if (c == n_len)
+			return (hay + i);
 		i++;
-		len--;
 	}
 	return (0);
 }
