@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 32
+#endif
 
 #ifndef GET_NEXT_LINE
 # define GET_NEXT_LINE

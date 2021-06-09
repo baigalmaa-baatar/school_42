@@ -1,30 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test_main.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/03 13:51:11 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/06/03 13:51:15 by bbaatar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "get_next_line.h"
+#include <stdio.h>
 
-int main(int argc, char **argv)
+int   main()
 {
-	char *line;
-	int fd1;
-	//   int   fd2;
+  char  *line;
+  int   fd3;
 
-	if (argc < 2)
-		return (-1);
-	fd1 = open(argv[1], O_RDONLY);
-	//   fd2 = open(argv[2], O_RDONLY);
-	get_next_line(fd1, &line);
-	printf("%s\n", line);
-	get_next_line(fd1, &line);
-	printf("%s\n", line);
-	// //   get_next_line(fd2, &line);
-	// printf("%s\n", line);
-	// //   get_next_line(fd2, &line);
-	// printf("%s\n", line);
-	// get_next_line(fd1, &line);
-	// printf("%s\n", line);
-	// //   get_next_line(fd2, &line);
-	// printf("%s\n", line);
-	// get_next_line(fd1, &line);
-	// printf("%s\n", line);
-	// //   get_next_line(fd2, &line);
-	// printf("%s\n", line);
-	return (0);
+  fd3 = open("file2", O_RDONLY);
+
+  get_next_line(fd3, &line);
+  printf("current buff is : %s\n", line);
+  
+  get_next_line(fd3, &line);
+  printf("current buff is : %s\n", line);
+  
+  get_next_line(fd3, &line);
+  printf("current buff is : %s\n", line);
+
+  get_next_line(fd3, &line);
+  printf("current buff is : %s\n", line);
+
+   get_next_line(fd3, &line);
+  printf("current buff is : %s\n", line);
+
+  return (0);
 }
