@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 12:26:33 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/06/14 16:26:40 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/06/15 10:06:16 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	get_next_char(int fd, char *ch)
 	fd_result = read(fd, buff, BUFFER_SIZE);
 	if (fd_result <= 0)
 	{	
-		//i = 0;
 		return (fd_result);
 	}
 	i = 0;
@@ -36,9 +35,9 @@ int	get_next_char(int fd, char *ch)
 
 int	get_next_line(int fd, char **line)
 {
-	int		i;
+	int			i;
 	char		*result;
-	int		ret_val;
+	int			ret_val;
 	static char	tmp_buff[32000];
 
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
