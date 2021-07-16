@@ -1,0 +1,4 @@
+Memo:
+VirtualBox installation : https://www.youtube.com/watch?v=2w-2MX5QrQw
+The other steps : https://githubmemory.com/repo/hanshazairi/42-born2beroot
+ 
