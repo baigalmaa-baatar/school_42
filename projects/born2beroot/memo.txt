@@ -2,4 +2,5 @@ Memo:
 VirtualBox installation : https://www.youtube.com/watch?v=2w-2MX5QrQw
 ISO image : https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/
 The other steps : https://githubmemory.com/repo/hanshazairi/42-born2beroot
+Correction screenshot : https://github.com/wshloic/born2beroot_correction/blob/master/correction_born2beroot.pdf
  
