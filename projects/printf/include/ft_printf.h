@@ -34,6 +34,8 @@ typedef struct	s_format
 	int precision;
 	//length
 	int length;
+	//type
+	int type;
 }				t_format;
 
 int	ft_printf(const char *, ...);

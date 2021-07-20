@@ -1,6 +1,11 @@
 {
 	"files.associations": {
 		"stdlib.h": "c",
-		"ft_printf.h": "c"
+		"ft_printf.h": "c",
+		"__locale": "c",
+		"bitset": "c",
+		"functional": "c",
+		"iterator": "c",
+		"memory": "c"
 	}
 }
