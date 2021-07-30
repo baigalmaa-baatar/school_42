@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//[min width][precision][length modifier][conversion specifier]
+
 #include "../include/ft_printf.h"
 
 void ft_putchar(char c)
@@ -103,50 +105,30 @@ void initialize_format(struct s_format *format)
 	format->apostrophe = 0;
 	format->hash = 0;
 	format->width = 0;
-	format->precision = 0;
+	format->precision = -1;
 	format->length = 0;
 	format->type = 0;
 }
 
-int detect_precistion(char *str, struct s_format *format)
+int detect_precision(char *str, struct s_format *format)
 {
 	int i;
 	int nbr;
 
 	i = 0;
 	nbr = 0;
+	// printf("here is the format->precision : %s\n", str);
+
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		nbr *= 10 + str[i];
+		// printf("here is the format->precision : %c\n", str[i]);
+		nbr = nbr * 10 + str[i] - '0';
 		i++;
+		// printf("here is the format->precision : %d\n", nbr);
 	}
-	//("%.10hd", 100)
-	
-	if (str[i] == 'h')
-	{
-		i++;
-		if (str[i] == 'h')
-			format->length = 1;
-		format->length = 2;
-		i--;
-	}
-	if (str[i] == 'l')
-	{
-		if (str[i++] == 'l')
-			format->length = 4;
-		format->length = 3;
-	}	
-	else if (str[i] == 'j')
-		format->length = 5;
-	else if (str[i] == 't')
-		format->length = 6;
-	else if (str[i] == 'z')
-		format->length = 7;
-	else if (str[i] == 'q')
-		format->length = 8;
-	else
-		return (0);
-	return (1);
+	format->precision = nbr;
+	// printf("here is the format->precision : %d\n", format->precision);
+	return (format->precision);
 }
 
 int detect_length(char *str, struct s_format *format)
@@ -225,10 +207,6 @@ int detect_type(char *str, struct s_format *format)
 	return (1);
 }
 
-//%[flags][width][.precision][length]type
-//%-10.05f float
-//%-10lld  long long
-
 void print_val(struct s_format *format, va_list a_list)
 {
 
@@ -244,8 +222,22 @@ void print_val(struct s_format *format, va_list a_list)
 			signed char sc = va_arg(a_list, int);
 			ft_putnbr_char(sc);
 		}
-		else
-			ft_putnbr(va_arg(a_list, int));
+		else if(format->length == 0)
+		{
+			if (format->precision != -1)
+				{
+					int curr_digit;
+					int i = 0;
+					int curr_nbr = va_arg(a_list, int);
+					curr_digit = ft_strlen(ft_itoa(curr_nbr));
+					while(format->precision - curr_digit > i)
+						{
+							ft_putchar('0');
+							i++;
+						}
+					ft_putnbr(va_arg(a_list, int));
+				}
+		}
 	}
 	if (format->type == 2)
 		ft_putnbr_oct(va_arg(a_list, int));
@@ -274,6 +266,7 @@ int ft_printf(const char *input, ...)
 			if(input[i] == '.')
 			{
 				i++;
+				// printf("aaaaaa");
 				detect_precision((char *)&input[i], &format);
 				i++;
 			}
@@ -309,9 +302,13 @@ int main()
 	// printf("%hd\n", (short)32767);
 	// ft_printf("%hd", (short)32767);
 
-	printf("07) Vrai PRINTF : |%.10d|\n", 100);
-	ft_printf("07) Mon PRINTF  : |%.10d|\n", 100);
+	printf("07) Vrai PRINTF : |%.5d|\n", 100);
+	ft_printf("07) Mon PRINTF  : |%.5d|\n", 100);
+
+	// printf( "%.5d\n", 100);
 
 	return 0;
 }
+
+
 
