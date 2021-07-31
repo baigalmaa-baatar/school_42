@@ -30,8 +30,10 @@ typedef struct	s_format
 	int	hash;
 	//width
 	int width;
+	int width_digit;
 	//precision
 	int precision;
+	int precision_digit;
 	//length
 	int length;
 	//type

@@ -105,9 +105,32 @@ void initialize_format(struct s_format *format)
 	format->apostrophe = 0;
 	format->hash = 0;
 	format->width = 0;
+	format->width_digit = 0;
 	format->precision = -1;
+	format->precision_digit = 0;
 	format->length = 0;
 	format->type = 0;
+}
+
+int detect_width(char *str, struct s_format *format)
+{
+	int i;
+	int nbr;
+
+	i = 0;
+	nbr = 0;
+	// printf("here is the format->precision : %s\n", str);
+
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		// printf("here is the format->precision : %c\n", str[i]);
+		nbr = nbr * 10 + str[i] - '0';
+		i++;
+		// printf("here is the format->precision : %d\n", nbr);
+	}
+	format->precision = nbr;
+	// printf("here is the format->precision : %d\n", format->precision);
+	return (format->width);
 }
 
 int detect_precision(char *str, struct s_format *format)
@@ -127,7 +150,10 @@ int detect_precision(char *str, struct s_format *format)
 		// printf("here is the format->precision : %d\n", nbr);
 	}
 	format->precision = nbr;
-	// printf("here is the format->precision : %d\n", format->precision);
+	format->precision_digit = i;
+	// printf("here is the format->precision_digit : %d\n", format->precision_digit);
+	// printf("here is the format->precision_digit : %d\n", format->precision);
+
 	return (format->precision);
 }
 
@@ -136,6 +162,7 @@ int detect_length(char *str, struct s_format *format)
 	int i;
 
 	i = 0;
+
 	if (str[i] == 'h')
 	{
 		i++;
@@ -203,7 +230,10 @@ int detect_type(char *str, struct s_format *format)
 	else if (str[i] == '%')
 		format->type = 13;
 	else
+	{
+		printf("input length:%d\n", format->length);
 		return (0);
+	}
 	return (1);
 }
 
@@ -226,16 +256,19 @@ void print_val(struct s_format *format, va_list a_list)
 		{
 			if (format->precision != -1)
 				{
-					int curr_digit;
-					int i = 0;
 					int curr_nbr = va_arg(a_list, int);
-					curr_digit = ft_strlen(ft_itoa(curr_nbr));
-					while(format->precision - curr_digit > i)
-						{
-							ft_putchar('0');
-							i++;
-						}
-					ft_putnbr(va_arg(a_list, int));
+    				char temp[format->precision];
+
+					// printf("here is the format->precision : %d\n", format->precision);
+					memset(temp, '0', sizeof(temp));
+    				temp[format->precision] = 0;
+    				format->precision--;
+				    while (curr_nbr > 0) 
+					{
+        				temp[format->precision--] = curr_nbr % 10 + '0';
+        				curr_nbr /= 10;
+    				}
+    				ft_putstr(temp);
 				}
 		}
 	}
@@ -263,21 +296,35 @@ int ft_printf(const char *input, ...)
 		if (input[i] == '%')
 		{
 			i++;
+			// if (!detect_type((char *)&input[i], &format))
+			// {
+			// 	i++;
+			// }
 			if(input[i] == '.')
 			{
 				i++;
-				// printf("aaaaaa");
 				detect_precision((char *)&input[i], &format);
-				i++;
-			}
-			if (!detect_length((char *)&input[i], &format))
-			{
+				i += format.precision_digit;
+				// printf("here : %d\n", format.precision_digit);
+				// if (format.precision_digit==0)
+				// {
+				// 	// printf("aaaa");
+				// 	i--;
+				// }
 				// printf("input length:%s\n", &input[i]);
-				i++;
 			}
+			//fix thi part
+			// if (!detect_length((char *)&input[i], &format))
+			// {
+			// 	// printf("aaaaaa");
+			// 	// printf("input length:%s\n", &input[i]);
+			// 	printf("input length:%d\n", format.length);
+			// 	i++;
+			// }
+			printf("input type : %s\n", &input[i]);
 			if (!detect_type((char *)&input[i], &format))
 			{
-				// printf("input type :%s\n", &input[i]);
+				printf("input type :%s\n", &input[i]);
 				i++;
 			}
 			print_val(&format, a_list);
@@ -295,20 +342,8 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	// ft_printf("this is the result : %d\n", 1234);
-	// printf("standard : %hd\n", (char)42);
-	// ft_printf("mine  : %hd\n", (char)42);
-
-	// printf("%hd\n", (short)32767);
-	// ft_printf("%hd", (short)32767);
-
-	printf("07) Vrai PRINTF : |%.5d|\n", 100);
-	ft_printf("07) Mon PRINTF  : |%.5d|\n", 100);
-
-	// printf( "%.5d\n", 100);
+	printf("07) Vrai PRINTF : |%.d|\n", 100);
+	ft_printf("07) Mon PRINTF  : |%.d|\n", 100);
 
 	return 0;
 }
-
-
-
