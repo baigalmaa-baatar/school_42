@@ -36,8 +36,8 @@ typedef struct	s_format
 	int precision_digit;
 	//length
 	int length;
-	//type
-	int type;
+	//specifier
+	int specifier;
 }				t_format;
 
 int	ft_printf(const char *, ...);
