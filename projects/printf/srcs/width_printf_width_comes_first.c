@@ -229,85 +229,79 @@ int detect_specifier(char *str, struct s_format *format)
 	return (1);
 }
 
+void print_val_1101(struct s_format *format, va_list a_list)
+{
+	format->width -= format->precision;
+	char temp_w[format->width];
+	memset(temp_w, ' ', sizeof(temp_w));
+    ft_putstr(temp_w);
+	int curr_nbr = va_arg(a_list, int);
+    char temp[format->precision];
+
+	memset(temp, '0', sizeof(temp));
+    temp[format->precision] = 0;
+    format->precision--;
+	while (curr_nbr > 0) 
+	{
+    	temp[format->precision--] = curr_nbr % 10 + '0';
+        curr_nbr /= 10;
+    }
+    ft_putstr(temp);
+}
+
 void print_val(struct s_format *format, va_list a_list)
 {
 
-	if (format->specifier == 1)
+	if (format->width != 0)
 	{
-		if(format->length == 1)
+		if (format->precision != -1 && format->width > format->precision)
 		{
-			if (format->precision != -1 && format->width > format->precision)
-					{
-						format->width -= format->precision;
-    					char temp_w[format->width];
-						memset(temp_w, ' ', sizeof(temp_w));
-    					ft_putstr(temp_w);
-
-						int curr_nbr = va_arg(a_list, int);
-    					char temp[format->precision];
-
-						memset(temp, '0', sizeof(temp));
-    					temp[format->precision] = 0;
-    					format->precision--;
-				    	while (curr_nbr > 0)
-						{
-        					temp[format->precision--] = curr_nbr % 10 + '0';
-        					curr_nbr /= 10;
-    					}
-    					ft_putstr(temp);
-					}
-			signed char sc = va_arg(a_list, int);
-			ft_putnbr_char(sc);
+			if(format->length == 1)
+			{
+				if (format->specifier == 1)
+					print_val_1101(struct s_format *format, va_list a_list);
+				else if (format->specifier == 2)
+					// print_val_1102(struct s_format *format, va_list a_list);
+				else if (format->specifier == 3)
+					// print_val_1102(struct s_format *format, va_list a_list);
+			}
+			else if(format->length == 2)
+			{
+				if (format->specifier == 1)
+					print_val_1101(struct s_format *format, va_list a_list);
+				else if (format->specifier == 2)
+					// print_val_1102(struct s_format *format, va_list a_list);
+				else if (format->specifier == 3)
+					// print_val_1102(struct s_format *format, va_list a_list);
+			}
+			else if(format->length == 3)
+			{
+				if (format->specifier == 1)
+					print_val_1101(struct s_format *format, va_list a_list);
+				else if (format->specifier == 2)
+					// print_val_1102(struct s_format *format, va_list a_list);
+				else if (format->specifier == 3)
+					// print_val_1102(struct s_format *format, va_list a_list);
+			}
+			else if(format->length == 4)
+			{
+				if (format->specifier == 1)
+					print_val_1101(struct s_format *format, va_list a_list);
+				else if (format->specifier == 2)
+					// print_val_1102(struct s_format *format, va_list a_list);
+				else if (format->specifier == 3)
+					// print_val_1102(struct s_format *format, va_list a_list);
+			}
+			else if (format->length == 0)
+			{
+				// print_val_1101(struct s_format *format, va_list a_list);
+			}
 		}
-		else if(format->length == 2)
+		else if (format->precision == -1 || format->width <= format->precision)
 		{
-			short sh = va_arg(a_list, int);
-			ft_putnbr_short(sh);
-		}
-		else if(format->length == 0)
-		{
-			if (format->width != 0)
-				{
-					if (format->precision != -1 && format->width > format->precision)
-					{
-						format->width -= format->precision;
-    					char temp_w[format->width];
-						memset(temp_w, ' ', sizeof(temp_w));
-    					ft_putstr(temp_w);
-
-						int curr_nbr = va_arg(a_list, int);
-    					char temp[format->precision];
-
-						memset(temp, '0', sizeof(temp));
-    					temp[format->precision] = 0;
-    					format->precision--;
-				    	while (curr_nbr > 0) 
-						{
-        					temp[format->precision--] = curr_nbr % 10 + '0';
-        					curr_nbr /= 10;
-    					}
-    					ft_putstr(temp);
-					}
-					else
-					{
-						int curr_nbr = va_arg(a_list, int);
-    					char temp[format->width];
-
-						memset(temp, ' ', sizeof(temp));
-    					temp[format->width] = 0;
-    					format->width--;
-				    	while (curr_nbr > 0) 
-						{
-        					temp[format->width--] = curr_nbr % 10 + '0';
-        					curr_nbr /= 10;
-    					}
-    					ft_putstr(temp);
-					}
-				}
+			print_val_1011(struct s_format *format, va_list a_list);
 		}
 	}
-	if (format->specifier == 2)
-		ft_putnbr_oct(va_arg(a_list, int));
 }
 
 int ft_printf(const char *input, ...)
@@ -365,8 +359,8 @@ int main()
 {
 	// printf("07) Vrai PRINTF : |%.d|\n", 100);
 	// ft_printf("07) Mon PRINTF  : |%.d|\n", 100);
-	printf("Standard output : |%u|\n", -1);
-	// ft_printf("   My function  : |%3d|\n", 100);
+	printf("Standard output : |%10.5d|\n", 100);
+	ft_printf("   My function  : |%10.5d|\n", 100);
 
 	return 0;
 }
