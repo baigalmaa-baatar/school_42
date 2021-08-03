@@ -197,33 +197,33 @@ int detect_specifier(char *str, struct s_format *format)
 	else if (str[i] == 'u')
 		format->specifier = 3;
 	else if (str[i] == 'x')
-		format->specifier = 4;
+		format->specifier = 1;
 	else if (str[i] == 'X')
-		format->specifier = 5;
+		format->specifier = 1;
 	else if (str[i] == 'D' || str[i] == 'O' || str[i] == 'U')
-		format->specifier = 6;
+		format->specifier = 2;
 	else if (str[i] == 'e' || str[i] == 'E')
-		format->specifier = 7;
+		format->specifier = 3;
 	else if (str[i] == 'f' || str[i] == 'F')
-		format->specifier = 8;
+		format->specifier = 4;
 	else if (str[i] == 'g' || str[i] == 'G')
-		format->specifier = 9;
+		format->specifier = 5;
 	else if (str[i] == 'a' || str[i] == 'A')
-		format->specifier = 10;
+		format->specifier = 6;
 	else if (str[i] == 'C')
-		format->specifier = 11;
+		format->specifier = 7;
 	else if (str[i] == 'c')
-		format->specifier = 12;
+		format->specifier = 8;
 	else if (str[i] == 'S')
-		format->specifier = 13;
+		format->specifier = 9;
 	else if (str[i] == 's')
-		format->specifier = 14;
+		format->specifier = 10;
 	else if (str[i] == 'p')
-		format->specifier = 15;
+		format->specifier = 11;
 	else if (str[i] == 'n')
-		format->specifier = 16;
+		format->specifier = 12;
 	else if (str[i] == '%')
-		format->specifier = 17;
+		format->specifier = 13;
 	else
 		return (0);
 	return (1);
@@ -232,38 +232,82 @@ int detect_specifier(char *str, struct s_format *format)
 void print_val(struct s_format *format, va_list a_list)
 {
 
-	if (format->length == 0)
+	if (format->specifier == 1)
 	{
-		if (format->specifier == 1)
+		if(format->length == 1)
 		{
-			print_val_di(&format, a_list);
+			if (format->precision != -1 && format->width > format->precision)
+					{
+						format->width -= format->precision;
+    					char temp_w[format->width];
+						memset(temp_w, ' ', sizeof(temp_w));
+    					ft_putstr(temp_w);
+
+						int curr_nbr = va_arg(a_list, int);
+    					char temp[format->precision];
+
+						memset(temp, '0', sizeof(temp));
+    					temp[format->precision] = 0;
+    					format->precision--;
+				    	while (curr_nbr > 0)
+						{
+        					temp[format->precision--] = curr_nbr % 10 + '0';
+        					curr_nbr /= 10;
+    					}
+    					ft_putstr(temp);
+					}
+			signed char sc = va_arg(a_list, int);
+			ft_putnbr_char(sc);
 		}
-		else if (format->specifier == 2 || format->specifier == 3 || \ 
-		format->specifier == 4 || format->specifier == 5)
+		else if(format->length == 2)
 		{
-			// print_val_ouxX(&format, a_list);
+			short sh = va_arg(a_list, int);
+			ft_putnbr_short(sh);
 		}
-		if (format->specifier == 16)
+		else if(format->length == 0)
 		{
-			print_val_n(&format, a_list);
+			if (format->width != 0)
+				{
+					if (format->precision != -1 && format->width > format->precision)
+					{
+						format->width -= format->precision;
+    					char temp_w[format->width];
+						memset(temp_w, ' ', sizeof(temp_w));
+    					ft_putstr(temp_w);
+
+						int curr_nbr = va_arg(a_list, int);
+    					char temp[format->precision];
+
+						memset(temp, '0', sizeof(temp));
+    					temp[format->precision] = 0;
+    					format->precision--;
+				    	while (curr_nbr > 0) 
+						{
+        					temp[format->precision--] = curr_nbr % 10 + '0';
+        					curr_nbr /= 10;
+    					}
+    					ft_putstr(temp);
+					}
+					else
+					{
+						int curr_nbr = va_arg(a_list, int);
+    					char temp[format->width];
+
+						memset(temp, ' ', sizeof(temp));
+    					temp[format->width] = 0;
+    					format->width--;
+				    	while (curr_nbr > 0) 
+						{
+        					temp[format->width--] = curr_nbr % 10 + '0';
+        					curr_nbr /= 10;
+    					}
+    					ft_putstr(temp);
+					}
+				}
 		}
 	}
-	if (format->length == 1)
-	{
-		if (format->specifier == 1)
-		{
-			print_val_hhdi(&format, a_list);
-		}
-		else if (format->specifier == 2 || format->specifier == 3 || \ 
-		format->specifier == 4 || format->specifier == 5)
-		{
-			// print_val_hhouxX(&format, a_list);
-		}
-		if (format->specifier == 16)
-		{
-			// print_val_hhn(&format, a_list);
-		}
-	}
+	if (format->specifier == 2)
+		ft_putnbr_oct(va_arg(a_list, int));
 }
 
 int ft_printf(const char *input, ...)
@@ -321,8 +365,8 @@ int main()
 {
 	// printf("07) Vrai PRINTF : |%.d|\n", 100);
 	// ft_printf("07) Mon PRINTF  : |%.d|\n", 100);
-	printf("Standard output : |%10.5d|\n", 123);
-	ft_printf("   My function  : |%10.5d|\n", 123);
+	printf("Standard output : |%u|\n", -1);
+	// ft_printf("   My function  : |%3d|\n", 100);
 
 	return 0;
 }
