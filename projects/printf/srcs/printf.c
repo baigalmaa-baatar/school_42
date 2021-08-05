@@ -14,6 +14,25 @@
 
 #include "../include/ft_printf.h"
 
+int ft_length_nbr(int nbr)
+{
+	int i = 0;
+	while (nbr > 0)
+	{
+		nbr /= 10;
+		i++;
+	}
+	return (i);
+}
+
+int ft_max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	else
+		return (b);
+}
+
 void ft_putchar(char c)
 {
 	write(1, &c, 1);
@@ -96,6 +115,93 @@ void ft_putstr(char *s)
 	}
 }
 
+void print_val_di(struct s_format *format, va_list a_list)
+{
+	char buff[100];
+	int nbr;
+	int i;
+	int max;
+	int len;
+
+	if (format->precision == -1)
+		format->precision = 0;
+	char temp_p[format->precision];
+	memset(buff, ' ', 100 * sizeof(char));
+	memset(buff + (100 - 1 - format->precision), '0', format->precision * sizeof(char));
+	buff[99] = 0;
+	i = 98;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
+	while(nbr > 0)
+	{
+		buff[i] = nbr % 10 + '0';
+		nbr /= 10;
+		i--;
+	}
+	max = ft_max(ft_max(format->width, sizeof(temp_p)), len);
+	ft_putstr(&buff[100 - 1 - max]);
+}
+
+void print_val_hhdi(struct s_format *format, va_list a_list)
+{
+	int precision;
+	char buff[100];
+	signed char nbr;
+	int i;
+	int max;
+	int len;
+
+	if (format->precision == -1)
+		precision = 0;
+	else 
+		precision = format->precision;
+	char temp_p[precision];
+	memset(buff, ' ', 100 * sizeof(char));
+	memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
+	buff[99] = 0;
+	i = 98;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
+	while(nbr > 0)
+	{
+		buff[i] = nbr % 10 + '0';
+		nbr /= 10;
+		i--;
+	}
+	max = ft_max(ft_max(format->width, sizeof(temp_p)), len);
+	ft_putstr(&buff[100 - 1 - max]);
+}
+
+void print_val_hdi(struct s_format *format, va_list a_list)
+{
+	int precision;
+	char buff[100];
+	short nbr;
+	int i;
+	int max;
+	int len;
+
+	if (format->precision == -1)
+		precision = 0;
+	else 
+		precision = format->precision;
+	char temp_p[precision];
+	memset(buff, ' ', 100 * sizeof(char));
+	memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
+	buff[99] = 0;
+	i = 98;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
+	while(nbr > 0)
+	{
+		buff[i] = nbr % 10 + '0';
+		nbr /= 10;
+		i--;
+	}
+	max = ft_max(ft_max(format->width, sizeof(temp_p)), len);
+	ft_putstr(&buff[100 - 1 - max]);
+}
+
 void initialize_format(struct s_format *format)
 {
 	format->minus = 0;
@@ -109,6 +215,7 @@ void initialize_format(struct s_format *format)
 	format->precision = -1;
 	format->precision_digit = 0;
 	format->length = 0;
+	format->length_digit = 0;
 	format->specifier = 0;
 }
 
@@ -121,13 +228,11 @@ int detect_width(char *str, struct s_format *format)
 	nbr = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		// printf("here is the format->precision : %c\n", str[i]);
 		nbr = nbr * 10 + str[i] - '0';
 		i++;
 	}
 	format->width = nbr;
 	format->width_digit = i;
-	// printf("here is the format->precision_digit : %d\n", format->precision_digit);
 	return (format->width);
 }
 
@@ -140,13 +245,11 @@ int detect_precision(char *str, struct s_format *format)
 	nbr = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		// printf("here is the format->precision : %c\n", str[i]);
 		nbr = nbr * 10 + str[i] - '0';
 		i++;
 	}
 	format->precision = nbr;
 	format->precision_digit = i;
-	// printf("here is the format->precision_digit : %d\n", format->precision_digit);
 	return (format->precision);
 }
 
@@ -155,16 +258,21 @@ int detect_length(char *str, struct s_format *format)
 	int i;
 
 	i = 0;
-
 	if (str[i] == 'h')
 	{
 		i++;
 		if (str[i] == 'h')
+		{
+			format->length = 2;
+			format->length_digit = 2;
+		}
+		else
+		{
 			format->length = 1;
-		format->length = 2;
-		i--;
+			format->length_digit = 1;
+		}
 	}
-	if (str[i] == 'l')
+	else if (str[i] == 'l')
 	{
 		if (str[i++] == 'l')
 			format->length = 4;
@@ -231,35 +339,52 @@ int detect_specifier(char *str, struct s_format *format)
 
 void print_val(struct s_format *format, va_list a_list)
 {
-
 	if (format->length == 0)
 	{
 		if (format->specifier == 1)
 		{
-			print_val_di(&format, a_list);
+			print_val_di(format, a_list);
 		}
-		else if (format->specifier == 2 || format->specifier == 3 || \ 
+		else if (format->specifier == 2 || format->specifier == 3 || \
 		format->specifier == 4 || format->specifier == 5)
 		{
 			// print_val_ouxX(&format, a_list);
 		}
-		if (format->specifier == 16)
+		else if (format->specifier == 16)
 		{
-			print_val_n(&format, a_list);
+			// print_val_n(&format, a_list);
 		}
 	}
 	if (format->length == 1)
 	{
 		if (format->specifier == 1)
 		{
-			print_val_hhdi(&format, a_list);
+			// printf("here");
+			print_val_hdi(format, a_list);
 		}
-		else if (format->specifier == 2 || format->specifier == 3 || \ 
+		else if (format->specifier == 2 || format->specifier == 3 || \
 		format->specifier == 4 || format->specifier == 5)
 		{
 			// print_val_hhouxX(&format, a_list);
 		}
-		if (format->specifier == 16)
+		else if (format->specifier == 16)
+		{
+			// print_val_hhn(&format, a_list);
+		}
+	}
+	if (format->length == 2)
+	{
+		if (format->specifier == 1)
+		{
+			// printf("here");
+			print_val_hhdi(format, a_list);
+		}
+		else if (format->specifier == 2 || format->specifier == 3 || \
+		format->specifier == 4 || format->specifier == 5)
+		{
+			// print_val_hhouxX(&format, a_list);
+		}
+		else if (format->specifier == 16)
 		{
 			// print_val_hhn(&format, a_list);
 		}
@@ -298,7 +423,7 @@ int ft_printf(const char *input, ...)
 			}
 			if (detect_length((char *)&input[i], &format) != 0)
 			{
-				i++;
+				i += format.length_digit;
 			}
 			if (detect_specifier((char *)&input[i], &format) != 0)
 			{
@@ -319,10 +444,7 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	// printf("07) Vrai PRINTF : |%.d|\n", 100);
-	// ft_printf("07) Mon PRINTF  : |%.d|\n", 100);
-	printf("Standard output : |%10.5d|\n", 123);
-	ft_printf("   My function  : |%10.5d|\n", 123);
-
+	printf("Standard output : |%hd|\n", (short)42);
+	ft_printf("   My function  : |%hd|\n", (short)42);
 	return 0;
 }

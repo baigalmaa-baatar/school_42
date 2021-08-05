@@ -36,6 +36,7 @@ typedef struct	s_format
 	int precision_digit;
 	//length
 	int length;
+	int length_digit;
 	//specifier
 	int specifier;
 }				t_format;
