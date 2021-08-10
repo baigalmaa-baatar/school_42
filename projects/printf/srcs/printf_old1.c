@@ -410,10 +410,8 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	// printf("07) Vrai PRINTF : |%.d|\n", 100);
-	// ft_printf("07) Mon PRINTF  : |%.d|\n", 100);
-	printf("Standard output : |%u|\n", -1);
-	// ft_printf("   My function  : |%3d|\n", 100);
-
+	printf("47) Vrai PRINTF : |%hhd|\n", (char)129);
+	ft_printf("47) Mon PRINTF  : |%hhd|\n", (char)129);
+	
 	return 0;
 }

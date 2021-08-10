@@ -156,46 +156,23 @@ void print_val_hhdi(struct s_format *format, va_list a_list)
 	int max;
 	int len;
 	int negative;
-	int max_flag;
 
 	negative = 0;
-	max_flag = 0;
-	nbr = va_arg(a_list, int);
-	len = ft_length_nbr(nbr);
-	// printf("the lenght is : %d\n", len);
-
 	if (format->precision == -1)
 		precision = 0;
 	else 
 		precision = format->precision;
-	// char temp_p[precision];
+	char temp_p[precision];
 	memset(buff, ' ', 100 * sizeof(char));
-	// printf("format->width_flag : %d\n", format->width_flag);
-	// printf("precision : %d\n", precision);
-	// printf("len : %d\n", len);
-	// printf("the input nbr is : %hhd\n", nbr);
-	if (format->width_flag && precision < len)
-	{
-		memset(buff + (100 - 1 - format->width), '0', format->width * sizeof(char));
-		// printf("here\n");
-	}
-	else
-	{
-		memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
-		// printf("here1\n");
-	}
+	memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
 	buff[99] = 0;
 	i = 98;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
 	if (nbr < 0)
 	{
-		//ene hesgiig martahaas umnu zasah
-		// printf("the input number is before : %hhd\n", nbr);
-		// if (nbr == -128)
-		// 	max_flag = 1;
-		// else 
-		// nbr = -nbr;
-		// negative = 1;
-		// printf("the input number is after : %hhd\n", nbr);
+		nbr = -nbr;
+		negative = 1;
 	}
 	while(nbr > 0)
 	{
@@ -203,36 +180,11 @@ void print_val_hhdi(struct s_format *format, va_list a_list)
 		nbr /= 10;
 		i--;
 	}
-	// printf("the buff is : %s\n", buff);
-	max = ft_max(ft_max(format->width, precision), len);
-	if (format->width_flag && precision < len)
-	{
-		if(negative)
-		{
-			memset(buff + (100  - 1 - max), '-', sizeof(char));
-			ft_putstr(&buff[100 - 1 - max]);
-		}
-		else
-			ft_putstr(&buff[100 - 1 - max]);
-	}
-	else
-	{
-		if(negative)
-		{
-			if(precision > format->width)
-			{
-				memset(buff + (100  - 2 - max), '-', sizeof(char));
-				ft_putstr(&buff[100 - 2 - max]);
-			}
-			else
-			{
-				memset(buff + (100 - 1 - len), '-', sizeof(char));
-				ft_putstr(&buff[100 - 1 - max]);
-			}
-		}
-		else
-			ft_putstr(&buff[100 - 1 - max]);
-	}
+	max = ft_max(ft_max(format->width, sizeof(temp_p)), len);
+	if(negative)
+		memset(buff + (100 - 1 - len), '-', sizeof(char));
+	ft_putstr(&buff[100 - 1 - max]);
+
 }
 
 void print_val_hdi(struct s_format *format, va_list a_list)
@@ -275,7 +227,6 @@ void initialize_format(struct s_format *format)
 	format->hash = 0;
 	format->width = 0;
 	format->width_digit = 0;
-	format->width_flag = 0;
 	format->precision = -1;
 	format->precision_digit = 0;
 	format->length = 0;
@@ -286,28 +237,17 @@ void initialize_format(struct s_format *format)
 int detect_width(char *str, struct s_format *format)
 {
 	int i;
-	int width_flag;
 	int nbr;
 
 	i = 0;
-	width_flag = 0;
 	nbr = 0;
-	if (str[i] == '0')
-	{
-		width_flag = 1;
-		i++;
-	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		nbr = nbr * 10 + str[i] - '0';
 		i++;
 	}
 	format->width = nbr;
-	// printf("the number is : %d\n", format->width);
 	format->width_digit = i;
-	format->width_flag = width_flag;
-	// printf("the number digit is : %d\n", format->width_digit);
-	// printf("the width flag is : %d\n", format->width_flag);
 	return (format->width);
 }
 
@@ -346,8 +286,6 @@ int detect_length(char *str, struct s_format *format)
 			format->length = 1;
 			format->length_digit = 1;
 		}
-		// printf("the format length is : %d\n", format->length);
-		// printf("the format length digit is : %d\n", format->length_digit);
 	}
 	else if (str[i] == 'l')
 	{
@@ -453,7 +391,7 @@ void print_val(struct s_format *format, va_list a_list)
 	{
 		if (format->specifier == 1)
 		{
-			// printf("here\n");
+			// printf("here");
 			print_val_hhdi(format, a_list);
 		}
 		else if (format->specifier == 2 || format->specifier == 3 || \
@@ -492,9 +430,6 @@ int ft_printf(const char *input, ...)
 			{
 				i += format.width_digit;
 			}
-			// printf("the width digit is : %d\n", format.width_digit);
-
-			// printf("the input is : %s\n", &input[i]);
 			if(input[i] == '.')
 			{
 				i++;
@@ -510,7 +445,6 @@ int ft_printf(const char *input, ...)
 				// i++;
 			}
 			print_val(&format, a_list);
-			// printf("the input is : %s\n", &input[i]);
 		}
 		else
 		{
@@ -525,26 +459,66 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	// printf("15) Vrai PRINTF : |%          hhd|\n", (char)1);
-	// ft_printf("15) Mon PRINTF  : |%          hhd|\n\n", (char)1);
-	// printf("23) Vrai PRINTF : |%.10hhd|\n", (char)-42);
-	// ft_printf("23) Mon PRINTF  : |%.10hhd|\n\n", (char)-42);
-	// printf("25) Vrai PRINTF : |%10.5hhd|\n", (char)-16);
-	// ft_printf("25) Mon PRINTF  : |%10.5hhd|\n\n", (char)-16);
-	// printf("36) Vrai PRINTF : |%.2hhd|\n", (char)-1);
-	// ft_printf("36) Mon PRINTF  : |%.2hhd|\n\n", (char)-1);
-	// printf("39) Vrai PRINTF : |%06hhd|\n", (char)35);
-	// ft_printf("39) Mon PRINTF  : |%06hhd|\n\n", (char)35);
-	// printf("40) Vrai PRINTF : |%06hhd|\n", (char)-35);
-	// ft_printf("40) Mon PRINTF  : |%06hhd|\n\n", (char)-35);
-	// printf("45) Vrai PRINTF : |%05.3hhd|\n", (char)-5);
-	// ft_printf("45) Mon PRINTF  : |%05.3hhd|\n\n", (char)-5);
-	// printf("46) Vrai PRINTF : |%03.5hhd|\n", (char)-5);
-	// ft_printf("46) Mon PRINTF  : |%03.5hhd|\n\n", (char)-5);
-	printf("47) Vrai PRINTF : |%hhd|\n", (char)129);
-	ft_printf("47) Mon PRINTF  : |%hhd|\n", (char)129);
-	// printf("48) Vrai PRINTF : |%hhd| |%hhd|\n", (char)128, (char)-129);
-	// ft_printf("48) Mon PRINTF  : |%hhd| |%hhd|\n", (char)128, (char)-129);
+	// printf("Standard output : |%1.2hhd|\n", (signed char)100);
+	// ft_printf("   My function  : |%1.2hhd|\n", (signed char)100);
+
+	ft_printf("--------------------%%hhd-et-%%hhi--------------------\n");	//perfect
+	// printf("01) Vrai PRINTF : |%hhd|\n", (char)42);
+	// ft_printf("01) Mon PRINTF  : |%hhd|\n", (char)42);
+	// printf("02) Vrai PRINTF : |%hhi|\n", (char)42);
+	// ft_printf("02) Mon PRINTF  : |%hhi|\n", (char)42);
+	// printf("05) Vrai PRINTF : |%10hhd|\n", (char)100);
+	// ft_printf("05) Mon PRINTF  : |%10hhd|\n", (char)100);
+	// printf("07) Vrai PRINTF : |%.10hhd|\n", (char)100);
+	// ft_printf("07) Mon PRINTF  : |%.10hhd|\n", (char)100);
+	// printf("08) Vrai PRINTF : |%10.5hhd|\n", (char)100);
+	// ft_printf("08) Mon PRINTF  : |%10.5hhd|\n", (char)100);
+	// printf("09) Vrai PRINTF : |%5.10hhd|\n", (char)64);
+	// ft_printf("09) Mon PRINTF  : |%5.10hhd|\n", (char)64);
+	// printf("10) Vrai PRINTF : |%1.1hhd|\n", (char)16);
+	// ft_printf("10) Mon PRINTF  : |%1.1hhd|\n", (char)16);
+	printf("15) Vrai PRINTF : |%          hhd|\n", (char)1);
+	ft_printf("15) Mon PRINTF  : |%          hhd|\n", (char)1);
+	// printf("21) Vrai PRINTF : |%hhd|\n", (char)-42);
+	// ft_printf("21) Mon PRINTF  : |%hhd|\n", (char)-42);
+	// printf("22) Vrai PRINTF : |%10hhd|\n", (char)-42);
+	// ft_printf("22) Mon PRINTF  : |%10hhd|\n", (char)-42);
+	printf("23) Vrai PRINTF : |%.10hhd|\n", (char)-42);
+	ft_printf("23) Mon PRINTF  : |%.10hhd|\n", (char)-42);
+	printf("25) Vrai PRINTF : |%10.5hhd|\n", (char)-16);
+	ft_printf("25) Mon PRINTF  : |%10.5hhd|\n", (char)-16);
+	// printf("26) Vrai PRINTF : |%5.10hhd|\n", (char)-16);
+	// ft_printf("26) Mon PRINTF  : |%5.10hhd|\n", (char)-16);
+	// printf("27) Vrai PRINTF : |%1.1hhd|\n", (char)-20);
+	// ft_printf("27) Mon PRINTF  : |%1.1hhd|\n", (char)-20);
+	// printf("33) Vrai PRINTF : |%2hhd|\n", (char)-20);
+	// ft_printf("33) Mon PRINTF  : |%2hhd|\n", (char)-20);
+	// printf("34) Vrai PRINTF : |%.2hhd|\n", (char)-20);
+	// ft_printf("34) Mon PRINTF  : |%.2hhd|\n", (char)-20);
+	// printf("35) Vrai PRINTF : |%2hhd|\n", (char)-1);
+	// ft_printf("35) Mon PRINTF  : |%2hhd|\n", (char)-1);
+	printf("36) Vrai PRINTF : |%.2hhd|\n", (char)-1);
+	ft_printf("36) Mon PRINTF  : |%.2hhd|\n", (char)-1);
+	printf("39) Vrai PRINTF : |%06hhd|\n", (char)35);
+	ft_printf("39) Mon PRINTF  : |%06hhd|\n", (char)35);
+	printf("40) Vrai PRINTF : |%06hhd|\n", (char)-35);
+	ft_printf("40) Mon PRINTF  : |%06hhd|\n", (char)-35);
+	// printf("43) Vrai PRINTF : |%05.3hhd|\n", (char)5);
+	// ft_printf("43) Mon PRINTF  : |%05.3hhd|\n", (char)5);
+	// printf("44) Vrai PRINTF : |%03.5hhd|\n", (char)5);
+	// ft_printf("44) Vrai PRINTF : |%03.5hhd|\n", (char)5);
+	printf("45) Vrai PRINTF : |%05.3hhd|\n", (char)-5);
+	ft_printf("45) Mon PRINTF  : |%05.3hhd|\n", (char)-5);
+	printf("46) Vrai PRINTF : |%03.5hhd|\n", (char)-5);
+	ft_printf("46) Mon PRINTF  : |%03.5hhd|\n", (char)-5);
+	printf("47) Vrai PRINTF : |%hhd| |%hhd|\n", (char)127, (char)-128);
+	ft_printf("47) Mon PRINTF  : |%hhd| |%hhd|\n", (char)127, (char)-128);
+	printf("48) Vrai PRINTF : |%hhd| |%hhd|\n", (char)128, (char)-129);
+	ft_printf("48) Mon PRINTF  : |%hhd| |%hhd|\n", (char)128, (char)-129);
+	// printf("49) Vrai PRINTF : |%.hhd|\n", (char)0);
+	// ft_printf("49) Mon PRINTF  : |%.hhd|\n", (char)0);
+	// printf("50) Vrai PRINTF : |%.hhd|\n", (char)100);
+	// ft_printf("50) Mon PRINTF  : |%.hhd|\n", (char)100);
 	
 	return 0;
 }

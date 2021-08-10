@@ -31,6 +31,7 @@ typedef struct	s_format
 	//width
 	int width;
 	int width_digit;
+	int width_flag;
 	//precision
 	int precision;
 	int precision_digit;
