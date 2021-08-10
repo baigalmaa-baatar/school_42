@@ -1,0 +1,99 @@
+--------------------hhd-et-hhi--------------------
+01) Mon PRINTF  : |42|
+02) Mon PRINTF  : |42|
+03) Mon PRINTF  : |hhd|
+04) Mon PRINTF  : |hhd|
+05) Mon PRINTF  : |       100|
+06) Mon PRINTF  : |10hhd|
+07) Mon PRINTF  : |0000000100|
+08) Mon PRINTF  : |     00100|
+09) Mon PRINTF  : |0000000064|
+10) Mon PRINTF  : |16|
+11) Mon PRINTF  : |10hhd|
+12) Mon PRINTF  : |2hhd|
+13) Mon PRINTF  : |.10hhd|
+14) Mon PRINTF  : |.2hhd|
+15) Mon PRINTF  : |         hhd|
+16) Mon PRINTF  : |-hhd|
+17) Mon PRINTF  : |+hhd|
+18) Mon PRINTF  : |-hhd|
+19) Mon PRINTF  : |+10hhd|
+20) Mon PRINTF  : |+.10hhd|
+21) Mon PRINTF  : |-42|
+22) Mon PRINTF  : |       -42|
+23) Mon PRINTF  : |0000000-42|
+24) Mon PRINTF  : |hhd|
+25) Mon PRINTF  : |     00-16|
+26) Mon PRINTF  : |0000000-16|
+27) Mon PRINTF  : |-20|
+29) Mon PRINTF  : |10hhd|
+30) Mon PRINTF  : |+++++++++hhd|
+31) Mon PRINTF  : |10hhd|
+32) Mon PRINTF  : |.10hhd|
+33) Mon PRINTF  : |-20|
+34) Mon PRINTF  : |-20|
+35) Mon PRINTF  : |-1|
+36) Mon PRINTF  : |-1|
+37) Mon PRINTF  : |10hhd|
+38) Mon PRINTF  : |.10hhd|
+39) Mon PRINTF  : |    35|
+40) Mon PRINTF  : |   -35|
+41) Mon PRINTF  : |+10hhd|
+42) Mon PRINTF  : |-10hhd|
+43) Mon PRINTF  : |  005|
+44) Vrai PRINTF : |00005|
+45) Mon PRINTF  : |  0-5|
+46) Mon PRINTF  : |000-5|
+47) Mon PRINTF  : |127| |-   |
+48) Mon PRINTF  : |-   | |127|
+49) Mon PRINTF  : ||
+50) Mon PRINTF  : |100|
+01) Vrai PRINTF : |42|
+02) Vrai PRINTF : |42|
+03) Vrai PRINTF : |+42|
+04) Vrai PRINTF : |42|
+05) Vrai PRINTF : |       100|
+06) Vrai PRINTF : |64        |
+07) Vrai PRINTF : |0000000100|
+08) Vrai PRINTF : |     00100|
+09) Vrai PRINTF : |0000000064|
+10) Vrai PRINTF : |16|
+11) Vrai PRINTF : |       +50|
+12) Vrai PRINTF : |+50|
+13) Vrai PRINTF : |+0000000050|
+14) Vrai PRINTF : |+50|
+15) Vrai PRINTF : | 1|
+16) Vrai PRINTF : | 1|
+17) Vrai PRINTF : |+32|
+18) Vrai PRINTF : |+32|
+19) Vrai PRINTF : |+42       |
+20) Vrai PRINTF : |+0000000042|
+21) Vrai PRINTF : |-42|
+22) Vrai PRINTF : |       -42|
+23) Vrai PRINTF : |-0000000042|
+24) Vrai PRINTF : |-10|
+25) Vrai PRINTF : |    -00016|
+26) Vrai PRINTF : |-0000000016|
+27) Vrai PRINTF : |-20|
+28) Vrai PRINTF : |-50       |
+30) Vrai PRINTF : |+69|
+31) Vrai PRINTF : |       -64|
+32) Vrai PRINTF : |-0000000064|
+33) Vrai PRINTF : |-20|
+34) Vrai PRINTF : |-20|
+35) Vrai PRINTF : |-1|
+36) Vrai PRINTF : |-01|
+37) Vrai PRINTF : |-80       |
+38) Vrai PRINTF : |-0000000080|
+39) Vrai PRINTF : |000035|
+40) Vrai PRINTF : |-00035|
+41) Vrai PRINTF : |-40       |
+42) Vrai PRINTF : |-40       |
+43) Vrai PRINTF : |  005|
+44) Vrai PRINTF : |00005|
+45) Vrai PRINTF : | -005|
+46) Vrai PRINTF : |-00005|
+47) Vrai PRINTF : |127| |-128|
+48) Vrai PRINTF : |-128| |127|
+49) Vrai PRINTF : ||
+50) Vrai PRINTF : |100|
