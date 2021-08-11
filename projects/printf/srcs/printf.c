@@ -20,7 +20,7 @@ int ft_length_nbr(int nbr)
 	if(nbr < 0)
 	{
 		nbr = -nbr;
-		i++;
+		// i++;
 	}
 	while (nbr > 0)
 	{
@@ -156,46 +156,24 @@ void print_val_hhdi(struct s_format *format, va_list a_list)
 	int max;
 	int len;
 	int negative;
-	int max_flag;
 
 	negative = 0;
-	max_flag = 0;
+	buff[99] = '\0';
+	i = 99;
 	nbr = va_arg(a_list, int);
 	len = ft_length_nbr(nbr);
-	// printf("the lenght is : %d\n", len);
-
 	if (format->precision == -1)
 		precision = 0;
 	else 
 		precision = format->precision;
-	// char temp_p[precision];
 	memset(buff, ' ', 100 * sizeof(char));
-	// printf("format->width_flag : %d\n", format->width_flag);
-	// printf("precision : %d\n", precision);
-	// printf("len : %d\n", len);
-	// printf("the input nbr is : %hhd\n", nbr);
-	if (format->width_flag && precision < len)
-	{
-		memset(buff + (100 - 1 - format->width), '0', format->width * sizeof(char));
-		// printf("here\n");
-	}
-	else
-	{
-		memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
-		// printf("here1\n");
-	}
-	buff[99] = 0;
-	i = 98;
+	memset(buff + (100 - precision), '0', precision * sizeof(char));
+
 	if (nbr < 0)
 	{
-		//ene hesgiig martahaas umnu zasah
-		// printf("the input number is before : %hhd\n", nbr);
-		// if (nbr == -128)
-		// 	max_flag = 1;
-		// else 
-		// nbr = -nbr;
-		// negative = 1;
-		// printf("the input number is after : %hhd\n", nbr);
+		// ene hesgiig martahaas umnu zasah->(char)-128
+		nbr = -nbr;
+		negative = 1;
 	}
 	while(nbr > 0)
 	{
@@ -203,36 +181,39 @@ void print_val_hhdi(struct s_format *format, va_list a_list)
 		nbr /= 10;
 		i--;
 	}
-	// printf("the buff is : %s\n", buff);
 	max = ft_max(ft_max(format->width, precision), len);
-	if (format->width_flag && precision < len)
+	// printf("buff is : %s", buff);
+	// printf("max is : %d", max);
+	if(negative)
 	{
-		if(negative)
+		if(precision == max && precision > len) //%5.10hhd
 		{
-			memset(buff + (100  - 1 - max), '-', sizeof(char));
-			ft_putstr(&buff[100 - 1 - max]);
+			memset(buff + (100  - 2 - max), '-', sizeof(char));
+			ft_putchar(buff[100 - 2 - max]);
 		}
-		else
-			ft_putstr(&buff[100 - 1 - max]);
+		else if(precision > len) ////%10.1hhd  123
+		{	
+			memset(buff + (100 - 1 - precision), '-', sizeof(char));
+			// printf("buff is : %s", buff);
+		}
+		else //%10.1hhd
+		{
+			memset(buff + (100 - 1 - len), '-', sizeof(char));
+			// printf("max is : %d", max);
+			// printf("len is : %d", len);
+			// printf("buff is : |%s|", buff);
+
+		}
+	}
+	// printf("buff is : |%s|", buff);
+	if (negative && max == len)
+	{
+		ft_putstr(&buff[100 - 1 - max]);
+		// printf("buff is : |%s|", buff);
+
 	}
 	else
-	{
-		if(negative)
-		{
-			if(precision > format->width)
-			{
-				memset(buff + (100  - 2 - max), '-', sizeof(char));
-				ft_putstr(&buff[100 - 2 - max]);
-			}
-			else
-			{
-				memset(buff + (100 - 1 - len), '-', sizeof(char));
-				ft_putstr(&buff[100 - 1 - max]);
-			}
-		}
-		else
-			ft_putstr(&buff[100 - 1 - max]);
-	}
+		ft_putstr(&buff[100 - max]);
 }
 
 void print_val_hdi(struct s_format *format, va_list a_list)
@@ -243,26 +224,203 @@ void print_val_hdi(struct s_format *format, va_list a_list)
 	int i;
 	int max;
 	int len;
+	int negative;
 
+	negative = 0;
+	buff[99] = '\0';
+	i = 99;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
 	if (format->precision == -1)
 		precision = 0;
 	else 
 		precision = format->precision;
-	char temp_p[precision];
 	memset(buff, ' ', 100 * sizeof(char));
-	memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
-	buff[99] = 0;
-	i = 98;
-	nbr = va_arg(a_list, int);
-	len = ft_length_nbr(nbr);
+	memset(buff + (100 - precision), '0', precision * sizeof(char));
+
+	if (nbr < 0)
+	{
+		// ene hesgiig martahaas umnu zasah->(char)-128
+		nbr = -nbr;
+		negative = 1;
+	}
 	while(nbr > 0)
 	{
 		buff[i] = nbr % 10 + '0';
 		nbr /= 10;
 		i--;
 	}
-	max = ft_max(ft_max(format->width, sizeof(temp_p)), len);
-	ft_putstr(&buff[100 - 1 - max]);
+	max = ft_max(ft_max(format->width, precision), len);
+	// printf("buff is : %s", buff);
+	// printf("max is : %d", max);
+	if(negative)
+	{
+		if(precision == max && precision > len) //%5.10hhd
+		{
+			memset(buff + (100  - 2 - max), '-', sizeof(char));
+			ft_putchar(buff[100 - 2 - max]);
+		}
+		else if(precision > len) ////%10.1hhd  123
+		{	
+			memset(buff + (100 - 1 - precision), '-', sizeof(char));
+			// printf("buff is : %s", buff);
+		}
+		else //%10.1hhd
+		{
+			memset(buff + (100 - 1 - len), '-', sizeof(char));
+			// printf("max is : %d", max);
+			// printf("len is : %d", len);
+			// printf("buff is : |%s|", buff);
+
+		}
+	}
+	// printf("buff is : |%s|", buff);
+	if (negative && max == len)
+	{
+		ft_putstr(&buff[100 - 1 - max]);
+		// printf("buff is : |%s|", buff);
+
+	}
+	else
+		ft_putstr(&buff[100 - max]);
+}
+
+void print_val_ldi(struct s_format *format, va_list a_list)
+{
+	int precision;
+	char buff[100];
+	long nbr;
+	int i;
+	int max;
+	int len;
+	int negative;
+
+	negative = 0;
+	buff[99] = '\0';
+	i = 99;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
+	if (format->precision == -1)
+		precision = 0;
+	else 
+		precision = format->precision;
+	memset(buff, ' ', 100 * sizeof(char));
+	memset(buff + (100 - precision), '0', precision * sizeof(char));
+
+	if (nbr < 0)
+	{
+		// ene hesgiig martahaas umnu zasah->(char)-128
+		nbr = -nbr;
+		negative = 1;
+	}
+	while(nbr > 0)
+	{
+		buff[i] = nbr % 10 + '0';
+		nbr /= 10;
+		i--;
+	}
+	max = ft_max(ft_max(format->width, precision), len);
+	// printf("buff is : %s", buff);
+	// printf("max is : %d", max);
+	if(negative)
+	{
+		if(precision == max && precision > len) //%5.10hhd
+		{
+			memset(buff + (100  - 2 - max), '-', sizeof(char));
+			ft_putchar(buff[100 - 2 - max]);
+		}
+		else if(precision > len) ////%10.1hhd  123
+		{	
+			memset(buff + (100 - 1 - precision), '-', sizeof(char));
+			// printf("buff is : %s", buff);
+		}
+		else //%10.1hhd
+		{
+			memset(buff + (100 - 1 - len), '-', sizeof(char));
+			// printf("max is : %d", max);
+			// printf("len is : %d", len);
+			// printf("buff is : |%s|", buff);
+
+		}
+	}
+	// printf("buff is : |%s|", buff);
+	if (negative && max == len)
+	{
+		ft_putstr(&buff[100 - 1 - max]);
+		// printf("buff is : |%s|", buff);
+
+	}
+	else
+		ft_putstr(&buff[100 - max]);
+}
+
+void print_val_lldi(struct s_format *format, va_list a_list)
+{
+	int precision;
+	char buff[100];
+	long long nbr;
+	int i;
+	int max;
+	int len;
+	int negative;
+
+	negative = 0;
+	buff[99] = '\0';
+	i = 99;
+	nbr = va_arg(a_list, int);
+	len = ft_length_nbr(nbr);
+	if (format->precision == -1)
+		precision = 0;
+	else 
+		precision = format->precision;
+	memset(buff, ' ', 100 * sizeof(char));
+	memset(buff + (100 - precision), '0', precision * sizeof(char));
+
+	if (nbr < 0)
+	{
+		// ene hesgiig martahaas umnu zasah->(char)-128
+		nbr = -nbr;
+		negative = 1;
+	}
+	while(nbr > 0)
+	{
+		buff[i] = nbr % 10 + '0';
+		nbr /= 10;
+		i--;
+	}
+	max = ft_max(ft_max(format->width, precision), len);
+	// printf("buff is : %s", buff);
+	// printf("max is : %d", max);
+	if(negative)
+	{
+		if(precision == max && precision > len) //%5.10hhd
+		{
+			memset(buff + (100  - 2 - max), '-', sizeof(char));
+			ft_putchar(buff[100 - 2 - max]);
+		}
+		else if(precision > len) ////%10.1hhd  123
+		{	
+			memset(buff + (100 - 1 - precision), '-', sizeof(char));
+			// printf("buff is : %s", buff);
+		}
+		else //%10.1hhd
+		{
+			memset(buff + (100 - 1 - len), '-', sizeof(char));
+			// printf("max is : %d", max);
+			// printf("len is : %d", len);
+			// printf("buff is : |%s|", buff);
+
+		}
+	}
+	// printf("buff is : |%s|", buff);
+	if (negative && max == len)
+	{
+		ft_putstr(&buff[100 - 1 - max]);
+		// printf("buff is : |%s|", buff);
+
+	}
+	else
+		ft_putstr(&buff[100 - max]);
 }
 
 void initialize_format(struct s_format *format)
@@ -275,7 +433,6 @@ void initialize_format(struct s_format *format)
 	format->hash = 0;
 	format->width = 0;
 	format->width_digit = 0;
-	format->width_flag = 0;
 	format->precision = -1;
 	format->precision_digit = 0;
 	format->length = 0;
@@ -286,17 +443,10 @@ void initialize_format(struct s_format *format)
 int detect_width(char *str, struct s_format *format)
 {
 	int i;
-	int width_flag;
 	int nbr;
 
 	i = 0;
-	width_flag = 0;
 	nbr = 0;
-	if (str[i] == '0')
-	{
-		width_flag = 1;
-		i++;
-	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		nbr = nbr * 10 + str[i] - '0';
@@ -305,9 +455,7 @@ int detect_width(char *str, struct s_format *format)
 	format->width = nbr;
 	// printf("the number is : %d\n", format->width);
 	format->width_digit = i;
-	format->width_flag = width_flag;
 	// printf("the number digit is : %d\n", format->width_digit);
-	// printf("the width flag is : %d\n", format->width_flag);
 	return (format->width);
 }
 
@@ -346,15 +494,21 @@ int detect_length(char *str, struct s_format *format)
 			format->length = 1;
 			format->length_digit = 1;
 		}
-		// printf("the format length is : %d\n", format->length);
-		// printf("the format length digit is : %d\n", format->length_digit);
 	}
 	else if (str[i] == 'l')
 	{
-		if (str[i++] == 'l')
+		i++;
+		if (str[i] == 'l')
+		{
 			format->length = 4;
-		format->length = 3;
-	}	
+			format->length_digit = 2;
+		}
+		else
+		{
+			format->length = 3;
+			format->length_digit = 1;
+		}
+	}
 	else if (str[i] == 'j')
 		format->length = 5;
 	else if (str[i] == 't')
@@ -466,6 +620,40 @@ void print_val(struct s_format *format, va_list a_list)
 			// print_val_hhn(&format, a_list);
 		}
 	}
+	if (format->length == 3)
+	{
+		if (format->specifier == 1)
+		{
+			// printf("here\n");
+			print_val_ldi(format, a_list);
+		}
+		else if (format->specifier == 2 || format->specifier == 3 || \
+		format->specifier == 4 || format->specifier == 5)
+		{
+			// print_val_hhouxX(&format, a_list);
+		}
+		else if (format->specifier == 16)
+		{
+			// print_val_hhn(&format, a_list);
+		}
+	}
+	if (format->length == 4)
+	{
+		if (format->specifier == 1)
+		{
+			// printf("here\n");
+			print_val_lldi(format, a_list);
+		}
+		else if (format->specifier == 2 || format->specifier == 3 || \
+		format->specifier == 4 || format->specifier == 5)
+		{
+			// print_val_hhouxX(&format, a_list);
+		}
+		else if (format->specifier == 16)
+		{
+			// print_val_hhn(&format, a_list);
+		}
+	}
 }
 
 int ft_printf(const char *input, ...)
@@ -525,26 +713,7 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	// printf("15) Vrai PRINTF : |%          hhd|\n", (char)1);
-	// ft_printf("15) Mon PRINTF  : |%          hhd|\n\n", (char)1);
-	// printf("23) Vrai PRINTF : |%.10hhd|\n", (char)-42);
-	// ft_printf("23) Mon PRINTF  : |%.10hhd|\n\n", (char)-42);
-	// printf("25) Vrai PRINTF : |%10.5hhd|\n", (char)-16);
-	// ft_printf("25) Mon PRINTF  : |%10.5hhd|\n\n", (char)-16);
-	// printf("36) Vrai PRINTF : |%.2hhd|\n", (char)-1);
-	// ft_printf("36) Mon PRINTF  : |%.2hhd|\n\n", (char)-1);
-	// printf("39) Vrai PRINTF : |%06hhd|\n", (char)35);
-	// ft_printf("39) Mon PRINTF  : |%06hhd|\n\n", (char)35);
-	// printf("40) Vrai PRINTF : |%06hhd|\n", (char)-35);
-	// ft_printf("40) Mon PRINTF  : |%06hhd|\n\n", (char)-35);
-	// printf("45) Vrai PRINTF : |%05.3hhd|\n", (char)-5);
-	// ft_printf("45) Mon PRINTF  : |%05.3hhd|\n\n", (char)-5);
-	// printf("46) Vrai PRINTF : |%03.5hhd|\n", (char)-5);
-	// ft_printf("46) Mon PRINTF  : |%03.5hhd|\n\n", (char)-5);
-	printf("47) Vrai PRINTF : |%hhd|\n", (char)129);
-	ft_printf("47) Mon PRINTF  : |%hhd|\n", (char)129);
-	// printf("48) Vrai PRINTF : |%hhd| |%hhd|\n", (char)128, (char)-129);
-	// ft_printf("48) Mon PRINTF  : |%hhd| |%hhd|\n", (char)128, (char)-129);
+
 	
 	return 0;
 }
