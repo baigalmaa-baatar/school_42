@@ -1,5 +1,5 @@
 NAME = libftprintf.a
-SRCS =  srcs/ft_printf.c \
+SRCS =  srcs/printf.c \
 		# srcs/ft_treatment.c
 INCLUDE = include
 LIBFT = libft

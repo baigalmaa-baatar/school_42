@@ -1,3 +1,0 @@
-Memo:
-Installation and configuration steps are here : https://baigal.medium.com/born2beroot-e6e26dfb50ac
-Correction screenshot : https://github.com/wshloic/born2beroot_correction/blob/master/correction_born2beroot.pdf

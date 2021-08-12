@@ -1,7 +1,9 @@
 NAME = libft.a
 SRCS = ft_atoi.c\
 		ft_putchar.c\
-		ft_putnbr.c
+		ft_putnbr.c\
+		ft_itoa.c\
+		ft_strlen.c
 OBJS = ${SRCS:.c=.o}
 CC		= gcc
 RM		= rm -f
