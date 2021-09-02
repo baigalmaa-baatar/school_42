@@ -1021,23 +1021,41 @@ void print_val_ss(struct s_format *format, va_list a_list)
 	buff[99] = '\0';
 	i = 99;
 	str = va_arg(a_list, const char *);
+	if (str == NULL)
+		ft_putstr("(null)");
 	len = ft_strlen(str);
 	if (format->precision == -1)
 		precision = 0;
 	else
-	{ 
+	{
 		flag_prec = 1;
 		precision = format->precision;
 	}
 	memset(buff, ' ', 100 * sizeof(char));
 	// memset(buff + (100 - precision), '0', precision * sizeof(char));
+	// if (!format->width)
+	// 	max = len;
+	// else
 	max = ft_max(format->width, len);
-	len--;
+	// printf("width is : %d\n", format->width);
+	// printf("precision is : %d\n", precision);
+	// printf("len is : %d\n", len);
 	if (flag_prec && !precision)
-		ft_putstr("");
-	else 
 	{
-		while(len >= 0)
+		if (!format->width)
+			ft_putstr("");
+		else
+			ft_putstr(&buff[100 - format->width]);
+	}
+	else
+	{
+		if (precision > 0 && precision < len)
+		{
+			max = ft_max(format->width, precision);
+			len = precision;
+		}
+		len--;
+		while (len >= 0)
 		{
 			buff[i] = str[len];
 			// printf("str is : %c\n", str[len]);
@@ -1356,25 +1374,10 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-
-	ft_printf("--------------------%%s--------------------\n");			//Perfect
+	ft_printf("--------------------%%s--------------------\n");
 	
-	printf("09) Vrai PRINTF : |%10.5s|\n", "precision");
-	ft_printf("09) Mon PRINTF  : |%10.4s|\n", "precision");
-	// printf("10) Vrai PRINTF : |%.0s|\n", "precision");
-	// ft_printf("10) Mon PRINTF  : |%.0s|\n", "precision");
-	// printf("15) Vrai PRINTF : |%10.8s|\n", "google");
-	// ft_printf("15) Mon PRINTF  : |%10.8s|\n", "google");
-	// printf("16) Vrai PRINTF : |%10.2s|\n", "twitter");
-	// ft_printf("16) Mon PRINTF  : |%10.2s|\n", "twitter");
-	// printf("17) Vrai PRINTF : |%2.10s|\n", "samsung");
-	// ft_printf("17) Mon PRINTF  : |%2.10s|\n", "samsung");
-	// printf("18) Vrai PRINTF : |%2.5s|\n", "printf");
-	// ft_printf("18) Mon PRINTF  : |%2.5s|\n", "printf");
-	// printf("20) Vrai PRINTF : |%1.0s|\n", "123456789");
-	// ft_printf("20) Mon PRINTF  : |%1.0s|\n", "123456789");
-	// printf("21) Vrai PRINTF : |%s|\n", NULL);
-	// ft_printf("21) Mon PRINTF  : |%s|\n", NULL);
+	printf("21) Vrai PRINTF : |%s|\n", NULL);
+	ft_printf("21) Mon PRINTF  : |%s|\n", NULL);
 	// printf("22) Vrai PRINTF : |%10s|\n", NULL);
 	// ft_printf("22) Mon PRINTF  : |%10s|\n", NULL);
 	// printf("24) Vrai PRINTF : |%.2s|\n", NULL);
