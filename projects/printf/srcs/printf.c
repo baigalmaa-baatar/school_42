@@ -1013,10 +1013,8 @@ void print_val_ss(struct s_format *format, va_list a_list)
 	int i;
 	int max;
 	int len;
-	int negative;
 	int flag_prec;
 
-	negative = 0;
 	flag_prec = 0;
 	buff[99] = '\0';
 	i = 99;
@@ -1032,14 +1030,7 @@ void print_val_ss(struct s_format *format, va_list a_list)
 		precision = format->precision;
 	}
 	memset(buff, ' ', 100 * sizeof(char));
-	// memset(buff + (100 - precision), '0', precision * sizeof(char));
-	// if (!format->width)
-	// 	max = len;
-	// else
 	max = ft_max(format->width, len);
-	// printf("width is : %d\n", format->width);
-	// printf("precision is : %d\n", precision);
-	// printf("len is : %d\n", len);
 	if (flag_prec && !precision)
 	{
 		if (!format->width)
@@ -1058,33 +1049,23 @@ void print_val_ss(struct s_format *format, va_list a_list)
 		while (len >= 0)
 		{
 			buff[i] = str[len];
-			// printf("str is : %c\n", str[len]);
 			len--;
 			i--;
 		}
 		ft_putstr(&buff[100 - max]);
 	}
-	// printf("max is : %d\n", max);
-	// printf("max is : %d\n", max);
-	// if(negative)
-	// {
-	// 	if(precision == max && precision > len) 
-	// 	{
-	// 		memset(buff + (100  - 2 - max), '-', sizeof(char));
-	// 		ft_putchar(buff[100 - 2 - max]);
-	// 	}
-	// 	else if(precision > len)
-	// 		memset(buff + (100 - 1 - precision), '-', sizeof(char));
-	// 	else 
-	// 		memset(buff + (100 - 1 - len), '-', sizeof(char));
-	// }
-	// if (negative && max == len)
-	// {
-	// 	ft_putstr(&buff[100 - 1 - max]);
-	// }
-	// else
-	// {
-	// }
+}
+
+void print_val_c(struct s_format *format, va_list a_list)
+{
+	char buff[100];
+	int max;
+
+	buff[99] = '\0';
+	memset(buff, ' ', 100 * sizeof(char));
+	max = ft_max(format->width, 1);
+	buff[99] = (char) va_arg(a_list, int);
+	ft_putstr(&buff[100 - max]);
 }
 
 void initialize_format(struct s_format *format)
@@ -1244,6 +1225,8 @@ void print_val(struct s_format *format, va_list a_list)
 			print_val_sx(format, a_list);
 		else if (format->specifier == 5)
 			print_val_X(format, a_list);
+		else if (format->specifier == 12)
+			print_val_c(format, a_list);
 		else if (format->specifier == 14)
 			print_val_ss(format, a_list);
 	}
@@ -1342,7 +1325,6 @@ int ft_printf(const char *input, ...)
 				i += format.width_digit;
 			}
 			// printf("the width digit is : %d\n", format.width_digit);
-
 			// printf("the input is : %s\n", &input[i]);
 			if(input[i] == '.')
 			{
@@ -1374,24 +1356,19 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	ft_printf("--------------------%%s--------------------\n");
-	
-	printf("21) Vrai PRINTF : |%s|\n", NULL);
-	ft_printf("21) Mon PRINTF  : |%s|\n", NULL);
-	// printf("22) Vrai PRINTF : |%10s|\n", NULL);
-	// ft_printf("22) Mon PRINTF  : |%10s|\n", NULL);
-	// printf("24) Vrai PRINTF : |%.2s|\n", NULL);
-	// ft_printf("24) Mon PRINTF  : |%.2s|\n", NULL);
-	// printf("25) Vrai PRINTF : |%10.8s|\n", NULL);
-	// ft_printf("25) Mon PRINTF  : |%10.8s|\n", NULL);
-	// printf("26) Vrai PRINTF : |%10.2s|\n", NULL);
-	// ft_printf("26) Mon PRINTF  : |%10.2s|\n", NULL);
-	// printf("27) Vrai PRINTF : |%2.10s|\n", NULL);
-	// ft_printf("27) Mon PRINTF  : |%2.10s|\n", NULL);
-	// printf("28) Vrai PRINTF : |%2.5s|\n", NULL);
-	// ft_printf("28) Mon PRINTF  : |%2.5s|\n", NULL);
-	// printf("30) Vrai PRINTF : |%1.0s|\n", NULL);
-	// ft_printf("30) Mon PRINTF  : |%1.0s|\n", NULL);
+	// int		*tab = malloc(sizeof(int) * 10);
+	// int		*tab2 = malloc(0);
+
+	// ft_printf("--------------------%%p--------------------\n");			//perfect
+	// printf("01) Vrai PRINTF : |%p|\n", "salut");
+	// printf("01) Vrai PRINTF : |%p|\n", "test");
+	// printf("01) Vrai PRINTF : |%p|\n", "salut");
+
+	// ft_printf("01) Mon PRINTF  : |%p|\n", "salut");
+
+	char *str1 = "salut";
+	char **p = &str1;
+	printf("address of pointer is: 0x%0x\n", (unsigned)&p);
 
 	return 0;
 }
