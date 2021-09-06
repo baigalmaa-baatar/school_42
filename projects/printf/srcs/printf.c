@@ -456,18 +456,17 @@ int print_val_c(struct s_format *format, va_list a_list)
 	int num_chars;
 
 	num_chars = 0;
-	buff[99] = '\0';
 	memset(buff, ' ', 100 * sizeof(char));
+	buff[99] = '\0';
 	c = (char) va_arg(a_list, int);
 	if(!c)
 	{
-		ft_putstr("");
-		return(0);
+		ft_putchar(0);
+		return(1);
 	}
-	buff[99] = c;
+	buff[98] = c;
 	num_chars = ft_max(format->width, 1);
-	ft_putstr(&buff[100 - num_chars]);
-	// printf("num chars : %d\n", num_chars);
+	ft_putstr(&buff[100 - num_chars - 1]);
 	return (num_chars);
 }
 
@@ -632,33 +631,6 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
-	// printf("%d\n", printf("|%c|", 'a'));
-	// printf("%d\n", printf("|%c|", 'a'));
-	// ft_printf("%d\n", ft_printf("%c\n", 'a'));
-
-	// printf("%d\n", printf("%c", 'a'));
-	// ft_printf("%d\n", ft_printf("%c", 'a'));
-	// printf(" %c ", '0');
-	// ft_printf(" %c ", '0');
-
-	// printf("%d\n", printf("kkk"));
-	// ft_printf("%d\n", ft_printf("kkk"));
-
-	printf("%d\n", printf("%c%c%c", 'a', 'b', 'c'));
-	ft_printf("%d\n", ft_printf("%c%c%c", 'a', 'b', 'c'));
-
-	// printf("%c ", '0' + 256);
-	// ft_printf("%c ", '0' + 256);
-	// printf(" %c %c %c ", '0', 0, '1');
-	// ft_printf(" %c %c %c ", '0', 0, '1');
-	// printf(" %c %c %c ", ' ', ' ', ' ');
-	// ft_printf(" %c %c %c ", ' ', ' ', ' ');
-	// printf(" %c %c %c ", '1', '2', '3');
-	// ft_printf(" %c %c %c ", '1', '2', '3');
-	// printf(" %c %c %c ", '2', '1', 0);
-	// ft_printf(" %c %c %c ", '2', '1', 0);
-	// printf(" %c %c %c ", 0, '1', '2');
-	// ft_printf(" %c %c %c ", 0, '1', '2');
 
 	return 0;
 }
