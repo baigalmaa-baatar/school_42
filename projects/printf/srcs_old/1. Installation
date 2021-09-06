@@ -1,9 +1,0 @@
-1. Installation
-If you already have installed the OS, you can skip this part.
-1. Get the Debian installer image from here. 
-
-ISO The netinst CD is a small CD image that contains just the core Debian installer code and a small core set of text-mode programs (known as "standard" in Debian). I chose the standard debian-10.10.0-amd64-netinst.
-Index of /debian-cd/current/amd64/iso-cd
-These are files containing the installer and other software for the Debian GNU/Linux operating system. The files in…cdimage.debian.org
-Put the image in sgoinfre (/sgoinfre/Perso/your_login) if you are installing at school. 
-2. Installing the Debian 10.

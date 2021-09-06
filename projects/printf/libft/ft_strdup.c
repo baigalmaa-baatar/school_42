@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/16 11:05:55 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/06/16 11:06:16 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/05/03 10:35:39 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/05/21 12:33:47 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft_printf.h"
+#include "libft.h"
 
-int main()
+char	*ft_strdup(const char *str)
 {
-	int result;
+	char			*res;
+	unsigned int	len;
+	unsigned int	i;
 
-	ft_printf("%d", 12345);
-	result = ft_printf("%d", 12345);
-	printf("the result of string is : %d", result);
-	return 0;
+	len = ft_strlen (str);
+	res = (char *)malloc (sizeof(char) * (len + 1));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (len--)
+	{
+		res[i] = str[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
 }
