@@ -128,7 +128,7 @@ void ft_putstr(char *s)
 	}
 }
 
-void print_val_di(struct s_format *format, va_list a_list)
+int print_val_di(struct s_format *format, va_list a_list)
 {
 	int precision;
 	char buff[100];
@@ -137,18 +137,20 @@ void print_val_di(struct s_format *format, va_list a_list)
 	int len;
 	int negative;
 	int nbr;
+	int num_chars;
 
 	nbr = va_arg(a_list, int);
 	negative = 0;
-	buff[99] = '\0';
-	i = 99;
+	num_chars = 0;
 	len = ft_length_nbr(nbr);
 	if (format->precision == -1)
 		precision = 0;
 	else 
 		precision = format->precision;
 	memset(buff, ' ', 100 * sizeof(char));
-	memset(buff + (100 - precision), '0', precision * sizeof(char));
+	memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
+	buff[99] = '\0';
+	i = 98;
 	if (!nbr)
 		buff[i] = '0';
 	else
@@ -171,25 +173,26 @@ void print_val_di(struct s_format *format, va_list a_list)
 	{
 		if(precision == max && precision > len) 
 		{
-			memset(buff + (100  - 2 - max), '-', sizeof(char));
-			ft_putchar(buff[100 - 2 - max]);
+			memset(buff + (100  - 3 - max), '-', sizeof(char));
+			ft_putchar(buff[100 - 3 - max]);
 		}
 		else if(precision > len)
 		{	
-			memset(buff + (100 - 1 - precision), '-', sizeof(char));
+			memset(buff + (100 - 2 - precision), '-', sizeof(char));
 		}
 		else
 		{
-			memset(buff + (100 - 1 - len), '-', sizeof(char));
+			memset(buff + (100 - 2 - len), '-', sizeof(char));
 		}
 	}
 	if (negative && max == len)
 	{
-		ft_putstr(&buff[100 - 1 - max]);
+		ft_putstr(&buff[100 - 2 - max]);
+		return (max);
 	}
 	else
-		ft_putstr(&buff[100 - max]);
-
+		ft_putstr(&buff[100 - 1 - max]);
+		return (max);
 }
 
 void print_val_u(struct s_format *format, va_list a_list)
@@ -398,57 +401,6 @@ void print_val_X(struct s_format *format, va_list a_list)
 	}
 }
 
-void print_val_s(struct s_format *format, va_list a_list)
-{
-	int precision;
-	char buff[100];
-	const char *str;
-	int i;
-	int max;
-	int len;
-	int flag_prec;
-
-	flag_prec = 0;
-	buff[99] = '\0';
-	i = 99;
-	str = va_arg(a_list, const char *);
-	if (str == NULL)
-		ft_putstr("(null)");
-	len = ft_strlen(str);
-	if (format->precision == -1)
-		precision = 0;
-	else
-	{
-		flag_prec = 1;
-		precision = format->precision;
-	}
-	memset(buff, ' ', 100 * sizeof(char));
-	max = ft_max(format->width, len);
-	if (flag_prec && !precision)
-	{
-		if (!format->width)
-			ft_putstr("");
-		else
-			ft_putstr(&buff[100 - format->width]);
-	}
-	else
-	{
-		if (precision > 0 && precision < len)
-		{
-			max = ft_max(format->width, precision);
-			len = precision;
-		}
-		len--;
-		while (len >= 0)
-		{
-			buff[i] = str[len];
-			len--;
-			i--;
-		}
-		ft_putstr(&buff[100 - max]);
-	}
-}
-
 int print_val_c(struct s_format *format, va_list a_list)
 {
 	char buff[100];
@@ -470,24 +422,92 @@ int print_val_c(struct s_format *format, va_list a_list)
 	return (num_chars);
 }
 
-void print_val_p(struct s_format *format, va_list a_list)
+int print_val_s(struct s_format *format, va_list a_list)
+{
+	int precision;
+	char buff[100];
+	const char *str;
+	const char *str_buff;
+	int i;
+	int max;
+	int len;
+	int flag_prec;
+	int num_chars;
+
+	flag_prec = 0;
+	num_chars = 0;
+	str_buff = va_arg(a_list, const char *);
+	if (!str_buff)
+		str = ft_strdup("(null)");
+	else
+		str = ft_strdup(str_buff);
+	memset(buff, ' ', 100 * sizeof(char));
+	buff[99] = '\0';
+	i = 98;
+	if (format->precision == -1)
+		precision = 0;
+	else
+	{
+		flag_prec = 1;
+		precision = format->precision;
+	}
+	len = ft_strlen(str);
+	max = ft_max(format->width, len);
+	if (flag_prec && !precision)
+	{
+		if (!format->width)
+			ft_putstr("");
+		else
+			ft_putstr(&buff[100 - format->width - 1]);
+	}
+	else
+	{
+		if (precision > 0 && precision < len)
+		{
+			max = ft_max(format->width, precision);
+			len = precision;
+		}
+		len--;
+		while (len >= 0)
+		{
+			buff[i] = str[len];
+			len--;
+			i--;
+		}
+		ft_putstr(&buff[100 - max - 1]);
+		num_chars = max;
+	}
+	free((char *)str);
+	if(!str)
+		return (0);
+	return (num_chars);
+}
+
+int print_val_p(struct s_format *format, va_list a_list)
 {
 	char buff[100];
 	int max;
 	int i;
 	unsigned long long nbr;
 
-	i = 99;
-	buff[i] = '\0';
 	memset(buff, ' ', 100 * sizeof(char));
+	buff[99] = '\0';
+	i = 98;
+	max = 0;
 	nbr = va_arg(a_list, unsigned long long);
 	if (!nbr)
 	{	
-		ft_putstr(&buff[100 - format->width + 3]);
+		ft_putstr(&buff[102 - format->width]);
 		ft_putstr("0x0");
+		return (ft_max(format->width, 3));
 	}
+	// else if ((char)nbr1 == '\0')
+	// {
+	// 	printf("here\n");
+	// }
 	else
 	{
+		// printf("%c\n", (char)nbr);
 		while(nbr > 0)
 		{
 			buff[i] = "0123456789abcdef"[nbr % 16];
@@ -496,9 +516,11 @@ void print_val_p(struct s_format *format, va_list a_list)
 		}
 		buff[i] = 'x';
 		buff[i - 1] = '0';
-		max = ft_max(format->width, 99 - i + 2);
+		max = ft_max(format->width, 101 - i);
 		ft_putstr(&buff[100 - max]);
+		// printf("%s\n", buff); '\0' g yanzlah
 	}
+	return (max - 1);
 }
 
 void print_val_perc(void)
@@ -557,17 +579,17 @@ int detect_precision(char *str, struct s_format *format)
 
 int print_val(char *str, struct s_format *format, va_list a_list)
 {
-	int num_char;
+	int num_chars;
 
-	num_char = 0;
+	num_chars = 0;
 	if (str[0] == 'c')
-		num_char = print_val_c(format, a_list);
+		num_chars = print_val_c(format, a_list);
 	else if (str[0] == 's')
-		print_val_s(format, a_list);
+		num_chars = print_val_s(format, a_list);
 	else if (str[0] == 'p')
-		print_val_p(format, a_list);
+		num_chars = print_val_p(format, a_list);
 	else if (str[0] == 'd' || str[0] == 'i')
-		print_val_di(format, a_list);
+		num_chars = print_val_di(format, a_list);
 	else if (str[0] == 'u')
 		print_val_u(format, a_list);
 	else if (str[0] == 'x')
@@ -578,7 +600,7 @@ int print_val(char *str, struct s_format *format, va_list a_list)
 		print_val_perc();
 	else
 		return (0);
-	return (num_char);
+	return (num_chars);
 }
 
 int ft_printf(const char *input, ...)
@@ -631,6 +653,55 @@ int ft_printf(const char *input, ...)
 
 int main()
 {
+	
+	ft_printf("--------------------%%d-et-%%i--------------------\n");	//perfect
+
+	// printf("01) Vrai PRINTF : |%d|\n", 42);
+	// ft_printf("01) Mon PRINTF  : |%d|\n", 42);
+	// printf("02) Vrai PRINTF : |%i|\n", 42);
+	// ft_printf("02) Mon PRINTF  : |%i|\n", 42);
+	// printf("05) Vrai PRINTF : |%10d|\n", 100);
+	// ft_printf("05) Mon PRINTF  : |%10d|\n", 100);
+	// printf("07) Vrai PRINTF : |%.10d|\n", 100);
+	// ft_printf("07) Mon PRINTF  : |%.10d|\n", 100);
+	// printf("08) Vrai PRINTF : |%10.5d|\n", 100);
+	// ft_printf("08) Mon PRINTF  : |%10.5d|\n", 100);
+	// printf("09) Vrai PRINTF : |%5.10d|\n", 64);
+	// ft_printf("09) Mon PRINTF  : |%5.10d|\n", 64);
+	// printf("10) Vrai PRINTF : |%1.1d|\n", 16);
+	// ft_printf("10) Mon PRINTF  : |%1.1d|\n", 16);
+	//    printf("21) Vrai PRINTF : |%d|\n", -42);
+	// ft_printf("21) Mon PRINTF  : |%d|\n", -42);
+	// printf("22) Vrai PRINTF : |%10d|\n", -42);
+	// ft_printf("22) Mon PRINTF  : |%10d|\n", -42);
+	// printf("23) Vrai PRINTF : |%.10d|\n", -42);
+	// ft_printf("23) Mon PRINTF  : |%.10d|\n", -42);
+	// printf("25) Vrai PRINTF : |%10.5d|\n", -16);
+	// ft_printf("25) Mon PRINTF  : |%10.5d|\n", -16);
+	// printf("26) Vrai PRINTF : |%5.10d|\n", -16);
+	// ft_printf("26) Mon PRINTF  : |%5.10d|\n", -16);
+	// printf("27) Vrai PRINTF : |%1.1d|\n", -20);
+	// ft_printf("27) Mon PRINTF  : |%1.1d|\n", -20);
+	// printf("33) Vrai PRINTF : |%2d|\n", -20);
+	// ft_printf("33) Mon PRINTF  : |%2d|\n", -20);
+	// printf("34) Vrai PRINTF : |%.2d|\n", -20);
+	// ft_printf("34) Mon PRINTF  : |%.2d|\n", -20);
+	// printf("35) Vrai PRINTF : |%2d|\n", -1);
+	// ft_printf("35) Mon PRINTF  : |%2d|\n", -1);
+	// printf("36) Vrai PRINTF : |%.2d|\n", -1);
+	// ft_printf("36) Mon PRINTF  : |%.2d|\n", -1);
+
+	   printf("47) Vrai PRINTF : |%d| |%d|\n", INT_MAX, INT_MIN);
+	ft_printf("47) Mon PRINTF  : |%d| |%d|\n", INT_MAX, INT_MIN);
+
+	// printf("48) Vrai PRINTF : |%d| |%d|\n", INT_MAX + 1, INT_MIN - 1);
+	// ft_printf("48) Mon PRINTF  : |%d| |%d|\n", INT_MAX + 1, INT_MIN - 1);
+
+	printf("49) Vrai PRINTF : |%.d|\n", 0);
+	ft_printf("49) Mon PRINTF  : |%.d|\n", 0);
+
+	// printf("50) Vrai PRINTF : |%.d|\n", 100);
+	// ft_printf("50) Mon PRINTF  : |%.d|\n", 100);
 
 	return 0;
 }
