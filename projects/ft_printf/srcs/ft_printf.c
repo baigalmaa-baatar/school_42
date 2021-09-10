@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//testers:
+// https://github.com/Tripouille/printfTester
+//https://github.com/paulo-santana/ft_printf_testers
+
 #include "../include/ft_printf.h"
 
 size_t	ft_strlen(const	char	*str)
@@ -128,6 +132,131 @@ void ft_putstr(char *s)
 	}
 }
 
+int print_c(struct s_format *format, va_list a_list)
+{
+	char buff[100];
+	char c;
+	int num_chars;
+
+	num_chars = 0;
+	memset(buff, ' ', 100 * sizeof(char));
+	buff[99] = '\0';
+	c = (char) va_arg(a_list, int);
+	if(!c)
+	{
+		num_chars = ft_max(format->width, 1);
+		ft_putstr(&buff[100 - num_chars]);
+		ft_putchar(0);
+		return (num_chars);
+	}
+	buff[98] = c;
+	num_chars = ft_max(format->width, 1);
+	ft_putstr(&buff[99 - num_chars]);
+	return (num_chars);
+}
+
+int print_str(struct s_format *format, va_list a_list)
+{
+	int precision;
+	char buff[100];
+	const char *str;
+	const char *str_buff;
+	int i;
+	int max;
+	int len;
+	int flag_prec;
+	int num_chars;
+
+	flag_prec = 0;
+	num_chars = 0;
+	str_buff = va_arg(a_list, const char *);
+	if (!str_buff)
+		str = ft_strdup("(null)");
+	else
+		str = ft_strdup(str_buff);
+	memset(buff, ' ', 100 * sizeof(char));
+	buff[99] = '\0';
+	i = 98;
+	if (format->precision == -1)
+		precision = 0;
+	else
+	{
+		flag_prec = 1;
+		precision = format->precision;
+	}
+	len = ft_strlen(str);
+	max = ft_max(format->width, len);
+	if (flag_prec && !precision)
+	{
+		if (!format->width)
+			ft_putstr("");
+		else
+			ft_putstr(&buff[100 - format->width - 1]);
+	}
+	else
+	{
+		if (precision > 0 && precision < len)
+		{
+			max = ft_max(format->width, precision);
+			len = precision;
+		}
+		len--;
+		while (len >= 0)
+		{
+			buff[i] = str[len];
+			len--;
+			i--;
+		}
+		ft_putstr(&buff[100 - max - 1]);
+		num_chars = max;
+	}
+	free((char *)str);
+	if(!str)
+		return (0);
+	return (num_chars);
+}
+
+int print_p(struct s_format *format, va_list a_list)
+{
+	char buff[100];
+	int max;
+	int i;
+	unsigned long long nbr;
+
+	memset(buff, ' ', 100 * sizeof(char));
+	buff[99] = '\0';
+	i = 98;
+	max = 0;
+	nbr = va_arg(a_list, unsigned long long);
+	if (!nbr)
+	{	
+		ft_putstr(&buff[102 - format->width]);
+		ft_putstr("0x0");
+		// printf("format width is %d\n", format->width);
+		// printf("format width is %d\n", ft_max(format->width,3));
+		return (ft_max(format->width, 3));
+	}
+	else
+	{
+		while(nbr > 0)
+		{
+			buff[i] = "0123456789abcdef"[nbr % 16];
+			nbr /= 16;
+			i--;
+		}
+		buff[i] = 'x';
+		buff[i - 1] = '0';
+		// printf("width is %d\n", format->width);
+		max = ft_max(format->width, 101 - i);
+		// printf("max is %d\n", max);
+		if (format->width >= 101 - i)
+			max++;
+		ft_putstr(&buff[100 - max]);
+		// printf("%s\n", buff); '\0' g yanzlah
+	}
+	return (max - 1);
+}
+
 int print_di(struct s_format *format, va_list a_list)
 {
 	int precision;
@@ -139,7 +268,6 @@ int print_di(struct s_format *format, va_list a_list)
 	long nbr;
 	int num_chars;
 	int flag_prec;
-
 
 	nbr = va_arg(a_list, int);
 	negative = 0;
@@ -159,10 +287,13 @@ int print_di(struct s_format *format, va_list a_list)
 	i = 98;
 	if (!nbr)
 	{
-		if (flag_prec)
-			return (0);
-		else
-			buff[i] = '0';
+		if(flag_prec)
+		{
+			max = ft_max(format->width, precision);
+			ft_putstr(&buff[100 - 1 - max]);
+			return (max);
+		}
+		buff[i] = '0';
 	}
 	else
 	{
@@ -195,8 +326,6 @@ int print_di(struct s_format *format, va_list a_list)
 			memset(buff + (100 - 2 - len), '-', sizeof(char));
 		}
 	}
-
-
 	if (negative)
 	{
 		if  (max == len)
@@ -430,130 +559,6 @@ int print_X(struct s_format *format, va_list a_list)
 	return (max);
 }
 
-int print_c(struct s_format *format, va_list a_list)
-{
-	char buff[100];
-	char c;
-	int num_chars;
-
-	num_chars = 0;
-	memset(buff, ' ', 100 * sizeof(char));
-	buff[99] = '\0';
-	c = (char) va_arg(a_list, int);
-	if(!c)
-	{
-		num_chars = ft_max(format->width, 1);
-		ft_putstr(&buff[100 - num_chars]);
-		ft_putchar(0);
-		return (num_chars);
-	}
-	buff[98] = c;
-	num_chars = ft_max(format->width, 1);
-	ft_putstr(&buff[99 - num_chars]);
-	return (num_chars);
-}
-
-int print_str(struct s_format *format, va_list a_list)
-{
-	int precision;
-	char buff[100];
-	const char *str;
-	const char *str_buff;
-	int i;
-	int max;
-	int len;
-	int flag_prec;
-	int num_chars;
-
-	flag_prec = 0;
-	num_chars = 0;
-	str_buff = va_arg(a_list, const char *);
-	if (!str_buff)
-		str = ft_strdup("(null)");
-	else
-		str = ft_strdup(str_buff);
-	memset(buff, ' ', 100 * sizeof(char));
-	buff[99] = '\0';
-	i = 98;
-	if (format->precision == -1)
-		precision = 0;
-	else
-	{
-		flag_prec = 1;
-		precision = format->precision;
-	}
-	len = ft_strlen(str);
-	max = ft_max(format->width, len);
-	if (flag_prec && !precision)
-	{
-		if (!format->width)
-			ft_putstr("");
-		else
-			ft_putstr(&buff[100 - format->width - 1]);
-	}
-	else
-	{
-		if (precision > 0 && precision < len)
-		{
-			max = ft_max(format->width, precision);
-			len = precision;
-		}
-		len--;
-		while (len >= 0)
-		{
-			buff[i] = str[len];
-			len--;
-			i--;
-		}
-		ft_putstr(&buff[100 - max - 1]);
-		num_chars = max;
-	}
-	free((char *)str);
-	if(!str)
-		return (0);
-	return (num_chars);
-}
-
-int print_p(struct s_format *format, va_list a_list)
-{
-	char buff[100];
-	int max;
-	int i;
-	unsigned long long nbr;
-
-	memset(buff, ' ', 100 * sizeof(char));
-	buff[99] = '\0';
-	i = 98;
-	max = 0;
-	nbr = va_arg(a_list, unsigned long long);
-	if (!nbr)
-	{	
-		ft_putstr(&buff[102 - format->width]);
-		ft_putstr("0x0");
-		return (ft_max(format->width, 3));
-	}
-	// else if ((char)nbr1 == '\0')
-	// {
-	// 	printf("here\n");
-	// }
-	else
-	{
-		// printf("%c\n", (char)nbr);
-		while(nbr > 0)
-		{
-			buff[i] = "0123456789abcdef"[nbr % 16];
-			nbr /= 16;
-			i--;
-		}
-		buff[i] = 'x';
-		buff[i - 1] = '0';
-		max = ft_max(format->width, 101 - i);
-		ft_putstr(&buff[100 - max]);
-		// printf("%s\n", buff); '\0' g yanzlah
-	}
-	return (max - 1);
-}
-
 int print_perc(void)
 {
 	write(1, "%", 1);
@@ -677,20 +682,15 @@ int ft_printf(const char *input, ...)
 		}
 		i++;
 	}
+
 	sum_char += k;
 	va_end(a_list);
 	free((char *)str_in);
 	return (sum_char);
 }
 
-int main()
-{
-	// testing("%.(3>6)i");
-
-	printf("%d\n", printf("%.3i", 0));
-	ft_printf("%d\n", ft_printf("%.3i", 0));
-
-	return 0;
-
-	//print_di iin tester deer tur zogsson baigaa. 
-}
+// int main()
+// {
+//    	printf(" %p %p \n", NULL, NULL);
+//    	ft_printf(" %p %p \n", NULL, NULL);
+// }
