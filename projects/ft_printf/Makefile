@@ -1,6 +1,6 @@
 NAME = libftprintf.a
-SRCS =  srcs/printf.c \
-		# srcs/ft_treatment.c
+SRCS =  srcs/ft_printf.c \
+		srcs/ft_tools.c
 INCLUDE = include
 LIBFT = libft
 OBJS = ${SRCS:.c=.o}

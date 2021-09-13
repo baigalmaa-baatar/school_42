@@ -22,23 +22,26 @@
 
 typedef struct	s_format
 {
-	// flags
-	int minus;
-	int plus;
-	int space;
-	int	zero;
-	int apostrophe;
-	int	hash;
-	//width
 	int width;
 	int width_digit;
-	//precision
 	int precision;
 	int precision_digit;
-	//specifier
 	int specifier;
 }				t_format;
 
 int	ft_printf(const char *, ...);
+int ft_length_nbr(long long nbr);
+int ft_length_X(unsigned int nbr);
+int ft_max(int a, int b);
+int print_c(struct s_format *format, va_list a_list);
+int print_str(struct s_format *format, va_list a_list);
+int print_p(struct s_format *format, va_list a_list);
+int print_di(struct s_format *format, va_list a_list);
+int print_u(struct s_format *format, va_list a_list);
+int print_sx(struct s_format *format, va_list a_list);
+int print_X(struct s_format *format, va_list a_list);
+int print_perc(void);
+int detect_width(char *str, struct s_format *format);
+int detect_precision(char *str, struct s_format *format);
 
 #endif

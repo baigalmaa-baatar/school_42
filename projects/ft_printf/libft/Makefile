@@ -1,10 +1,9 @@
 NAME = libft.a
-SRCS = ft_atoi.c\
-		ft_putchar.c\
+SRCS = ft_putchar.c\
 		ft_putnbr.c\
-		ft_itoa.c\
-		ft_strlen.c\
-		ft_strdup.c
+		ft_putstr.c\
+		ft_strdup.c\
+		ft_strlen.c
 OBJS = ${SRCS:.c=.o}
 CC		= gcc
 RM		= rm -f
@@ -18,8 +17,7 @@ $(NAME): ${OBJS}
 
 all:	${NAME}
 
-clean:
-		${RM} ${OBJS}
+clean:	${RM} ${OBJS}
 
 fclean:	clean
 		${RM} ${NAME}
