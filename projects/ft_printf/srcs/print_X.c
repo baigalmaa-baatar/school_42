@@ -6,13 +6,13 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 15:31:39 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/13 15:31:40 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/14 16:03:11 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-int print_X(struct s_format *format, va_list a_list)
+int print_x(struct s_format *format, va_list a_list)
 {
 	int precision;
 	char buff[100];
@@ -27,7 +27,7 @@ int print_X(struct s_format *format, va_list a_list)
 	flag_prec = 0;
 	max = 0;
 	nbr = va_arg(a_list, int);
-	len = ft_length_X((unsigned int)nbr);
+	len = ft_length_x((unsigned int)nbr);
 	if (format->precision == -1)
 		precision = 0;
 	else

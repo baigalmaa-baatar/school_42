@@ -6,16 +6,16 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 15:31:15 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/13 15:31:17 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/14 15:57:51 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-int detect_width(char *str, struct s_format *format)
+int	detect_width(char *str, struct s_format *format)
 {
-	int i;
-	int nbr;
+	int	i;
+	int	nbr;
 
 	i = 0;
 	nbr = 0;
@@ -29,10 +29,10 @@ int detect_width(char *str, struct s_format *format)
 	return (format->width);
 }
 
-int detect_precision(char *str, struct s_format *format)
+int	detect_precision(char *str, struct s_format *format)
 {
-	int i;
-	int nbr;
+	int	i;
+	int	nbr;
 
 	i = 0;
 	nbr = 0;

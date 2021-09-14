@@ -1,6 +1,15 @@
 NAME = libftprintf.a
-SRCS =  srcs/ft_printf.c \
-		srcs/ft_tools.c
+SRCS =  srcs/ft_printf.c\
+		srcs/ft_tools.c\
+		srcs/print_c.c\
+		srcs/print_p.c\
+		srcs/print_str.c\
+		srcs/print_u.c\
+		srcs/detect_wid_prec.c\
+		srcs/print_x.c\
+		srcs/print_di.c\
+		srcs/print_perc.c\
+		srcs/print_sx.c
 INCLUDE = include
 LIBFT = libft
 OBJS = ${SRCS:.c=.o}

@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 15:31:49 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/13 15:31:50 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/14 16:03:24 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int print_sx(struct s_format *format, va_list a_list)
 	flag_prec = 0;
 	max = 0;
 	nbr = va_arg(a_list, int);
-	len = ft_length_X((unsigned int)nbr);
+	len = ft_length_x((unsigned int)nbr);
 	if (format->precision == -1)
 		precision = 0;
 	else
