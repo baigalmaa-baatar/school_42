@@ -15,7 +15,7 @@
 int	print_sx(struct s_format *format, va_list a_list)
 {
 	char			buff[100];
-	unsigned int	nbr;
+	unsigned long long	nbr;
 	int				i;
 	int				max;
 	int				len;
@@ -33,5 +33,6 @@ int	print_sx(struct s_format *format, va_list a_list)
 	x_detect_nbr(&nbr, format, buff, &i);
 	max = ft_max(ft_max(format->width, format->precision), len);
 	x_digits(format, &max, &len, buff);
+	free((char *)format->base);
 	return (max);
 }

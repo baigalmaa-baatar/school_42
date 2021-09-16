@@ -15,14 +15,14 @@
 int	print_u(struct s_format *format, va_list a_list)
 {
 	char			buff[100];
-	unsigned int	nbr;
+	unsigned long long	nbr;
 	int				i;
 	int				max;
 	int				len;
 
 	max = 0;
-	nbr = va_arg(a_list, int);
-	len = ft_length_nbr((long long)nbr);
+	nbr = va_arg(a_list, long long);
+	len = ft_length_nbr((unsigned long long)nbr);
 	prec_point(format);
 	memset(buff, ' ', 100 * sizeof(char));
 	memset(buff + (99 - format->precision), '0',

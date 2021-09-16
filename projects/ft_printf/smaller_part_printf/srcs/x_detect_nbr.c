@@ -12,7 +12,7 @@
 
 #include "../include/ft_printf.h"
 
-void	x_detect_nbr(unsigned int *nbr, struct s_format *format,
+void	x_detect_nbr(unsigned long long *nbr, struct s_format *format,
 char *buff, int *i)
 {
 	if (!*nbr)
@@ -23,5 +23,8 @@ char *buff, int *i)
 			buff[*i] = '0';
 	}
 	else
+	{
+		// printf("here is the number : %X\n", *nbr);
 		putnbr_base(nbr, format, buff, i);
+	}
 }

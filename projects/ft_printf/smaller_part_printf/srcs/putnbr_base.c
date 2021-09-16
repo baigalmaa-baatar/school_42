@@ -12,7 +12,7 @@
 
 #include "../include/ft_printf.h"
 
-void	putnbr_base(unsigned int *nbr, struct s_format *format,
+void	putnbr_base(unsigned long long *nbr, struct s_format *format,
 char *buff, int *i)
 {
 	if (*nbr < 0)

@@ -32,7 +32,7 @@ int	ft_length_nbr(long long nbr)
 	}
 }
 
-int	ft_length_x(unsigned int nbr)
+int	ft_length_x(unsigned long long nbr)
 {
 	int	i;
 
