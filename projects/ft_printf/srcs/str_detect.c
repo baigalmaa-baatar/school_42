@@ -6,13 +6,13 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 20:33:28 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/16 00:24:41 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/18 22:01:51 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-void str_null(struct s_format *format, char *buff)
+void	str_null(struct s_format *format, char *buff)
 {
 	if (!format->width)
 		ft_putstr("");
@@ -22,9 +22,9 @@ void str_null(struct s_format *format, char *buff)
 
 int	str_detect(const char *str, struct s_format *format, char *buff)
 {
-	int i;
-	int max;
-	int len;
+	int	i;
+	int	max;
+	int	len;
 
 	buff[99] = '\0';
 	i = 98;

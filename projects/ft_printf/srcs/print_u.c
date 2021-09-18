@@ -6,76 +6,31 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 15:31:55 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/13 15:31:56 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/18 22:02:42 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-int print_u(struct s_format *format, va_list a_list)
+int	print_u(struct s_format *format, va_list a_list)
 {
-	int precision;
-	char buff[100];
-	unsigned int nbr;
-	int i;
-	int max;
-	int len;
-	int negative;
-	int flag_prec;
+	char				buff[100];
+	unsigned long long	nbr;
+	int					i;
+	int					max;
+	int					len;
 
-	negative = 0;
-	flag_prec = 0;
 	max = 0;
-	nbr = va_arg(a_list, int);
-	len = ft_length_nbr((long long)nbr);
-	if (format->precision == -1)
-		precision = 0;
-	else
-	{ 
-		flag_prec = 1;
-		precision = format->precision;
-	}
+	nbr = va_arg(a_list, unsigned int);
+	len = ft_length_nbr((unsigned long long)nbr);
+	prec_point(format);
 	memset(buff, ' ', 100 * sizeof(char));
-	memset(buff + (100 - 1 - precision), '0', precision * sizeof(char));
+	memset(buff + (99 - format->precision), '0',
+		format->precision * sizeof(char));
 	buff[99] = '\0';
 	i = 98;
-	if (!nbr)
-	{
-		if (flag_prec)
-			buff[i] = '\0';
-		else
-			buff[i] = '0';
-	}
-	else
-	{
-		if (nbr < 0)
-		{
-			nbr = -nbr;
-			negative = 1;
-		}
-		while(nbr > 0)
-		{
-			buff[i] = nbr % 10 + '0';
-			nbr /= 10;
-			i--;
-		}
-	}
-	max = ft_max(ft_max(format->width, precision), len);
-	if(negative)
-	{
-		if(precision == max && precision > len) 
-		{
-			memset(buff + (100  - 2 - max), '-', sizeof(char));
-			ft_putchar(buff[100 - 2 - max]);
-		}
-		else if(precision > len)
-			memset(buff + (100 - 1 - precision), '-', sizeof(char));
-		else 
-			memset(buff + (100 - 1 - len), '-', sizeof(char));
-	}
-	if (negative && max == len)
-		ft_putstr(&buff[100 - 1 - max]);
-	else
-		ft_putstr(&buff[100 - 1 - max]);
+	x_detect_nbr(&nbr, format, buff, &i);
+	max = ft_max(ft_max(format->width, format->precision), len);
+	u_digits(format, &max, &len, buff);
 	return (max);
 }

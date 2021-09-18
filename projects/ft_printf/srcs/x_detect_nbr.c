@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   x_detect_nbr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/18 12:54:59 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/06/18 12:55:01 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/09/15 20:33:28 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/09/18 22:02:13 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/ft_printf.h"
 
-void	ft_putchar(char c)
+void	x_detect_nbr(unsigned long long *nbr, struct s_format *format,
+char *buff, int *i)
 {
-	write(1, &c, 1);
+	if (!*nbr)
+	{
+		if (format->flag_prec)
+			buff[*i] = '\0';
+		else
+			buff[*i] = '0';
+	}
+	else
+		putnbr_base(nbr, format, buff, i);
 }

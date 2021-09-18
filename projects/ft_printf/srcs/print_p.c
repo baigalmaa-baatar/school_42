@@ -26,10 +26,10 @@ int	p_not_null(struct s_format *format, char *buff, unsigned long long *nbr)
 
 	i = 98;
 	max = 0;
-	while (*nbr > 0)// ene nbr gedeg pointer g yanzlah heregtei.
+	while (*nbr > 0)
 	{
 		buff[i] = "0123456789abcdef"[*nbr % 16];
-		*nbr /= 1;
+		*nbr /= 16;
 		i--;
 	}
 	buff[i] = 'x';
