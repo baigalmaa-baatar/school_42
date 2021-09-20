@@ -26,8 +26,8 @@ int	str_detect(const char *str, struct s_format *format, char *buff)
 	int	max;
 	int	len;
 
-	buff[99] = '\0';
-	i = 98;
+	buff[9999] = '\0';
+	i = 9998;
 	len = ft_strlen(str);
 	max = ft_max(format->width, len);
 	if (format->flag_prec && !format->precision)
@@ -44,7 +44,7 @@ int	str_detect(const char *str, struct s_format *format, char *buff)
 		{
 			buff[i--] = str[len--];
 		}
-		ft_putstr(&buff[99 - max]);
+		ft_putstr(&buff[9999 - max]);
 	}
 	return (max);
 }

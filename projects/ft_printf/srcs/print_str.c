@@ -14,7 +14,7 @@
 
 int	print_str(struct s_format *format, va_list a_list)
 {
-	char		buff[100];
+	char		buff[10000];
 	const char	*str;
 	const char	*str_buff;
 	int			max;
@@ -24,7 +24,7 @@ int	print_str(struct s_format *format, va_list a_list)
 		str = ft_strdup("(null)");
 	else
 		str = ft_strdup(str_buff);
-	memset (buff, ' ', 100 * sizeof(char));
+	memset (buff, ' ', 10000 * sizeof(char));
 	prec_point (format);
 	max = str_detect(str, format, buff);
 	free((char *)str);
