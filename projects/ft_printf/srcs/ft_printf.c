@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 11:05:55 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/18 23:23:16 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/24 15:54:09 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	print_val(char *str, struct s_format *format, va_list a_list)
 	else if (str[0] == 's')
 		num_chars = print_str(format, a_list);
 	else if (str[0] == 'p')
-		num_chars = print_p(format, a_list);
+		num_chars = print_p(a_list);
 	else if (str[0] == 'd' || str[0] == 'i')
 		num_chars = print_di(format, a_list);
 	else if (str[0] == 'u')

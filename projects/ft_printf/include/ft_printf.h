@@ -29,8 +29,8 @@ typedef struct s_format
 	int		flag_prec;
 	int		specifier;
 	int		negative;
-	char	*base;
 	int		base_nbr;
+	char	*base;
 }				t_format;
 
 int		ft_printf(const char *str, ...);
@@ -39,7 +39,7 @@ int		ft_length_x(unsigned long long nbr);
 int		ft_max(int a, int b);
 int		print_c(struct s_format *format, va_list a_list);
 int		print_str(struct s_format *format, va_list a_list);
-int		print_p(struct s_format *format, va_list a_list);
+int		print_p(va_list a_list);
 int		print_di(struct s_format *format, va_list a_list);
 int		print_u(struct s_format *format, va_list a_list);
 int		print_sx(struct s_format *format, va_list a_list);

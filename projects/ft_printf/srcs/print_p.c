@@ -6,20 +6,13 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 15:32:15 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/14 16:40:34 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/24 16:11:48 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_printf.h"
 
-int	p_null(struct s_format *format, char *buff)
-{
-	ft_putstr(&buff[102 - format->width]);
-	ft_putstr("0x0");
-	return (ft_max(format->width, 3));
-}
-
-int	p_not_null(struct s_format *format, char *buff, unsigned long long *nbr)
+int	p_not_null(char *buff, unsigned long long *nbr)
 {
 	int	i;
 	int	max;
@@ -34,14 +27,12 @@ int	p_not_null(struct s_format *format, char *buff, unsigned long long *nbr)
 	}
 	buff[i] = 'x';
 	buff[i - 1] = '0';
-	max = ft_max(format->width, 101 - i);
-	if (format->width >= 101 - i)
-		max++;
+	max = 101 - i;
 	ft_putstr(&buff[100 - max]);
 	return (max - 1);
 }
 
-int	print_p(struct s_format *format, va_list a_list)
+int	print_p(va_list a_list)
 {
 	char				buff[100];
 	unsigned long long	nbr;
@@ -50,7 +41,10 @@ int	print_p(struct s_format *format, va_list a_list)
 	buff[99] = '\0';
 	nbr = va_arg(a_list, unsigned long long);
 	if (!nbr)
-		return (p_null(format, buff));
+	{
+		ft_putstr("0x0");
+		return (3);
+	}
 	else
-		return (p_not_null(format, buff, &nbr));
+		return (p_not_null(buff, &nbr));
 }
