@@ -12,18 +12,22 @@
 
 #include "../include/ft_printf.h"
 
-void	putnbr_base(unsigned long long *nbr, struct s_format *format,
-char *buff, int *i)
+int	putnbr_base_without_zero(unsigned long long nbr, unsigned int base_nbr,
+char *base)
 {
-	if (*nbr < 0)
-	{
-		*nbr = -(*nbr);
-		format->negative = 1;
-	}
-	while (*nbr > 0)
-	{
-		buff[*i] = format->base[*nbr % format->base_nbr];
-		*nbr /= format->base_nbr;
-		(*i)--;
-	}
+	int	result;
+
+	if (nbr == 0)
+		return (0);
+	result = 0;
+	result += putnbr_base_without_zero(nbr / base_nbr, base_nbr, base);
+	result += write(1, &base[nbr % base_nbr], 1);
+	return (result);
+}
+
+int	putnbr_base(unsigned long long nbr, unsigned int base_nbr, char *base)
+{
+	if (nbr == 0)
+		return (write(1, &base[0], 1));
+	return (putnbr_base_without_zero(nbr, base_nbr, base));
 }

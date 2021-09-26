@@ -12,92 +12,52 @@
 
 #include "../include/ft_printf.h"
 
-void	initialize_format(struct s_format *format)
+int	print_val(const char *str, va_list a_list)
 {
-	format->width = 0;
-	format->width_digit = 0;
-	format->precision = -1;
-	format->precision_digit = 0;
-	format->flag_prec = 0;
-	format->specifier = 0;
-	format->negative = 0;
-	format->base = "0123456789";
-	format->base_nbr = 10;
-}
-
-int	print_val(char *str, struct s_format *format, va_list a_list)
-{
-	int	num_chars;
-
-	num_chars = 0;
 	if (str[0] == 'c')
-		num_chars = print_c(format, a_list);
+		return (print_c(a_list));
 	else if (str[0] == 's')
-		num_chars = print_str(format, a_list);
+		return (print_str(a_list));
 	else if (str[0] == 'p')
-		num_chars = print_p(a_list);
+		return (print_p(a_list));
 	else if (str[0] == 'd' || str[0] == 'i')
-		num_chars = print_di(format, a_list);
+		return (print_di(a_list));
 	else if (str[0] == 'u')
-		num_chars = print_u(format, a_list);
+		return (print_u(a_list));
 	else if (str[0] == 'x')
-		num_chars = print_sx(format, a_list);
+		return (print_sx(a_list));
 	else if (str[0] == 'X')
-		num_chars = print_x(format, a_list);
+		return (print_x(a_list));
 	else if (str[0] == '%')
-		num_chars = print_perc();
-	else
-		return (0);
-	return (num_chars);
-}
-
-int	detect_width_and_precision(char *str, struct s_format *format,
-		int *i, va_list *a_list)
-{
-	int	sum_char;
-
-	sum_char = 0;
-	if (str[*i] == '%')
-	{
-		(*i)++;
-		if (detect_width(&str[*i], format) != 0)
-			*i += format->width_digit;
-		if (str[*i] == '.')
-		{
-			(*i)++;
-			detect_precision(&str[*i], format);
-			*i += format->precision_digit;
-		}
-		sum_char += print_val(&str[*i], format, *a_list);
-	}
-	else
-	{
-		write(1, (const void *)&str[*i], 1);
-		sum_char++;
-	}
-	(*i)++;
-	return (sum_char);
+		return (print_perc());
+	return (-1);
 }
 
 int	ft_printf(const char *input, ...)
 {
-	int				i;
-	int				sum_char;
-	va_list			a_list;
-	struct s_format	format;
-	const char		*str_in;
+	int		i;
+	int		result;
+	va_list	a_list;
+	int		tmp;
 
-	str_in = ft_strdup(input);
 	va_start(a_list, input);
-	sum_char = 0;
+	result = 0;
 	i = 0;
-	while (str_in[i] != '\0')
+	while (input[i] != '\0')
 	{
-		initialize_format(&format);
-		sum_char += detect_width_and_precision((char *)str_in, &format,
-				&i, &a_list);
+		if (input[i] == '%')
+		{
+			tmp = print_val(&input[i + 1], a_list);
+			if (-1 < tmp)
+			{
+				result += tmp;
+				i++;
+			}
+		}
+		else
+			result += write(1, &input[i], 1);
+		i++;
 	}
-	va_end (a_list);
-	free((char *)str_in);
-	return (sum_char);
+	va_end(a_list);
+	return (result);
 }
