@@ -12,27 +12,18 @@
 
 #include "../include/ft_printf.h"
 
-int	print_di(struct s_format *format, va_list a_list)
+int	print_di(va_list a_list)
 {
-	char	buff[100];
-	int		i;
-	int		max;
-	int		len;
 	long	nbr;
 
-	max = 0;
 	nbr = va_arg(a_list, int);
-	len = ft_length_nbr(nbr);
-	prec_point(format);
-	memset(buff, ' ', 100 * sizeof(char));
-	memset(buff + (100 - 1 - format->precision), '0',
-		format->precision * sizeof(char));
-	buff[99] = '\0';
-	i = 98;
-	max = di_detect_nbr(&nbr, format, buff, &i);
-	if (max)
-		return (max);
-	max = ft_max(ft_max(format->width, format->precision), len);
-	max = di_digits(format, &max, &len, buff);
-	return (max);
+	if (nbr < 0)
+	{
+		return (write(1, "-", 1) + putnbr_base(-((long long)nbr), 10,
+				"0123456789"));
+	}
+	else
+	{
+		return (putnbr_base(nbr, 10, "0123456789"));
+	}
 }

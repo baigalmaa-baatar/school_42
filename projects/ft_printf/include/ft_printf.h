@@ -18,45 +18,19 @@
 # include <stdlib.h>
 # include <stdarg.h>
 # include <limits.h>
-# include "../libft/libft.h"
-
-typedef struct s_format
-{
-	int		width;
-	int		width_digit;
-	int		precision;
-	int		precision_digit;
-	int		flag_prec;
-	int		specifier;
-	int		negative;
-	int		base_nbr;
-	char	*base;
-}				t_format;
 
 int		ft_printf(const char *str, ...);
-int		ft_length_nbr(long long nbr);
-int		ft_length_x(unsigned long long nbr);
-int		ft_max(int a, int b);
-int		print_c(struct s_format *format, va_list a_list);
-int		print_str(struct s_format *format, va_list a_list);
+int		print_val(const char *str, va_list a_list);
+int		print_c(va_list a_list);
+int		print_di(va_list a_list);
 int		print_p(va_list a_list);
-int		print_di(struct s_format *format, va_list a_list);
-int		print_u(struct s_format *format, va_list a_list);
-int		print_sx(struct s_format *format, va_list a_list);
-int		print_x(struct s_format *format, va_list a_list);
 int		print_perc(void);
-int		detect_width(char *str, struct s_format *format);
-int		detect_precision(char *str, struct s_format *format);
-void	prec_point(struct s_format *format);
-void	x_digits(struct s_format *format, int *max, int *len, char *buff);
-int		di_digits(struct s_format *format, int *max, int *len, char *buff);
-void	u_digits(struct s_format *format, int *max, int *len, char *buff);
-void	x_detect_nbr(unsigned long long *nbr, struct s_format *format,
-			char *buff, int *i);
-int		str_detect(const char *str, struct s_format *format, char *buff);
-int		di_detect_nbr(long *nbr, struct s_format *format, char *buff, int *i);
-void	putnbr_base(unsigned long long *nbr, struct s_format *format,
-			char *buff, int *i);
-void	di_putnbr_base(long *nbr, struct s_format *format, char *buff, int *i);
+int		print_str(va_list a_list);
+int		print_sx(va_list a_list);
+int		print_u(va_list a_list);
+int		print_x(va_list a_list);
+int		putnbr_base_without_zero(unsigned long long nbr, unsigned int base_nbr,
+			char *base);
+int		putnbr_base(unsigned long long nbr, unsigned int base_nbr, char *base);
 
 #endif

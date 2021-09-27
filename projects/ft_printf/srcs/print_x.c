@@ -12,27 +12,10 @@
 
 #include "../include/ft_printf.h"
 
-int	print_x(struct s_format *format, va_list a_list)
+int	print_x(va_list a_list)
 {
-	char				buff[100];
 	unsigned long long	nbr;
-	int					i;
-	int					max;
-	int					len;
 
 	nbr = va_arg(a_list, unsigned int);
-	len = ft_length_x((unsigned int)nbr);
-	prec_point(format);
-	memset(buff, ' ', 100 * sizeof(char));
-	memset(buff + (99 - format->precision), '0',
-		format->precision * sizeof(char));
-	buff[99] = '\0';
-	i = 98;
-	format->base_nbr = 16;
-	format->base = ft_strdup("0123456789ABCDEF");
-	x_detect_nbr(&nbr, format, buff, &i);
-	max = ft_max(ft_max(format->width, format->precision), len);
-	x_digits(format, &max, &len, buff);
-	free((char *)format->base);
-	return (max);
+	return (putnbr_base(nbr, 16, "0123456789ABCDEF"));
 }
