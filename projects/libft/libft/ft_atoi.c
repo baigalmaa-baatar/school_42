@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 16:00:31 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/05/27 16:09:29 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/09/30 13:03:06 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	ft_skip_spaces(const char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\n' || str[i] == '\r' || \
-			str[i] == '\t' || str[i] == '\v')
+	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\n'
+		|| str[i] == '\r' || str[i] == '\t' || str[i] == '\v')
 		i++;
 	return (i);
 }
