@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list.h                                          :+:      :+:    :+:   */
+/*   ft_list_push_front.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 12:55:13 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/05 12:55:14 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/05/06 14:35:11 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/05/09 18:35:20 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include "ft_list.h"
 
-typedef struct s_list
+t_list	*ft_list_last(t_list *begin_list)
 {
-    struct s_list   *next;
-    int data;
-}   t_list;
+	while(begin_list)
+	{
+		begin_list = begin_list->next;
+	}
+	return(begin_list);
+}

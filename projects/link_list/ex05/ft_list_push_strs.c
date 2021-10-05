@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list_at.c                                       :+:      :+:    :+:   */
+/*   ft_list_push_strs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/05 16:02:56 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/05 16:02:57 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/10/05 13:16:48 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/10/05 13:16:50 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 t_list  *create_elem(int    data)
 {
-    t_list *elem;
-    
-    if(!(elem = malloc (sizeof(t_list))))
+    t_list  *elem;
+    if (!(elem = malloc(sizeof(t_list))))
         return (0);
     elem->data = data;
     elem->next = NULL;
@@ -24,39 +23,29 @@ t_list  *create_elem(int    data)
     return (elem);
 }
 
-t_list *ft_list_at(t_list *begin_list, unsigned int nbr)
+t_list *ft_list_push_nbrs(int size, int *nbrs)
 {
-    t_list *list;
-    unsigned int cntr = 1;
+    t_list *root = NULL, *next_list = NULL;
 
-    if (!list)
+    if(size <= 0)
         return (0);
-    list = begin_list;
-    while(list && cntr < nbr)
+    size--;
+    root = create_elem(nbrs[size]);
+    next_list = root;
+    while (size-- >= 0)
     {
-        printf("%d\n", list->data);
-        list = list->next;
-        cntr++;
+        next_list->next = create_elem(nbrs[size]);
+        next_list = next_list->next;
     }
-
-    return (list);
+    return (root);
 }
 
 int main(void)
 {
-    t_list *a, *b;
     int nbrs[4] = {12,34,56,78};
-    int i = 1;
 
-    a = create_elem(nbrs[0]);
-    b = a;
-    while (i < 4)
-    {
-        a->next = create_elem(nbrs[i]);
-        a = a->next;
-        i++;
-    }
-    printf("%d\n", ft_list_at(b, 2)->data);
-
-    return (0);
+    printf("%d\n", ft_list_push_nbrs(4, nbrs)->data);
+    printf("%d\n", ft_list_push_nbrs(4, nbrs)->next->data);
+    printf("%d\n", ft_list_push_nbrs(4, nbrs)->next->next->data);
+    printf("%d\n", ft_list_push_nbrs(4, nbrs)->next->next->next->data);
 }
