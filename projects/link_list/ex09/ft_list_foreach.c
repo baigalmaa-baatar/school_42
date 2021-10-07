@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list_foreach_if.c                               :+:      :+:    :+:   */
+/*   ft_list_foreach.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/07 12:33:52 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/07 12:33:53 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/10/07 11:00:29 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/10/07 11:00:32 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_list.h"
 
-t_list  *create_elem(int *data)
+t_list  *create_elem(int    data)
 {
-    t_list *elem;
+    t_list  *elem;
 
     if (!(elem = malloc(sizeof(t_list))))
         return (0);
@@ -39,36 +39,40 @@ void ft_list_reverse(t_list **begin_list)
     *begin_list = prev;
 }
 
-void f(int  *nbr)
+int ft_doubler(int nbr)
 {
-    printf("%d", *(int *)nbr);
+    return (nbr * 2);
 }
 
-int *ft_intcmp (int *data, int *data_ref)
-{
-    if (*data < *data_ref)
-        return (1);
-    else
-        return (0);
-}
+void    ft_list_foreach(t_list *begin_list, int (*f)(int nbr))
+{  
+    t_list  *list;
 
-void ft_list_foreach_if(t_list *begin_list, void (*f)(void *), void *data_ref, int (*ft_intcmp)())
-{
-    
+    list = begin_list;
+    while (list)
+    {   
+        list->data = f(list->data);
+        printf("%d\n", list->data);
+        list = list->next;
+    }
 }
 
 int main(void)
 {
-    t_list *a;
-    int nbrs[4] = {12, 34, 56, 78};
+    t_list *a = NULL, *b = NULL;
+    int nbrs[3] = {12, 34, 56};
     int i = 1;
 
     a = create_elem(nbrs[0]);
-    while (i < 4)
+    b = a;
+    while (i < 3)
     {
         a->next = create_elem(nbrs[i]);
         a = a->next;
         i++;
     }
-    
+    ft_list_reverse(&b);
+    ft_list_foreach(b, ft_doubler);
+
+    return (0);
 }
