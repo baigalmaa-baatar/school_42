@@ -1,94 +1,86 @@
 /* ************************************************************************** */
-/*                                                                            */
+/*			                                                                  */
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 15:11:20 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/20 15:11:24 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/10/27 14:53:38 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "../includes/push_swap.h"
 
-void	ft_copy(int	*stack_a, int	*stack_b)
+t_stack	*create_elem(int data)
 {
-	int i = 0;
+	t_stack	*elem;
 
-	while (i < 6)
+	elem = malloc(sizeof(t_stack));
+	if (!elem)
+		return (0);
+	elem->data = data;
+	elem->next = NULL;
+	return (elem);
+}
+
+int	convert_stack(t_stack **stack_a, int size, long long *nbrs)
+{
+	int		i;
+	t_stack	*tmp;
+
+	tmp = create_elem(nbrs[0]);
+	*stack_a = tmp;
+	i = 1;
+	while (i < size)
 	{
-		stack_b[i] = stack_a[i];
+		tmp->next = create_elem(nbrs[i]);
+		tmp = tmp->next;
 		i++;
 	}
-}
-
-void	ft_printf(int *stack)
-{
-	int i = 0;
-
-	while(i < 10)
-	{
-		printf("%d\n", stack[i]);
-		i++;
-	}
-}
-void	initiliaze_stack(int *stack_a, int *stack_b)
-{
-	memset(stack_a, 0, 500 * sizeof(int));
-	memset(stack_b, 0, 500 * sizeof(int));
-}
-
-int	sa(int len, int *stack)
-{
-	int	tmp;
-
-	if (len < 2)
-	{
-		printf("here\n");
-		return (1);
-	}
-	tmp = stack[0];
-	stack[0] = stack[1];
-	stack[1] = tmp;
 	return (0);
 }
 
-void	sb(int *n1, int *n2)
+int	sort_stack(t_stack **stack_a, int size)
 {
-	int	tmp;
-
-	tmp = *n1;
-	*n1 = *n2;
-	*n2 = tmp;
+	if (size <= 1)
+		return (0);
+	else if (size == 2)
+		sort_2(stack_a);
+	else if (size == 3)
+		sort_3(stack_a);
+	else if (size == 4)
+		sort_4(stack_a);
+	else if (size == 5)
+		sort_5(stack_a);
+	else if (size <= 50 && size >= 6)
+		sort_mid(stack_a);
+	else
+		sort_big(stack_a);
+	return (1);
 }
 
-void	ss(int *stack_a, int *stack_b)
+int	main(int argc, char *argv[])
 {
-	sa(&stack_a[0], &stack_a[1]);
-	sb(&stack_b[0], &stack_b[1]);
-}
+	int			size;
+	t_stack		*stack_a;
+	long long	nbrs[10000];
 
-int main(int argc, char *argv[])
-{
-	int	stack_a[500];
-	int	stack_b[500];
-	int len;
-	
-	len = 0;
-	initiliaze_stack(stack_a, stack_b);
-	if (argc != 2 || ft_get_numbers(argv[1], stack_a) == 0)
+	stack_a = NULL;
+	if (argc <= 1)
+		return (0);
+	size = get_numbers(argc, argv, nbrs);
+	if (!size)
 	{
 		write(1, "Error\n", 6);
-		return (1);
+		return (0);
 	}
-
-	printf("before\n");
-	sa(len, stack_a);
-	ft_copy(stack_a, stack_b);
-	// sb(&stack_b[0], &stack_b[1]);
-	ss(stack_a, stack_b);
-	printf("after\n");
-	ft_printf(stack_b);
-	ft_printf(stack_a);
+	convert_stack(&stack_a, size, nbrs);
+	if (!check_already_sorted(stack_a))
+		return (0);
+	if (!sort_stack(&stack_a, size))
+		return (0);
+	printf("after stack_a\n");
+	ft_print(stack_a);
+	return (0);
 }

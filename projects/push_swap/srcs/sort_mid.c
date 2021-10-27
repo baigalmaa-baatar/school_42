@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   sort_mid.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/21 15:56:37 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/26 15:51:43 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/10/24 01:20:36 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/10/27 13:35:09 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "../includes/push_swap.h"
 
-# include	<string.h>
-# include	<stdlib.h>
-# include	<ctype.h>
-# include	<wchar.h>
-# include	<limits.h>
-# include	<unistd.h>
+int	sort_mid(t_stack	**stack_a)
+{
+	t_stack	*stack_b;
 
-size_t	ft_strlen(const	char	*str);
-char	*ft_substr(const char *s, unsigned int start_pos, size_t len);
-char	**ft_split(char const *s, char c);
-int		ft_atoi(const char *str, long long *nbr);
-
-#endif
+	stack_b = NULL;
+	while (*stack_a != NULL)
+	{
+		pb(stack_a, &stack_b);
+	}
+	while (stack_b != NULL)
+	{
+		b_to_a(stack_a, &stack_b);
+	}
+	rotate_a(stack_a);
+	return (0);
+}

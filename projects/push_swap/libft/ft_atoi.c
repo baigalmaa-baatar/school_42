@@ -6,47 +6,35 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 16:00:31 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/05/27 16:09:29 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/10/26 15:55:20 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_skip_spaces(const char *str)
+int	ft_atoi(const char *str, long long *nbr)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] == ' ' || str[i] == '\f' || str[i] == '\n' || str[i] == '\r' || \
-			str[i] == '\t' || str[i] == '\v')
-		i++;
-	return (i);
-}
-
-int	ft_atoi(const char *str)
-{
-	size_t				i;
-	unsigned long long	res;
-	int					neg;
+	size_t			i;
+	long long		res;
+	int				sign;
 
 	res = 0;
-	neg = 1;
+	sign = 1;
 	i = 0;
-	i = ft_skip_spaces(str);
-	if (str[i] == '+' || str[i] == '-')
+	while (str[i] != 0)
 	{
 		if (str[i] == '-')
-			neg *= (-1);
+		{
+			sign = -1;
+		}
+		else if (str[i] >= '0' && str[i] <= '9')
+			res = res * 10 + sign *(str[i] - 48);
+		else
+			return (0);
 		i++;
 	}
-	while (str[i] >= 48 && str[i] <= 57)
-	{
-		res = res * 10 + (str[i] - 48);
-		i++;
-	}
-	if (res > LLONG_MAX && neg == 1)
-		return (-1);
-	if (res > LLONG_MAX && neg == -1)
+	*nbr = res;
+	if (*nbr > 2147483647 || *nbr < -2147483648)
 		return (0);
-	return (res * neg);
+	return (1);
 }

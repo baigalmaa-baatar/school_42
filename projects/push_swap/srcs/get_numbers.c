@@ -5,45 +5,73 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/20 15:11:05 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/09/20 15:11:07 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/10/24 21:55:23 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/10/26 16:45:56 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "../includes/push_swap.h"
 
-int	ft_strlen(char *str)
+int	chars_to_int(char **result, long long *nbrs, int start_pos)
 {
 	int	i;
+	int	j;
 
-	i = 0;
-	while (str[i] != '\0')
+	i = start_pos;
+	j = 0;
+	while (result[i] != 0)
+	{
+		if (!ft_atoi(result[i], &nbrs[j]))
+			return (0);
 		i++;
-	return (i);
+		j++;
+	}
+	return (j);
 }
 
-int	ft_get_numbers(char *str, int *stack_a)
+int	if_nbr_duplicate(long long *nbrs, int size)
 {
 	int	i;
-	int len;
+	int	j;
 
 	i = 0;
-	len = ft_strlen(str); //end zogsson
-	while (str[i] != '\0')
+	while (i < size)
 	{
-		if (i % 2 == 1)
+		j = i + 1;
+		while (j < size)
 		{
-			if (str[i] != ' ')
+			if (nbrs[i] == nbrs[j])
 				return (0);
-		}
-		else
-		{
-			if (ft_atoi(&str[i]) >= INT_MIN && ft_atoi(&str[i]) <= INT_MAX)
-				stack_a[i / 2] = ft_atoi(&str[i]);
-			else
-				return (0);
+			j++;
 		}
 		i++;
 	}
 	return (1);
+}
+
+int	get_numbers(int argc, char **argv, long long *nbrs)
+{
+	char	**result;
+	int		size;
+
+	if (argc == 2)
+	{
+		result = ft_split(argv[1], ' ');
+		size = chars_to_int(result, nbrs, 0);
+		if (!size)
+			return (0);
+	}
+	else if (argc > 2)
+	{
+		size = chars_to_int(argv, nbrs, 1);
+		if (!size)
+			return (0);
+	}
+	else
+		return (0);
+	if (!if_nbr_duplicate(nbrs, size))
+	{
+		return (0);
+	}
+	return (size);
 }
