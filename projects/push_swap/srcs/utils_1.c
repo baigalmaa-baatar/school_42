@@ -49,7 +49,7 @@ void	ft_print(t_stack *ref_list)
 	list = ref_list;
 	while (list)
 	{
-		printf("%d\n", list->data);
+		// printf("%d\n", list->data);
 		list = list->next;
 	}
 }

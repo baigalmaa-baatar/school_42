@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/10/28 13:49:18 by bbaatar           #+#    #+#              #
+#    Updated: 2021/10/28 13:49:21 by bbaatar          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = push_swap
 SRCS =  srcs/push_swap.c\
 		srcs/get_numbers.c\
@@ -16,19 +28,16 @@ SRCS =  srcs/push_swap.c\
 		srcs/utils_2.c
 
 INCLUDE = includes
-LIBFT = libft
 OBJS = ${SRCS:.c=.o}
 CC		= gcc
 RM		= rm -f
 CFLAGS = -Wall -Wextra -Werror
 .c.o:
-		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o $(NAME)
+		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o $@
 
 $(NAME): ${OBJS}
 		make -C libft/
-		cp libft/libft.a ./$(NAME)
-		# ar rcs ${NAME} ${OBJS}
-		# @$(CC) $(CFLAGS) $(OBJ) $(INCLUDES) $(LIB) -o $(NAME)
+		$(CC) $(CFLAGS) $(OBJS) $(INCLUDES) libft/libft.a -o $(NAME)
 
 all:	${NAME}
 
