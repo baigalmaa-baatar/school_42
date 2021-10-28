@@ -22,12 +22,13 @@ CC		= gcc
 RM		= rm -f
 CFLAGS = -Wall -Wextra -Werror
 .c.o:
-		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o ${<:.c=.o}
+		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o $(NAME)
 
 $(NAME): ${OBJS}
 		make -C libft/
 		cp libft/libft.a ./$(NAME)
-		ar rcs ${NAME} ${OBJS}
+		# ar rcs ${NAME} ${OBJS}
+		# @$(CC) $(CFLAGS) $(OBJ) $(INCLUDES) $(LIB) -o $(NAME)
 
 all:	${NAME}
 
