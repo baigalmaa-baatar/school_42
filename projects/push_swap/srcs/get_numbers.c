@@ -20,6 +20,7 @@ static void	*ft_malloc_free(char **tab)
 	while (tab[i] != 0)
 	{
 		free(tab[i]);
+		i++;
 	}
 	free(tab);
 	return (NULL);
@@ -71,22 +72,23 @@ int	get_numbers(int argc, char **argv, long long *nbrs)
 	{
 		result = ft_split(argv[1], ' ');
 		size = chars_to_int(result, nbrs, 0);
-		if (!size)
-			return (0);
 		ft_malloc_free(result);
+		if (!size)
+		{
+			return (0);
+		}
 	}
 	else if (argc > 2)
 	{
 		size = chars_to_int(argv, nbrs, 1);
 		if (!size)
+		{
 			return (0);
-		ft_malloc_free(argv);
+		}
 	}
 	else
 		return (0);
 	if (!if_nbr_duplicate(nbrs, size))
-	{
 		return (0);
-	}
 	return (size);
 }
