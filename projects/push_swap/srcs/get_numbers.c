@@ -12,9 +12,12 @@
 
 #include "../includes/push_swap.h"
 
-static void	*ft_malloc_free(char **tab, int i)
+static void	*ft_malloc_free(char **tab)
 {
-	while (i-- > 0)
+	int	i;
+
+	i = 0;
+	while (tab[i] != 0)
 	{
 		free(tab[i]);
 	}
@@ -70,13 +73,14 @@ int	get_numbers(int argc, char **argv, long long *nbrs)
 		size = chars_to_int(result, nbrs, 0);
 		if (!size)
 			return (0);
-		ft_malloc_free(result, size);
+		ft_malloc_free(result);
 	}
 	else if (argc > 2)
 	{
 		size = chars_to_int(argv, nbrs, 1);
 		if (!size)
 			return (0);
+		ft_malloc_free(argv);
 	}
 	else
 		return (0);
