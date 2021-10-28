@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 15:11:20 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/27 14:53:38 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/10/28 15:19:32 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,21 @@ t_stack	*create_elem(int data)
 	elem->data = data;
 	elem->next = NULL;
 	return (elem);
+}
+
+void	ft_stack_clear(t_stack *stack)
+{
+	t_stack	*current;
+	t_stack	*tmp;
+
+	current = stack;
+	while (current)
+	{
+		current->data = 0;
+		tmp = current;
+		current = current->next;
+		free(tmp);
+	}
 }
 
 int	convert_stack(t_stack **stack_a, int size, long long *nbrs)
@@ -82,5 +97,6 @@ int	main(int argc, char *argv[])
 		return (0);
 	// printf("after stack_a\n");
 	ft_print(stack_a);
+	ft_stack_clear(stack_a);
 	return (0);
 }

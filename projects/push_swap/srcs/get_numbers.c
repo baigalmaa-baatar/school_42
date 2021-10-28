@@ -12,6 +12,16 @@
 
 #include "../includes/push_swap.h"
 
+static void	*ft_malloc_free(char **tab, int i)
+{
+	while (i-- > 0)
+	{
+		free(tab[i]);
+	}
+	free(tab);
+	return (NULL);
+}
+
 int	chars_to_int(char **result, long long *nbrs, int start_pos)
 {
 	int	i;
@@ -60,6 +70,7 @@ int	get_numbers(int argc, char **argv, long long *nbrs)
 		size = chars_to_int(result, nbrs, 0);
 		if (!size)
 			return (0);
+		ft_malloc_free(result, size);
 	}
 	else if (argc > 2)
 	{
