@@ -54,13 +54,11 @@ int	sort_array(t_stack *a, int *median1, int *median2, int *median3)
 	int		size;
 	int		*arr;
 	int		min;
-	t_stack	*stack;
 
 	size = len_list(a);
 	arr = malloc(sizeof(int) * size);
 	if (!arr)
 		return (1);
-	stack = a;
 	get_array(a, arr);
 	find_median(arr, size);
 	min = arr[0];

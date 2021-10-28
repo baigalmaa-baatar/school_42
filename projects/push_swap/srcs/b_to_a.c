@@ -36,7 +36,6 @@ int	push_to_a(t_stack **stack_b, int *rb_rrb_flag, unsigned int w_pos)
 int	b_to_a(t_stack **stack_a, t_stack **stack_b)
 {
 	unsigned int	w_pos;
-	unsigned int	size;
 	int				*rra_flag;
 	int				*rb_rrb_flag;
 
@@ -46,7 +45,6 @@ int	b_to_a(t_stack **stack_a, t_stack **stack_b)
 		return (0);
 	*rra_flag = 1;
 	*rb_rrb_flag = 1;
-	size = len_list(*stack_b);
 	w_pos = 0;
 	w_pos = find_max_or_min(stack_b, rra_flag, rb_rrb_flag);
 	push_to_a(stack_b, rb_rrb_flag, w_pos);
