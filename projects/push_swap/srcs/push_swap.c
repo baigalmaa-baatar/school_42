@@ -95,7 +95,6 @@ int	main(int argc, char *argv[])
 		return (0);
 	if (!sort_stack(&stack_a, size))
 		return (0);
-	// printf("after stack_a\n");
 	ft_print(stack_a);
 	ft_stack_clear(stack_a);
 	return (0);

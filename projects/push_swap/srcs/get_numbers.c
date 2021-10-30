@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 21:55:23 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/26 16:45:56 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/10/30 13:36:06 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,13 @@ int	get_numbers(int argc, char **argv, long long *nbrs)
 		size = chars_to_int(result, nbrs, 0);
 		ft_malloc_free(result);
 		if (!size)
-		{
 			return (0);
-		}
 	}
 	else if (argc > 2)
 	{
 		size = chars_to_int(argv, nbrs, 1);
 		if (!size)
-		{
 			return (0);
-		}
 	}
 	else
 		return (0);
