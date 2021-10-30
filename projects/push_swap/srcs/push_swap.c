@@ -92,7 +92,10 @@ int	main(int argc, char *argv[])
 	}
 	convert_stack(&stack_a, size, nbrs);
 	if (!check_already_sorted(stack_a))
+	{
+		ft_stack_clear(stack_a);
 		return (0);
+	}
 	if (!sort_stack(&stack_a, size))
 		return (0);
 	ft_print(stack_a);
