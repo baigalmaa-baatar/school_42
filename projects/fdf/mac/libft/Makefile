@@ -1,8 +1,10 @@
 NAME = libft.a
-SRCS = ft_atoi.c\
-		ft_split.c\
+SRCS = ft_atoi_changed.c\
+		ft_split_changed.c\
 		ft_strlen.c\
-		ft_substr.c
+		ft_substr_changed.c\
+		ft_strdup.c\
+		get_next_line.c
 OBJS = ${SRCS:.c=.o}
 CC		= gcc
 RM		= rm -f

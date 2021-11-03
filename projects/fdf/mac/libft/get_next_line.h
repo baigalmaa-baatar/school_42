@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/21 15:56:37 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/26 15:51:43 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/06/02 12:26:47 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/06/02 12:26:48 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include	<string.h>
-# include	<stdlib.h>
-# include	<ctype.h>
-# include	<wchar.h>
-# include	<limits.h>
-# include	<unistd.h>
-# include "get_next_line.h"
+# include <unistd.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
 
 size_t	ft_strlen(const	char	*str);
-char	*ft_substr_changed(const char *s, unsigned int start_pos, size_t len);
-char	**ft_split_changed(char const *s, char c);
-int		ft_atoi_changed(const char *str, long long *nbr);
+char	*ft_strdup(const char *str);
+int		get_next_line(int fd, char **line);
 
 #endif

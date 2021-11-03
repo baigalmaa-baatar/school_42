@@ -56,7 +56,7 @@ static void	*ft_malloc_free(char **tab, int i)
 	return (NULL);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split_changed(char const *s, char c)
 {
 	int		nb_ofwords;
 	char	**tab;
@@ -73,7 +73,7 @@ char	**ft_split(char const *s, char c)
 	{
 		while (*s == c && *s != '\0')
 			s++;
-		tab[i] = ft_substr((char *)s, 0, ft_len_word((char *)s, c));
+		tab[i] = ft_substr_changed((char *)s, 0, ft_len_word((char *)s, c));
 		if (!tab[i])
 			return (ft_malloc_free(tab, i));
 		s = s + ft_len_word((char *)s, c);

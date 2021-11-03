@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int	ft_atoi(const char *str, long long *nbr)
+int	ft_atoi_changed(const char *str, long long *nbr)
 {
 	size_t			i;
 	long long		res;

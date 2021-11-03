@@ -97,18 +97,66 @@ void	plot_line(int x0, int y0, int x1, int y1, t_data img)
 	}
 }
 
-int main(void)
+int	main(int argc, char *argv[])
 {
-	void *mlx;
-	void *mlx_win;
-	t_data img;
+	char		*line;
+	int			fd;
+	int			i;
+	int			row = 0;
+	int 		col = 0;
+	long long	nbrs[10000];
+	int			x0;
+	int			x1;
+	int			y0;
+	int			y1;
+	void		*mlx;
+	void		*mlx_win;
+	t_data		img;
 
+	if (argc <= 1)
+		return (0);
+	fd = open(argv[1], O_RDONLY);
+	while (get_next_line(fd, &line) == 1)
+	{
+		// printf("%s\n", line);
+		row = get_numbers(line, nbrs);
+		col++;
+		free(line);
+	}
+	printf("row is : %d\n", row);
+	printf("col is : %d\n", col);
+	i = 0;
+	while (i < row*col)
+	{
+		printf("nbrs : %lld, i : %d\n", nbrs[i], i);
+		i++;
+	}
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, 600, 600, "FDF");
 	img.img = mlx_new_image(mlx, 600, 600);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	plot_line(100, 100, 200, 200, img);
-	plot_line(100, 200, 300, 300, img);
+	x0 = 0;
+	y0 = 0;
+	x1 = 20;
+	y1 = 20;
+	row = x1 * row;
+	col = y1 * col;
+	while (x0 < row)
+	{
+		y0 = 0;
+		y1 = 20;
+		while (y0 < col)
+		{
+			plot_line(x0, y0, x1, y0, img);
+			plot_line(x0, y0, x0, y1, img);
+			plot_line(x0, y1, x1, y1, img);
+			plot_line(x1, y0, x1, y1, img);
+			y0 += 20;
+			y1 += 20;
+		}
+		x0 += 20;
+		x1 += 20;
+	}
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
 	return (0);
