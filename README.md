@@ -1,2 +1,2 @@
-# school_42
-The projects and submits during attending school 42.
+# 42-projects
+My school 42's projects
