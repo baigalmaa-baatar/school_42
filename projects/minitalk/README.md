@@ -1,2 +1,3 @@
-# fdf-project
-1. The algorithm behind the connecting the dots: https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+# minitalk-project
+1. About Linux Signal : https://www.youtube.com/watch?v=83M5-NPDeWs
+2. About SIGUSR1 and SIGUSR2 : Communicating between processes using signals https://www.youtube.com/watch?v=PErrlOx3LYE
