@@ -1,4 +1,5 @@
 #include <mlx.h>
+#include <math.h>
 #include "fdf.h"
 
 typedef struct s_data
@@ -97,14 +98,43 @@ void	plot_line(int x0, int y0, int x1, int y1, t_data img)
 	}
 }
 
+double cameraX = -10;
+double cameraY = 0;
+double cameraZ = -100;
+double thetaX = 2.0944;
+double thetaY = 2.0944;
+double thetaZ = 2.0944;
+double epsilonX = 1200;
+double epsilonY = 800;
+double epsilonZ = 400;
+
+void translate(double aX, double aY, double aZ, double *bX, double *bY) {
+    double x = aX - cameraX;
+    double y = aY - cameraY;
+    double z = aZ - cameraZ;
+    double cX = cos(thetaX);
+    double cY = cos(thetaY);
+    double cZ = cos(thetaZ);
+    double sX = sin(thetaX);
+    double sY = sin(thetaY);
+    double sZ = sin(thetaZ);
+    double dX = cY * (sZ * y + cZ * x) - sY * z;
+    double dY = sX * (cY * z + sY * (sZ * y + cZ * x)) + cX * (cZ * y - sZ * x);
+    double dZ = cX * (cY * z + sY * (sZ * y + cZ * x)) - sX * (cZ * y - sZ * x);
+    
+    *bX = epsilonZ / dZ * dX + epsilonX;
+    *bY = epsilonZ / dZ * dY + epsilonY;
+}
+
 int	main(int argc, char *argv[])
 {
 	char		*line;
 	int			fd;
 	int			i;
+	int			j;
 	int			row = 0;
 	int 		col = 0;
-	long long	nbrs[10000];
+	long long	nbrs[1000][1000];
 	int			x0;
 	int			x1;
 	int			y0;
@@ -116,21 +146,16 @@ int	main(int argc, char *argv[])
 	if (argc <= 1)
 		return (0);
 	fd = open(argv[1], O_RDONLY);
+	col = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
 		// printf("%s\n", line);
-		row = get_numbers(line, nbrs);
+		row = get_numbers(line, nbrs[col]);
 		col++;
 		free(line);
 	}
 	printf("row is : %d\n", row);
 	printf("col is : %d\n", col);
-	i = 0;
-	while (i < row*col)
-	{
-		printf("nbrs : %lld, i : %d\n", nbrs[i], i);
-		i++;
-	}
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, 600, 600, "FDF");
 	img.img = mlx_new_image(mlx, 600, 600);
@@ -139,24 +164,64 @@ int	main(int argc, char *argv[])
 	y0 = 0;
 	x1 = 20;
 	y1 = 20;
-	row = x1 * row;
-	col = y1 * col;
-	while (x0 < row)
+	//row = x1 * row;
+	//col = y1 * col;
+
+	i = 0;
+	while (i < row)
 	{
-		y0 = 0;
-		y1 = 20;
-		while (y0 < col)
-		{
-			plot_line(x0, y0, x1, y0, img);
-			plot_line(x0, y0, x0, y1, img);
-			plot_line(x0, y1, x1, y1, img);
-			plot_line(x1, y0, x1, y1, img);
-			y0 += 20;
-			y1 += 20;
+		j = 0;
+		while (j < col - 1)
+		{	
+			double x1, y1, x2, y2;
+			translate(j, i, nbrs[j][i], &x1, &y1);
+			translate(j + 1, i, nbrs[j + 1][i], &x2, &y2);
+			printf("%0.3lf %0.3lf -> %0.3lf %0.3lf\n", x1, y1, x2, y2);
+			if (0 <= x1 && x1 < 600 && 0 <= y1 && y1 < 600) {
+				if (0 <= x2 && x2 < 600 && 0 <= y2 && y2 < 600) {
+					plot_line(x1, y1, x2, y2, img);
+				}
+			}
+			j++;
 		}
-		x0 += 20;
-		x1 += 20;
+		i++;
 	}
+
+	j = 0;
+	while (j < col)
+	{
+		i = 0;
+		while (i < row - 1)
+		{	
+			double x1, y1, x2, y2;
+			translate(j, i, nbrs[j][i], &x1, &y1);
+			translate(j, i + 1, nbrs[j][i + 1], &x2, &y2);
+			printf("%0.3lf %0.3lf -> %0.3lf %0.3lf\n", x1, y1, x2, y2);
+			if (0 <= x1 && x1 < 600 && 0 <= y1 && y1 < 600) {
+				if (0 <= x2 && x2 < 600 && 0 <= y2 && y2 < 600) {
+					plot_line(x1, y1, x2, y2, img);
+				}
+			}
+			i++;
+		}
+		j++;
+	}
+	// while (x0 < row)
+	// {
+	// 	y0 = 0;
+	// 	y1 = 20;
+	// 	while (y0 < col)
+	// 	{
+	// 		plot_line(x0, y0, x1, y0, img);
+	// 		plot_line(x0, y0, x0, y1, img);
+	// 		plot_line(x0, y1, x1, y1, img);
+	// 		plot_line(x1, y0, x1, y1, img);
+	// 		y0 += 20;
+	// 		y1 += 20;
+	// 	}
+	// 	x0 += 20;
+	// 	x1 += 20;
+	// }
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
 	return (0);
