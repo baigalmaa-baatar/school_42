@@ -12,30 +12,36 @@
 
 #include "includes/minitalk.h"
 
-void handler(int num)
+void handle_sigtstp(int sig)
 {
-	write(STDOUT_FILENO, "I won't die!\n", 13);
-	(void)num;
+	write (STDOUT_FILENO, "You can't terminate!\n", 21);
+	(void)sig;
 }
 
-void sig_handler(int num)
+void handle_sigcont(int sig)
 {
-	write(STDOUT_FILENO, "Seg fault!\n", 10);
-	(void)num;
+	write (STDOUT_FILENO, "Input number :\n", 15);
+	fflush(stdout);
+	(void)sig;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
-	int *p = NULL;
-	signal(SIGINT, handler);
-	signal(SIGTERM, handler);
-	signal(SIGKILL, handler);
-	signal(SIGSEGV, sig_handler);
+	int x;
+	struct sigaction sa;
 
-	*p = 45;//segfault
-	while (1)
-	{
-		printf("pid is  : %d\n", getpid());
-	}
-	sleep(100);
+	sa.sa_handler = &handle_sigtstp;
+	sa.sa_handler = &handle_sigcont;
+	sa.sa_flags = SA_RESTART;
+	// sigaction(SIGTSTP, &sa, NULL);
+	sigaction(SIGCONT, &sa, NULL);
+	
+	// signal(SIGTSTP, &handle_sigtstp);
+
+	(void)argc;
+	(void)argv;
+	printf("Insert the number : \n");
+	scanf("%d", &x);
+	printf("Result of %d * 5 is %d\n", x, x * 5);
+	return (0);
 }
