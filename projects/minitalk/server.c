@@ -12,36 +12,52 @@
 
 #include "includes/minitalk.h"
 
-void handle_sigtstp(int sig)
+unsigned int nbr = 0;
+unsigned int cntr = 1;
+
+void nbr_gen(int sig)
 {
-	write (STDOUT_FILENO, "You can't terminate!\n", 21);
-	(void)sig;
+	if (sig == 0)
+	{
+		nbr = nbr << 1;
+	}
+	else if (sig == 1)
+	{
+		nbr = (nbr << 1) + 1;
+	}
+	if (cntr == 8)
+	{
+		printf("%c", nbr);
+		cntr = 0;
+		nbr = 0;
+	}
+	cntr++;
 }
 
-void handle_sigcont(int sig)
+void handle_sigusr(int sig)
 {
-	write (STDOUT_FILENO, "Input number :\n", 15);
-	fflush(stdout);
-	(void)sig;
+	if (sig == 30)
+	{
+		nbr_gen(0);
+	}
+	else if (sig == 31)
+	{
+		nbr_gen(1);
+	}
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
-	int x;
+	int pid;
+
+	pid = getpid();
+	printf("PID is : %d\n", pid);
 	struct sigaction sa;
-
-	sa.sa_handler = &handle_sigtstp;
-	sa.sa_handler = &handle_sigcont;
 	sa.sa_flags = SA_RESTART;
-	// sigaction(SIGTSTP, &sa, NULL);
-	sigaction(SIGCONT, &sa, NULL);
-	
-	// signal(SIGTSTP, &handle_sigtstp);
+	sa.sa_handler = &handle_sigusr;
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 
-	(void)argc;
-	(void)argv;
-	printf("Insert the number : \n");
-	scanf("%d", &x);
-	printf("Result of %d * 5 is %d\n", x, x * 5);
-	return (0);
+	while (1)
+		pause();
 }

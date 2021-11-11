@@ -17,9 +17,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdarg.h>
-# include <limits.h>
 # include <string.h>
 # include <signal.h>
+# include <sys/wait.h>
 # include "../libft/libft.h"
 
 int server();
