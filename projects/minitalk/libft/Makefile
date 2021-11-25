@@ -5,45 +5,34 @@
 #                                                     +:+ +:+         +:+      #
 #    By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/11/04 14:17:00 by bbaatar           #+#    #+#              #
-#    Updated: 2021/11/04 14:17:03 by bbaatar          ###   ########.fr        #
+#    Created: 2021/11/25 11:34:36 by bbaatar           #+#    #+#              #
+#    Updated: 2021/11/25 11:34:38 by bbaatar          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = 
-SERVER = server
-CLIENT = client
-
-SRC_S =  server.c
-SRC_C =  client.c
-
-INCLUDE = includes
-OBJ_S = server
-OBJ_C = client
+NAME = libft.a
+SRCS = ft_putstr_fd.c\
+		ft_putchar_fd.c\
+		ft_putnbr_fd.c\
+		ft_strlen.c\
+		ft_atoi.c
+OBJS = ${SRCS:.c=.o}
 CC		= gcc
 RM		= rm -f
 CFLAGS = -Wall -Wextra -Werror
 
-all: $(SERVER) $(CLIENT)
+.c.o:
+		${CC} ${CFLAGS} -Ilibft -c $< -o ${<:.c=.o}
 
-$(NAME): all
+$(NAME): ${OBJS}
+		ar rcs ${NAME} ${OBJS}
 
-$(SERVER): 
-		make -C libft/
-		$(CC) $(CFLAGS) $(SRC_S) $(INCLUDES) libft/libft.a -o $(SERVER)
+all:	${NAME}
 
-$(CLIENT): 
-		$(CC) $(CFLAGS) $(SRC_C) $(INCLUDES) libft/libft.a -o $(CLIENT)
-
-all:	$(CLIENT) $(SERVER)
-
-clean:
-		make clean -C libft/
-		$(RM) $(OBJ_S) $(OBJ_C) 
+clean:	
+		${RM} ${OBJS}
 
 fclean:	clean
-		$(RM) $(NAME)
+		${RM} ${NAME}
 
 re:		fclean all
-
-.PHONY: all clean fclean re

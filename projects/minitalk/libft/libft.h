@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 15:56:37 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/26 15:51:43 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/11/25 11:57:49 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@
 # include	<limits.h>
 # include	<unistd.h>
 
-// size_t	ft_strlen(const	char	*str);
-// char	*ft_substr(const char *s, unsigned int start_pos, size_t len);
-// char	**ft_split(char const *s, char c);
-// int		ft_atoi(const char *str, long long *nbr);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putchar_fd(char c, int fd);
+void	ft_putnbr_fd(int nbr, int fd);
+size_t	ft_strlen(const char *str);
+int		ft_atoi(const char *str);
 
 #endif

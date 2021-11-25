@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/04 14:18:36 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/11/04 14:18:37 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/05/06 16:52:23 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/05/21 12:16:18 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include <signal.h>
-# include "../libft/libft.h"
+void	ft_putnbr_fd(int nbr, int fd)
+{
+	unsigned int	nbr_ui;
 
-#endif
+	if (nbr < 0)
+	{	
+		write (fd, "-", 1);
+		nbr = nbr * (-1);
+	}
+	nbr_ui = (unsigned int)nbr;
+	if (nbr_ui > 9)
+	{
+		ft_putnbr_fd (nbr_ui / 10, fd);
+	}
+	ft_putchar_fd (nbr_ui % 10 + '0', fd);
+}

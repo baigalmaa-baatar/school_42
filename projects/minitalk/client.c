@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 14:40:16 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/11/04 14:40:18 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/11/25 11:50:41 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minitalk.h"
 
-void	ft_putstr(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-}
-
 void	send_end_sig(int pid)
 {
-	static int i;
+	static int	i;
 
 	i = 0;
-	while(i < 8)
+	while (i < 8)
 	{
 		kill(pid, SIGUSR1);
 		usleep(100);
@@ -37,10 +25,10 @@ void	send_end_sig(int pid)
 	}
 }
 
-void send_char(int pid, unsigned char nbr)
+void	send_char(int pid, unsigned char nbr)
 {
-	int i;
-	int array[8];
+	int	i;
+	int	array[8];
 
 	i = 0;
 	while (i < 8)
@@ -64,16 +52,16 @@ void send_char(int pid, unsigned char nbr)
 	}
 }
 
-void send_str(int pid, unsigned char *str)
+void	send_str(int pid, unsigned char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
-		{
-			send_char(pid, str[i]);
-			i++;
-		}
+	{
+		send_char(pid, str[i]);
+		i++;
+	}
 	send_end_sig(pid);
 }
 
@@ -82,20 +70,20 @@ void	client_handler(int signum, siginfo_t *siginfo, void *unused)
 	(void)unused;
 	(void)siginfo;
 	(void)signum;
-	ft_putstr("Signal received!\n");
+	ft_putstr_fd("Message received!\n", 1);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	struct sigaction	sa;
 
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = client_handler;
 	if ((sigaction(SIGUSR2, &sa, NULL)) == -1)
-		ft_putstr("Sigaction error occured!\n");
+		ft_putstr_fd("Sigaction error occured!\n", 1);
 	if (argc == 3)
-		send_str(atoi(argv[1]), (unsigned char *)argv[2]);
+		send_str(ft_atoi(argv[1]), (unsigned char *)argv[2]);
 	else
-		ft_putstr("Arguments error occured!\n");
+		ft_putstr_fd("Arguments error occured!\n", 1);
 	return (0);
 }
