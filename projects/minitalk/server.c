@@ -84,14 +84,12 @@ char	*ft_char_join(char *s1, char c)
 {
 	char			*res;
 	size_t			i;
-	unsigned int	length;
 
 	if (!c)
 		return (0);
 	if (!s1)
 		return (one_char(c));
-	length = ft_strlen(s1) + ft_strlen(&c);
-	res = (char *)malloc(sizeof(char) * (length + 1));
+	res = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 2));
 	if (!res)
 	{
 		free(s1);
@@ -103,7 +101,6 @@ char	*ft_char_join(char *s1, char c)
 		res[i] = *s1++;
 		i++;
 	}
-	// free(s1);
 	res[i++] = c;
 	res[i] = '\0';
 	return (res);
