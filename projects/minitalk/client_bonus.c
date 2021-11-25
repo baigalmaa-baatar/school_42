@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 14:40:16 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/11/25 15:55:45 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/11/25 11:50:41 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	send_end_sig(int pid)
 	while (i < 8)
 	{
 		kill(pid, SIGUSR1);
-		usleep(1000);
+		usleep(100);
 		i++;
 	}
 }
@@ -47,7 +47,7 @@ void	send_char(int pid, unsigned char nbr)
 			kill(pid, SIGUSR2);
 		else
 			kill(pid, SIGUSR1);
-		usleep(1000);
+		usleep(100);
 		i--;
 	}
 }
