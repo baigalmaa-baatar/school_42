@@ -24,18 +24,24 @@ void	ft_putstr(char *str)
 	}
 }
 
-void	error(char *str)
+void	send_end_sig(int pid)
 {
-	ft_putstr(str);
-	exit(EXIT_FAILURE);
+	static int i;
+
+	i = 0;
+	while(i < 8)
+	{
+		kill(pid, SIGUSR1);
+		usleep(100);
+		i++;
+	}
 }
 
-void send_char(int pid, int nbr)
+void send_char(int pid, unsigned char nbr)
 {
 	int i;
 	int array[8];
 
-	// printf("nbr is : %d\n", nbr);
 	i = 0;
 	while (i < 8)
 	{
@@ -49,17 +55,16 @@ void send_char(int pid, int nbr)
 	i = 7;
 	while (i >= 0)
 	{
-		// printf("array %d\n", array[i]);
 		if (array[i] % 2)
 			kill(pid, SIGUSR2);
 		else
 			kill(pid, SIGUSR1);
-		usleep(1000);
+		usleep(100);
 		i--;
 	}
 }
 
-void send_str(int pid, char *str)
+void send_str(int pid, unsigned char *str)
 {
 	int i;
 
@@ -69,7 +74,7 @@ void send_str(int pid, char *str)
 			send_char(pid, str[i]);
 			i++;
 		}
-	send_char(pid, '\n');
+	send_end_sig(pid);
 }
 
 void	client_handler(int signum, siginfo_t *siginfo, void *unused)
@@ -79,18 +84,18 @@ void	client_handler(int signum, siginfo_t *siginfo, void *unused)
 	(void)signum;
 	ft_putstr("Signal received!\n");
 }
+
 int main(int argc, char *argv[])
 {
 	struct sigaction	sa;
 
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = client_handler;
-
 	if ((sigaction(SIGUSR2, &sa, NULL)) == -1)
-		error("Sigaction error occured!\n");
+		ft_putstr("Sigaction error occured!\n");
 	if (argc == 3)
-		send_str(atoi(argv[1]), argv[2]);
+		send_str(atoi(argv[1]), (unsigned char *)argv[2]);
 	else
-		error("Arguments error occured!\n");
+		ft_putstr("Arguments error occured!\n");
 	return (0);
 }

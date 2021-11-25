@@ -12,52 +12,145 @@
 
 #include "includes/minitalk.h"
 
-unsigned int nbr = 0;
-unsigned int cntr = 1;
-
-void nbr_gen(int sig)
+void	ft_putchar(char c)
 {
-	if (sig == 0)
-	{
-		nbr = nbr << 1;
-	}
-	else if (sig == 1)
-	{
-		nbr = (nbr << 1) + 1;
-	}
-	if (cntr == 8)
-	{
-		printf("%c", nbr);
-		cntr = 0;
-		nbr = 0;
-	}
-	cntr++;
+	write(1, &c, 1);
 }
 
-void handle_sigusr(int sig)
+void	ft_putstr(char *str)
 {
-	if (sig == 30)
+	int	i;
+
+	i = 0;
+	while (str[i])
 	{
-		nbr_gen(0);
+		write(1, &str[i], 1);
+		i++;
 	}
-	else if (sig == 31)
+}
+
+void	ft_putnbr(int numbr)
+{
+	if (numbr < -9 || numbr > 9)
+		ft_putnbr(numbr / 10);
+	if (numbr < 0)
 	{
-		nbr_gen(1);
+		if (numbr >= -9 && numbr <= 9)
+		{
+			ft_putchar('-');
+		}
+		ft_putchar('0' - (numbr % 10));
+	}
+	else
+	{
+		ft_putchar('0' + (numbr % 10));
+	}
+}
+
+size_t	ft_strlen(const	char	*str)
+{
+	size_t	len;
+
+	len = 0;
+	if (str[0] == '\0')
+		return (len);
+	while (str[len] != '\0')
+	{
+		len++;
+	}
+	return (len);
+}
+
+char	*ft_print_str(char *str)
+{
+	ft_putstr(str);
+	free(str);
+	return (0);
+}
+
+char *one_char(char c)
+{
+	char *res;
+
+	res = (char *)malloc(sizeof(char) * (1 + 1));
+	if (!res)
+		return (0);
+	res[0] = c;
+	res[1] = '\0';
+	return (res);
+}
+
+char	*ft_char_join(char *s1, char c)
+{
+	char			*res;
+	size_t			i;
+	unsigned int	length;
+
+	if (!c)
+		return (0);
+	if (!s1)
+		return (one_char(c));
+	length = ft_strlen(s1) + ft_strlen(&c);
+	res = (char *)malloc(sizeof(char) * (length + 1));
+	if (!res)
+	{
+		free(s1);
+		return (0);
+	}
+	i = 0;
+	while (*s1)
+	{
+		res[i] = *s1++;
+		i++;
+	}
+	// free(s1);
+	res[i++] = c;
+	res[i] = '\0';
+	return (res);
+}
+
+void handle_sigusr(int sig, siginfo_t *siginfo, void *void_var)
+{
+	static unsigned int cntr = 0;
+	static char *str = 0;
+	static char	c = 0xFF;
+
+	(void)void_var;
+	if (sig == SIGUSR1)
+		c ^= 0x80 >> cntr;
+	else if (sig == SIGUSR2)
+		c |= 0x80 >> cntr;
+	if (++cntr == 8)
+	{
+		if(c)
+			str = ft_char_join(str, c);
+		else
+		{
+			str = ft_print_str(str);
+			if (kill(siginfo->si_pid, SIGUSR2) == -1)
+			{
+				ft_putstr("Error signal\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+		cntr = 0;
+		c = 0xFF;
 	}
 }
 
 int main(void)
 {
 	int pid;
+	struct sigaction sa;
 
 	pid = getpid();
-	printf("PID is : %d\n", pid);
-	struct sigaction sa;
-	sa.sa_flags = SA_RESTART;
-	sa.sa_handler = &handle_sigusr;
+	write(1, "PID is : ", 9);
+	ft_putnbr(pid);
+	write(1, "\n", 1);
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = handle_sigusr;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
-
 	while (1)
 		pause();
 }
