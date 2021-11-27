@@ -12,19 +12,6 @@
 
 #include "includes/minitalk.h"
 
-void	send_end_sig(int pid)
-{
-	static int	i;
-
-	i = 0;
-	while (i < 8)
-	{
-		kill(pid, SIGUSR1);
-		usleep(1000);
-		i++;
-	}
-}
-
 void	send_char(int pid, unsigned char nbr)
 {
 	int	i;
@@ -50,6 +37,11 @@ void	send_char(int pid, unsigned char nbr)
 		usleep(1000);
 		i--;
 	}
+}
+
+void	send_end_sig(int pid)
+{
+	send_char(pid, '\0');
 }
 
 void	send_str(int pid, unsigned char *str)

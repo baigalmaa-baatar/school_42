@@ -54,6 +54,7 @@ char	*ft_char_join(char *s1, char c)
 	}
 	res[i++] = c;
 	res[i] = '\0';
+	free(s1);
 	return (res);
 }
 

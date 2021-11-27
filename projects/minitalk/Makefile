@@ -22,7 +22,7 @@ OBJ_S = server
 OBJ_C = client
 CC		= gcc
 RM		= rm -f
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(SERVER) $(CLIENT)
 

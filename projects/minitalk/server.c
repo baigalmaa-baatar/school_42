@@ -42,18 +42,16 @@ char	*ft_char_join(char *s1, char c)
 		return (one_char(c));
 	res = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 2));
 	if (!res)
-	{
-		free(s1);
 		return (0);
-	}
 	i = 0;
-	while (*s1)
+	while (s1[i])
 	{
-		res[i] = *s1++;
+		res[i] = s1[i];
 		i++;
 	}
 	res[i++] = c;
 	res[i] = '\0';
+	free(s1);
 	return (res);
 }
 
@@ -88,12 +86,16 @@ int	main(void)
 {
 	int					pid;
 	struct sigaction	sa;
+	sigset_t			blocked_signals;
 
+	sigemptyset(&blocked_signals);
 	pid = getpid();
 	write (1, "PID is : ", 9);
 	ft_putnbr_fd(pid, 1);
 	write (1, "\n", 1);
 	sa.sa_flags = SA_SIGINFO;
+	sa.sa_mask = blocked_signals;
+	sa.sa_handler = NULL;
 	sa.sa_sigaction = handle_sigusr;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
