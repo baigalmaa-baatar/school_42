@@ -15,34 +15,48 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-int x = 2;
+int mails = 0;
+pthread_mutex_t     mutex;
 
-void    *routing(void   *vargarp)
+void    *routine(void   *vargarp)
 {
-    x++;
-    sleep(2);
-    printf("Value of x is  %d\n", x);
-}
-
-void    *routing2(void   *vargarp)
-{
-    sleep(2);
-    printf("Value of x is  %d\n", x);
+    int i = 0;
+    
+    while (i < 10000000)
+    {
+        pthread_mutex_lock(&mutex);
+        mails++;
+        pthread_mutex_unlock(&mutex);
+        i++;
+    }
 }
 
 int main(void)
 {
-    pthread_t  t1, t2;
-
-    if (pthread_create(&t1, NULL, routing, NULL))
-        return (1);
-    if (pthread_create(&t2, NULL, routing2, NULL))
-        return (1);
-    if (pthread_join(t1, NULL))
-        return (1);
-    if (pthread_join(t2, NULL))
-        return (1);
-
+    pthread_t  p[4];
+    int i = 0;
+    
+    pthread_mutex_init(&mutex, NULL);
+    while (i < 4)
+    {
+        if (pthread_create(&p[i], NULL, routine, NULL))
+        {
+            perror("Failed to create thread");
+            return (1);
+        }
+        printf("Thread %d has started\n", i);
+        i++;
+    }
+    i = 0;
+    while ( i < 4)
+    {
+        if (pthread_join(p[i], NULL))
+            return (1);
+        printf("Thread %d has finished\n", i);
+        i++;
+    }
+    pthread_mutex_destroy(&mutex);
+    printf("Number of mails %d\n", mails);
     return (0);
 
 }
