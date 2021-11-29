@@ -6,7 +6,7 @@
 #    By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/04 14:17:00 by bbaatar           #+#    #+#              #
-#    Updated: 2021/11/04 14:17:03 by bbaatar          ###   ########.fr        #
+#    Updated: 2021/11/29 16:49:39 by bbaatar          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,9 +46,4 @@ fclean:	clean
 
 re:		fclean all
 
-mandatory:	$(CLIENT) $(SERVER)
-bonus:		mandatory
-
-m : mandatory
-b : bonus
 .PHONY: all clean fclean re
