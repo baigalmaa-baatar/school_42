@@ -45,3 +45,6 @@ echo "1$"
 echo "---"
 echo "12$"
 ./inter "hahahah12" "kkkk12" | cat -e
+echo "---"
+echo "qwerty$"
+./inter "qwerty" "ytrewq" | cat -e
