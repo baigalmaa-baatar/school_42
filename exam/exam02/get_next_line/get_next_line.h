@@ -5,18 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/06 14:17:52 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/06 14:17:54 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/12/07 09:46:59 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/12/07 09:47:00 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#include <string.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 
-int get_next_line(char **line);
+char    *get_next_line(int fd);
 
 #endif

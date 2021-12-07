@@ -5,23 +5,24 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/06 14:21:45 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/06 14:21:47 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/12/07 09:47:10 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/12/07 09:47:11 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdio.h>
 #include "get_next_line.h"
 
 int		main(void)
 {
 	char	*line;
 
-	while (get_next_line(&line) == 1)
+	line = get_next_line(0);
+    while (line != NULL)
 	{
-		printf("%s\n", line);
+		write(1, line, strlen(line));
+		write(1, "\n", 1);
 		free(line);
+        line = get_next_line(0);
 	}
 	return (0);
 }
