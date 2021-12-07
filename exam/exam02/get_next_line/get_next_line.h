@@ -17,6 +17,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+size_t  ft_strlen(const char *str);
+char    *ft_strdup(const char *str);
 char    *get_next_line(int fd);
 
 #endif

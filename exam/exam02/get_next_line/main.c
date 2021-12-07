@@ -20,7 +20,6 @@ int		main(void)
     while (line != NULL)
 	{
 		write(1, line, strlen(line));
-		write(1, "\n", 1);
 		free(line);
         line = get_next_line(0);
 	}

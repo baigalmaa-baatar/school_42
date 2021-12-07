@@ -12,53 +12,32 @@
 
 #include "get_next_line.h"
 
-int get_next_char (int fd, char *c)
+size_t  ft_strlen(const char *str)
 {
-    static char buff[BUFFER_SIZE];
-    static int i = 0;
-    static int fd_result = 0;
+    size_t i;
 
-    if (i < fd_result)
-    {
-        *c = buff[i++];
-        return (1);
-    }
-    fd_result = read (fd, buff, BUFFER_SIZE);
-    if (fd_result <= 0)
-        return (fd_result);
     i = 0;
-    *c = buff[i++];
-    return (1);
-}
-
-char    *get_next_line (int fd)
-{
-    int i;
-    char *result;
-    int ret_val;
-    static char tmp_buff[32000];
-
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return (0);
-    i = 0;
-    while (1)
+    while (str[i])
     {
-        ret_val = get_next_char(fd, &tmp_buff[i]);
-        if (ret_val < 0)
-        {
-            return (0);
-        }
-        if (tmp_buff[i] == '\n' || !ret_val)
-            break ;
         i++;
     }
-    tmp_buff[i] = '\n';
-    i++;
-    tmp_buff[i] = '\0';
-    result = ft_strdup(tmp_buff);
-    if (!ret_val)
-    {
+    return (i);
+}
+
+char    *ft_strdup(const char *str)
+{
+    char *result;
+    int i;
+
+    result = (char *) malloc (sizeof(char) * (ft_strlen(str) + 1));
+    if (!result)
         return (0);
+    i = 0;
+    while (str[i])
+    {
+        result[i] = str[i];
+        i++;
     }
-    return (&result[0]);
+    result[i] = '\0';
+    return(result);
 }
