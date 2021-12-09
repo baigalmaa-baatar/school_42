@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "get_next_line.h"
 
 int get_next_char (int fd, char *c)
@@ -45,20 +46,19 @@ char    *get_next_line (int fd)
     {
         ret_val = get_next_char(fd, &tmp_buff[i]);
         if (ret_val < 0)
-        {
             return (0);
-        }
         if (tmp_buff[i] == '\n' || !ret_val)
             break ;
         i++;
     }
-    tmp_buff[i] = '\n';
-    i++;
+	if (ret_val > 0)
+	{
+    	tmp_buff[i] = '\n';
+    	i++;
+	}
     tmp_buff[i] = '\0';
+	if (ft_strlen(tmp_buff) == 0)
+		return (0);
     result = ft_strdup(tmp_buff);
-    if (!ret_val)
-    {
-        return (0);
-    }
     return (&result[0]);
 }
