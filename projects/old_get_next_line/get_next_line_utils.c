@@ -5,39 +5,43 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/07 09:47:03 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/09 21:03:44 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/06/02 12:26:40 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/06/02 12:26:41 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *str)
+size_t	ft_strlen(const	char	*str)
 {
-	size_t	i;
+	size_t	len;
 
-	i = 0;
-	while (str[i])
+	len = 0;
+	if (str[0] == '\0')
+		return (len);
+	while (str[len] != '\0')
 	{
-		i++;
+		len++;
 	}
-	return (i);
+	return (len);
 }
 
 char	*ft_strdup(const char *str)
 {
-	char	*result;
-	int		i;
+	char			*res;
+	unsigned int	len;
+	unsigned int	i;
 
-	result = (char *) malloc (sizeof(char) * (ft_strlen(str) + 1));
-	if (!result)
-		return (0);
+	len = ft_strlen (str);
+	res = (char *)malloc (sizeof(char) * (len + 1));
+	if (!res)
+		return (NULL);
 	i = 0;
-	while (str[i])
+	while (len--)
 	{
-		result[i] = str[i];
+		res[i] = str[i];
 		i++;
 	}
-	result[i] = '\0';
-	return (result);
+	res[i] = '\0';
+	return (res);
 }

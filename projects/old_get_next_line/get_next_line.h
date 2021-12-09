@@ -1,43 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/07 09:47:03 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/09 21:03:44 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/06/02 12:26:47 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/06/02 12:26:48 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
+# include <unistd.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
 
-	i = 0;
-	while (str[i])
-	{
-		i++;
-	}
-	return (i);
-}
+size_t	ft_strlen(const	char	*str);
+char	*ft_strdup(const char *str);
+int		get_next_line(int fd, char **line);
 
-char	*ft_strdup(const char *str)
-{
-	char	*result;
-	int		i;
-
-	result = (char *) malloc (sizeof(char) * (ft_strlen(str) + 1));
-	if (!result)
-		return (0);
-	i = 0;
-	while (str[i])
-	{
-		result[i] = str[i];
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
-}
+#endif

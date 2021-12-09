@@ -5,27 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/03 14:26:07 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/11/03 14:28:48 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/12/09 20:59:11 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/12/09 21:06:02 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "get_next_line.h"
 
-int		main(int argc, char *argv[])
+int	main(void)
 {
 	char	*line;
-	int		fd;
 
-	(void)argc;
-	fd = open(argv[1], O_RDONLY);
-	while (get_next_line(fd, &line) == 1)
+	line = get_next_line (0);
+	while (line != NULL)
 	{
-		printf("%s\n", line);
-		free(line);
+		write (1, line, strlen(line));
+		free (line);
+		line = get_next_line(0);
 	}
 	return (0);
 }
