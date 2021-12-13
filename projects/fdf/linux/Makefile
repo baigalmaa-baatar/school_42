@@ -17,7 +17,7 @@ INCLIB=$(INC)/../lib
 LFLAGS = -Lmlx -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
 
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -O3
+FLAGS = -Wall -Werror -Wextra -g -O3 
 LIBRARIES = -L$(LIBFT_DIRECTORY) -L$(MINILIBX_DIRECTORY)
 INCLUDES = -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS) -I$(MINILIBX_HEADERS)
 
