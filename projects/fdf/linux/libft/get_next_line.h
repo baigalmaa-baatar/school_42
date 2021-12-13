@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/20 15:11:32 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/26 16:42:52 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/06/02 12:26:47 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/06/02 12:26:48 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
-# define FDF_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <unistd.h>
 # include <stdio.h>
+# include <fcntl.h>
 # include <stdlib.h>
-# include <stdarg.h>
-# include <limits.h>
-# include <string.h>
-// # include "../mlx/mlx.h"
-# include "../libft/includes/libft.h"
 
-int	main(int argc, char *argv[]);
-int	get_numbers(char *line, long long *nbrs);
+size_t	ft_strlen(const	char	*str);
+char	*ft_strdup(const char *str);
+int		get_next_line(int fd, char **line);
 
 #endif
