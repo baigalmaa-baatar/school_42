@@ -46,34 +46,16 @@ double epsilonX = 200;
 double epsilonY = -20;
 double epsilonZ = 50;
 
-void transform(double aX, double aY, double aZ, double *bX, double *bY) {
-	// https://en.wikipedia.org/wiki/3D_projection#Mathematical_formula
-	/*
-    double x = aX - cameraX;
-    double y = aY - cameraY;
-    double z = aZ - cameraZ;
-    double cX = cos(thetaX);
-    double cY = cos(thetaY);
-    double cZ = cos(thetaZ);
-    double sX = sin(thetaX);
-    double sY = sin(thetaY);
-    double sZ = sin(thetaZ);
-    double dX = cY * (sZ * y + cZ * x) - sY * z;
-    double dY = sX * (cY * z + sY * (sZ * y + cZ * x)) + cX * (cZ * y - sZ * x);
-    double dZ = cX * (cY * z + sY * (sZ * y + cZ * x)) - sX * (cZ * y - sZ * x);
-
-    *bX = epsilonZ / dZ * dX + epsilonX;
-    *bY = epsilonZ / dZ * dY + epsilonY;
-	*/
-
+void transform(double aX, double aY, double aZ, double *bX, double *bY) 
+{
 	// https://en.wikipedia.org/wiki/Isometric_projection#Mathematics
 	aZ *= zFactor;
 	*bX = (aX - aZ) / sqrt(2);
 	*bY = (aX + 2 * aY + aZ) / sqrt(6);
 	*bX *= xyFactor;
 	*bY *= xyFactor;
-	*bX += 100;
-	*bY += 100;
+	*bX += 256;
+	*bY += 144;
 
 	// printf("%0.3lf %0.3lf\n", *bX, *bY);
 }
@@ -170,7 +152,7 @@ int	render_next_frame(t_image *data) {
 	double x1, y1, x2, y2;
 	t_data		img;
 
-	img.img = mlx_new_image(data->mlx, 600, 600);
+	img.img = mlx_new_image(data->mlx, 1280, 720);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 
 	y = 0;
@@ -181,8 +163,8 @@ int	render_next_frame(t_image *data) {
 		{
 			transform(x, y, data->points[y][x], &x1, &y1);
 			transform(x + 1, y, data->points[y][x + 1], &x2, &y2);
-			if (0 <= x1 && x1 < 600 && 0 <= y1 && y1 < 600) {
-				if (0 <= x2 && x2 < 600 && 0 <= y2 && y2 < 600) {
+			if (0 <= x1 && x1 < 1280 && 0 <= y1 && y1 < 720) {
+				if (0 <= x2 && x2 < 1280 && 0 <= y2 && y2 < 720) {
 					plot_line(x1, y1, x2, y2, &img);
 				}
 			}
@@ -199,8 +181,8 @@ int	render_next_frame(t_image *data) {
 		{
 			transform(x, y, data->points[y][x], &x1, &y1);
 			transform(x, y + 1, data->points[y + 1][x], &x2, &y2);
-			if (0 <= x1 && x1 < 600 && 0 <= y1 && y1 < 600) {
-				if (0 <= x2 && x2 < 600 && 0 <= y2 && y2 < 600) {
+			if (0 <= x1 && x1 < 1280 && 0 <= y1 && y1 < 720) {
+				if (0 <= x2 && x2 < 1280 && 0 <= y2 && y2 < 720) {
 					plot_line(x1, y1, x2, y2, &img);
 				}
 			}
@@ -217,33 +199,43 @@ int	render_next_frame(t_image *data) {
 
 int	key_hook(int keycode, t_image *data)
 {
-	if (keycode == 126) {
+	if (keycode == 65307) {
+		// CLOSE WINDOW
+		mlx_destroy_window(data->mlx, data->window);
+	}
+	if (keycode == 65362) {
 		// UP
 		cameraX += 1;
 		zFactor += 0.1;
 	}
-	if (keycode == 125) {
+	if (keycode == 65364) {
 		// DOWN
 		cameraX -= 1;
 		zFactor -= 0.1;
 	}
-	if (keycode == 123) {
+	if (keycode == 65361) {
 		// LEFT
 		cameraY -= 1;
-		xyFactor += 0.5;
 	}
-	if (keycode == 124) {
+	if (keycode == 65363) {
 		// RIGHT
 		cameraY += 1;
-		xyFactor -= 0.5;
 	}
-	if (keycode == 116) {
+	if (keycode == 65365) {
 		// PAGE UP
 		cameraZ += 1;
 	}
-	if (keycode == 121) {
+	if (keycode == 65366) {
 		// PAGE DOWN
 		cameraZ -= 1;
+	}
+	if (keycode == 65451) {
+		// ZOOM IN
+		xyFactor += 0.5;
+	}
+	if (keycode == 65453) {
+		// ZOOM OUT
+		xyFactor -= 0.5;
 	}
 
 	double centerX = data->width / 2;
@@ -286,6 +278,24 @@ int	key_hook(int keycode, t_image *data)
 	return 1;
 }
 
+int	mouse_hook(int button, int x, int y, t_image *data)
+{
+	(void)x;
+	(void)y;
+	(void)data;
+	if (button == 4)
+	{
+		// ZOOM IN
+		xyFactor += 0.5;
+	}
+	if (button == 5)
+	{
+		// ZOOM OUT
+		xyFactor -= 0.5;
+	}
+	return (0);
+}
+
 int	main(int argc, char *argv[])
 {
 	char		*line;
@@ -309,11 +319,12 @@ int	main(int argc, char *argv[])
 	// printf("width is : %d\n", width);
 	// printf("heigth is : %d\n", height);
 	input.mlx = mlx_init();
-	input.window = mlx_new_window(input.mlx, 600, 600, "FDF");
+	input.window = mlx_new_window(input.mlx, 1280, 720, "FDF");
 	input.height = height;
 	input.width = width;
 	mlx_loop_hook(input.mlx, render_next_frame, &input);
 	mlx_key_hook(input.window, key_hook, &input);
+	mlx_mouse_hook(input.window, mouse_hook, &input);
 	mlx_loop(input.mlx);
 	return (0);
 }
