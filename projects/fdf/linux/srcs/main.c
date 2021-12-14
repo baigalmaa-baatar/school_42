@@ -31,12 +31,9 @@ typedef struct s_image {
 	void *window;
 } t_image;
 
-// double cameraX = 38;
-// double cameraY = 22;
-// double cameraZ = 40;
-double cameraX = 0;
-double cameraY = 0;
-double cameraZ = 0;
+double cameraX = 38;
+double cameraY = 22;
+double cameraZ = 40;
 double zFactor = 1;
 double xyFactor = 10;
 
@@ -51,30 +48,30 @@ double epsilonZ = 50;
 
 void transform(double aX, double aY, double aZ, double *bX, double *bY) {
 	// https://en.wikipedia.org/wiki/3D_projection#Mathematical_formula
-    double x = aX - cameraX;
-    double y = aY - cameraY;
-    double z = aZ - cameraZ;
-    double cX = cos(thetaX);
-    double cY = cos(thetaY);
-    double cZ = cos(thetaZ);
-    double sX = sin(thetaX);
-    double sY = sin(thetaY);
-    double sZ = sin(thetaZ);
-    double dX = cY * (sZ * y + cZ * x) - sY * z;
-    double dY = sX * (cY * z + sY * (sZ * y + cZ * x)) + cX * (cZ * y - sZ * x);
-    double dZ = cX * (cY * z + sY * (sZ * y + cZ * x)) - sX * (cZ * y - sZ * x);
+    // double x = aX - cameraX;
+    // double y = aY - cameraY;
+    // double z = aZ - cameraZ;
+    // double cX = cos(thetaX);
+    // double cY = cos(thetaY);
+    // double cZ = cos(thetaZ);
+    // double sX = sin(thetaX);
+    // double sY = sin(thetaY);
+    // double sZ = sin(thetaZ);
+    // double dX = cY * (sZ * y + cZ * x) - sY * z;
+    // double dY = sX * (cY * z + sY * (sZ * y + cZ * x)) + cX * (cZ * y - sZ * x);
+    // double dZ = cX * (cY * z + sY * (sZ * y + cZ * x)) - sX * (cZ * y - sZ * x);
 
-    *bX = epsilonZ / dZ * dX + epsilonX;
-    *bY = epsilonZ / dZ * dY + epsilonY;
+    // *bX = epsilonZ / dZ * dX + epsilonX;
+    // *bY = epsilonZ / dZ * dY + epsilonY;
 
 	// https://en.wikipedia.org/wiki/Isometric_projection#Mathematics
-	// aZ *= zFactor;
-	// *bX = (aX - aZ) / sqrt(2);
-	// *bY = (aX + 2 * aY + aZ) / sqrt(6);
-	// *bX *= xyFactor;
-	// *bY *= xyFactor;
-	// *bX += 100;
-	// *bY += 100;
+	aZ *= zFactor;
+	*bX = (aX - aZ) / sqrt(2);
+	*bY = (aX + 2 * aY + aZ) / sqrt(6);
+	*bX *= xyFactor;
+	*bY *= xyFactor;
+	*bX += 200;
+	*bY += 200;
 
 	// printf("%0.3lf %0.3lf\n", *bX, *bY);
 }
@@ -297,6 +294,24 @@ int	key_hook(int keycode, t_image *data)
 	return 1;
 }
 
+int	mouse_hook(int button, int x, int y, t_image *data)
+{
+	(void)x;
+	(void)y;
+	(void)data;
+	if (button == 4)
+	{
+		// ZOOM IN
+		xyFactor += 0.5;
+	}
+	if (button == 5)
+	{
+		// ZOOM OUT
+		xyFactor -= 0.5;
+	}
+	return (0);
+}
+
 int	main(int argc, char *argv[])
 {
 	char		*line;
@@ -325,6 +340,7 @@ int	main(int argc, char *argv[])
 	input.width = width;
 	mlx_loop_hook(input.mlx, render_next_frame, &input);
 	mlx_key_hook(input.window, key_hook, &input);
+	mlx_mouse_hook(input.window, mouse_hook, &input);
 	mlx_loop(input.mlx);
 	return (0);
 }
