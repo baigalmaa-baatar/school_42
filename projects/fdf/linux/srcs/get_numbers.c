@@ -12,6 +12,37 @@
 
 #include "../includes/fdf.h"
 
+// void get_min_max(t_image input)
+// {
+// 	int min;
+// 	int max;
+// 	int x;
+// 	int y;
+
+// 	x = 0;
+// 	y = 0;
+// 	printf("min is : %d\n", input.min);
+// 	min = input.points[x][y];
+// 	max = input.points[x][y];
+// 	while (x < input.width)
+// 	{
+// 		y = 0;
+// 		while (y < input.height)
+// 		{
+// 			if (input.points[x][y] < min)
+// 				min = input.points[x][y];
+// 			if (input.points[x][y] > max)
+// 				max = input.points[x][y];
+// 			y++;
+// 		}
+// 		x++;
+// 	}
+// 	input.min = min;
+// 	input.max = max;
+// 	printf("min is : %d\n", input.min);
+// 	printf("max is : %d\n", input.max);
+// }
+
 static void	*ft_malloc_free(char **tab)
 {
 	int	i;

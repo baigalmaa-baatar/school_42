@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 15:11:32 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/26 16:42:52 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/12/16 09:46:21 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 # include <limits.h>
 # include <string.h>
 // # include "../mlx/mlx.h"
-# include "../libft/libft.h"
+# include "../libft/includes/libft.h"
+
+# define W_HEIGHT			1080
+# define W_WIDTH			1920
 
 typedef struct s_data
 {
@@ -36,6 +39,7 @@ typedef struct	s_coord
 	int	x;
 	int	y;
 	int	z;
+	int	color;
 }	t_coord;
 
 typedef struct	s_camera
@@ -62,11 +66,14 @@ typedef struct s_image {
 	long long points[1000][1000];
 	int width;
 	int height;
+	int min;
+	int max;
 	void *mlx;
 	void *window;
 	t_camera	*camera;
 }	t_image;
 
+void get_min_max(t_image input);
 int	main(int argc, char *argv[]);
 int	get_numbers(char *line, long long *nbrs);
 
