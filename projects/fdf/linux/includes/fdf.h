@@ -20,7 +20,52 @@
 # include <limits.h>
 # include <string.h>
 // # include "../mlx/mlx.h"
-# include "../libft/includes/libft.h"
+# include "../libft/libft.h"
+
+typedef struct s_data
+{
+	void *img;
+	char *addr;
+	int bits_per_pixel;
+	int line_length;
+	int endian;
+} t_data;
+
+typedef struct	s_coord
+{
+	int	x;
+	int	y;
+	int	z;
+}	t_coord;
+
+typedef struct	s_camera
+{
+	double	thetaX;
+	double	thetaY;
+	double	thetaZ;
+	double	depth;
+	double	zoom;
+	double		move_x;
+	double		move_y;
+}	t_camera;
+
+typedef struct	s_mouse
+{
+	char	clicked;
+	int		x;
+	int		y;
+	int		previous_x;
+	int		previous_y;
+}	t_mouse;
+
+typedef struct s_image {
+	long long points[1000][1000];
+	int width;
+	int height;
+	void *mlx;
+	void *window;
+	t_camera	*camera;
+}	t_image;
 
 int	main(int argc, char *argv[]);
 int	get_numbers(char *line, long long *nbrs);
