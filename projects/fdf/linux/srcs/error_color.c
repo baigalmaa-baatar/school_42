@@ -14,6 +14,30 @@
 #include <math.h>
 #include "../includes/fdf.h"
 
+double percent (int min, int max, int current)
+{
+	return ((current - min)/(max - min));
+}
+
+int	lighting(int min, int max, double percentage)
+{
+	return ((int)(1 - percentage) * min + percentage * max);
+}
+
+int	get_color(int min, int max, double percentage)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	if (min == max)
+		return (min);
+	r = lighting((min >> 16) & 0xFF, (max >> 16) & 0xFF, percentage);
+	g = lighting((min >> 8) & 0xFF, (max >> 8) & 0xFF, percentage);
+	b = lighting(min & 0xFF, max & 0xFF, percentage);
+	return (r << 16 | g << 8 | b);
+}
+
 void	xaxis_rot(int *y, int *z, double theta)
 {
 	int prev_y;
@@ -100,14 +124,15 @@ void my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void plot_line_low(int x0, int y0, int x1, int y1, t_data *img)
+void plot_line_low(t_coord a, t_coord b, t_data *img, t_image data)
 {
-	int dx = x1 - x0;
-	int dy = y1 - y0;
+	int dx = b.x - a.x;
+	int dy = b.y - a.y;
 	int yi = 1;
 	int d;
 	int x;
 	int y;
+	double percentage;
 
 	if (dy < 0)
 	{
@@ -115,12 +140,15 @@ void plot_line_low(int x0, int y0, int x1, int y1, t_data *img)
 		dy = -dy;
 	}
 	d = (2 * dy) - dx;
-	y = y0;
-	x = x0;
-	while (x < x1)
+	y = a.y;
+	x = a.x;
+	while (x < b.x)
 	{
-		if (0 <= x && x < W_WIDTH && 0 <= y && y < W_HEIGHT)
-			my_mlx_pixel_put(img, x, y, 0x00f4c0ff);
+		if (dx > dy)
+			percentage = percent(data.min, data.max, a.x);
+		else
+			percentage = percent(data.min, data.max, a.y);
+		my_mlx_pixel_put(img, x, y, get_color(x, y, percentage));
 		if (d > 0)
 		{
 			y = y + yi;
@@ -132,14 +160,15 @@ void plot_line_low(int x0, int y0, int x1, int y1, t_data *img)
 	}
 }
 
-void plot_line_high(int x0, int y0, int x1, int y1, t_data *img)
+void plot_line_high(t_coord a, t_coord b, t_data *img, t_image data)
 {
-	int dx = x1 - x0;
-	int dy = y1 - y0;
+	int dx = b.x - a.x;
+	int dy = b.y - a.y;
 	int xi = 1;
 	int d;
 	int x;
 	int y;
+	double percentage;
 
 	if (dx < 0)
 	{
@@ -147,12 +176,15 @@ void plot_line_high(int x0, int y0, int x1, int y1, t_data *img)
 		dx = -dx;
 	}
 	d = (2 * dx) - dy;
-	y = y0;
-	x = x0;
-	while (y < y1)
+	y = a.y;
+	x = a.x;
+	while (y < b.y)
 	{
-		if (0 <= x && x < W_WIDTH && 0 <= y && y < W_HEIGHT)
-			my_mlx_pixel_put(img, x, y, 0x00f4c0ff);
+		if (dx > dy)
+			percentage = percent(data.min, data.max, a.x);
+		else
+			percentage = percent(data.min, data.max, a.y);
+		my_mlx_pixel_put(img, x, y, get_color(x, y, percentage));
 		if (d > 0)
 		{
 			x = x + xi;
@@ -163,34 +195,34 @@ void plot_line_high(int x0, int y0, int x1, int y1, t_data *img)
 		y++;
 	}
 }
-void	plot_line(t_coord coord0, t_coord coord1, t_data *img)
+void	plot_line(t_coord a, t_coord b, t_data *img, t_image data)
 {
-	int x0 = coord0.x;
-	int y0 = coord0.y;
-	int x1 = coord1.x;
-	int y1 = coord1.y;
-
-	if (abs(y1 - y0) < abs(x1 - x0))
+	if (abs(b.y - a.y) < abs(b.x - a.x))
 	{
-		if (x0 > x1)
-			plot_line_low(x1, y1, x0, y0, img);
+		if (a.x > b.x)
+			plot_line_low(b, a, img, data);
 		else
-			plot_line_low(x0, y0, x1, y1, img);
+			plot_line_low(a, b, img, data);
 	}
 	else
 	{
-		if (y0 > y1)
-			plot_line_high(x1, y1, x0, y0, img);
+		if (a.y > b.y)
+			plot_line_high(b, a, img, data);
 		else
-			plot_line_high(x0, y0, x1, y1, img);
+			plot_line_high(a, b, img, data);
 	}
 }
 
-void calc_points_x(t_image *data, t_data img)
+int	render_next_frame(t_image *data)
 {
 	int x, y;
+	t_data		img;
 	t_coord		a;
 	t_coord		b;
+	
+
+	img.img = mlx_new_image(data->mlx, W_WIDTH, W_HEIGHT);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 
 	y = 0;
 	while (y < data->height)
@@ -204,18 +236,18 @@ void calc_points_x(t_image *data, t_data img)
 			b.x = x + 1;
 			b.y = y;
 			b.z = data->points[y][x + 1];
-			plot_line(transform(*data->camera, a), transform(*data->camera, b), &img);
+			a = transform(*data->camera, a);
+			b = transform(*data->camera, b);
+			if (0 <= a.x && a.x < W_WIDTH && 0 <= a.y && a.y < W_HEIGHT) {
+				if (0 <= b.x && b.x < W_WIDTH && 0 <= b.y && b.y < W_HEIGHT)
+				{
+					plot_line(a, b, &img, *data);
+				}
+			}
 			x++;
 		}
 		y++;
 	}
-}
-
-void calc_points_y(t_image *data, t_data img)
-{
-	int x, y;
-	t_coord		a;
-	t_coord		b;
 
 	x = 0;
 	while (x < data->width)
@@ -229,21 +261,18 @@ void calc_points_y(t_image *data, t_data img)
 			b.x = x;
 			b.y = y + 1;
 			b.z = data->points[y + 1][x];
-			plot_line(transform(*data->camera, a), transform(*data->camera, b), &img);
+			a = transform(*data->camera, a);
+			b = transform(*data->camera, b);
+			if (0 <= a.x && a.x < W_WIDTH && 0 <= a.y && a.y < W_HEIGHT) {
+				if (0 <= b.x && b.x < W_WIDTH && 0 <= b.y && b.y < W_HEIGHT)
+				{
+					plot_line(a, b, &img, *data);
+				}
+			}
 			y++;
 		}
 		x++;
 	}
-}
-
-int	render_next_frame(t_image *data)
-{
-	t_data		img;
-
-	img.img = mlx_new_image(data->mlx, W_WIDTH, W_HEIGHT);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	calc_points_x(data, img);
-	calc_points_y(data, img);
 	mlx_put_image_to_window(data->mlx, data->window, img.img, 0, 0);
 	mlx_destroy_image(data->mlx, img.img);
 
@@ -355,6 +384,10 @@ int	main(int argc, char *argv[])
 	input.window = mlx_new_window(input.mlx, W_WIDTH, W_HEIGHT, "FDF");
 	input.height = height;
 	input.width = width;
+	// get_min_max(input);
+	input.min = 0;
+	input.max = 10;
+	// printf("min is : %d\n", input.min);
 	mlx_loop_hook(input.mlx, render_next_frame, &input);
 	mlx_key_hook(input.window, key_hook, &input);
 	mlx_mouse_hook(input.window, mouse_hook, &input);
