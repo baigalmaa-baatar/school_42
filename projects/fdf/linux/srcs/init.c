@@ -23,7 +23,7 @@ t_camera	*angle_init(void)
 	camera->thetaY = 0;
 	camera->thetaZ = 0;
 	camera->depth = 1;
-	camera->zoom = 30;
+	camera->zoom = 40;
 	camera->move_x = 0;
 	camera->move_y = 0;
 	return (camera);

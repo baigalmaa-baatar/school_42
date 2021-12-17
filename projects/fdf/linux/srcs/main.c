@@ -36,8 +36,6 @@ int	main(int argc, char *argv[])
 		input.mlx = mlx_init();
 		input.camera = angle_init();
 		input.window = mlx_new_window(input.mlx, W_WIDTH, W_HEIGHT, "FDF");
-		input.min = 0;
-		input.max = 10;
 		mlx_loop_hook(input.mlx, render_next_frame, &input);
 		mlx_key_hook(input.window, key_hook, &input);
 		mlx_mouse_hook(input.window, mouse_hook, &input);

@@ -56,6 +56,35 @@ int	get_numbers(char *line, long long *nbrs)
 	return (size);
 }
 
+void	min_max(t_image *input)
+{
+	int x;
+	int	y;
+	int	min;
+	int	max;
+
+	x = 0;
+	y = 0;
+	min = input->points[x][y];
+	max = input->points[x][y];
+	y = 0;
+	while (y < input->height)
+	{
+		x = 0;
+		while (x < input->width)
+		{
+			if (input->points[y][x] < min)
+				min = input->points[y][x];
+			if (input->points[y][x] > max)
+				max = input->points[y][x];
+			x++;
+		}
+		y++;
+	}
+	input->min = min;
+	input->max = max;
+}
+
 int	get_map(char *argv, t_image *input)
 {
 	char	*line;
@@ -74,5 +103,9 @@ int	get_map(char *argv, t_image *input)
 	}
 	input->height = height;
 	input->width = width;
+	min_max(input);
+	printf("min is %d\n", input->min);
+	printf("max is %d\n", input->max);
 	return (0);
 }
+

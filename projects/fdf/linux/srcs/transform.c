@@ -29,8 +29,8 @@ t_coord	transform(t_camera camera, t_coord coord)
 	coord.z *= (camera.zoom * camera.depth) / 2;
 	coord.x *= camera.zoom;
 	coord.y *= camera.zoom;
-	coord.x += 256;
-	coord.y += 144;
+	coord.x += 600;
+	coord.y += 100;
 	coord.x += camera.move_x;
 	coord.y += camera.move_y;
 	xaxis_rot(&coord.y, &coord.z, camera.thetaX);

@@ -31,14 +31,14 @@ int	get_z_color(t_image *data, int z)
 	percentage = percent(data->min, data->max, z);
 
 	if (percentage <= 0.25)
-		return (0x8fb1e9);
+		return (0x152069);
 	else if (0.25 < percentage && percentage <= 0.5)
-		return (0xa9d7f6);
+		return (0x244A80);
 	else if (0.5 < percentage && percentage <= 0.75)
-		return (0xb84d69);
+		return (0x377A98);
 	else if (0.75 < percentage)
-		return (0xf96d6d);
-	else return (0xf39de5);
+		return (0x88DE80);
+	else return (0x88DE80);
 }
 
 int	rgb_comb(int a_point, int b_point, double percentage)
