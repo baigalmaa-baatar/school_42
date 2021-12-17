@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 21:55:23 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/30 13:36:06 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/12/17 00:41:11 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	*ft_malloc_free(char **tab)
 		free(tab[i]);
 		i++;
 	}
-	free(tab);
+	free (tab);
 	return (NULL);
 }
 
@@ -54,4 +54,25 @@ int	get_numbers(char *line, long long *nbrs)
 	if (!size)
 		return (0);
 	return (size);
+}
+
+int	get_map(char *argv, t_image *input)
+{
+	char	*line;
+	int		fd;
+	int		width;
+	int		height;
+
+	fd = open(argv, O_RDONLY);
+	width = 0;
+	height = 0;
+	while (get_next_line(fd, &line) == 1)
+	{
+		width = get_numbers(line, input->points[height]);
+		height++;
+		free (line);
+	}
+	input->height = height;
+	input->width = width;
+	return (0);
 }

@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/03 10:35:39 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/05/21 12:33:47 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/12/17 01:15:25 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/12/17 01:33:37 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/libft.h"
+#include "../includes/fdf.h"
 
-char	*ft_strdup(const char *str)
+t_camera	*angle_init(void)
 {
-	char			*res;
-	unsigned int	len;
-	unsigned int	i;
+	t_camera	*camera;
 
-	len = ft_strlen (str);
-	res = (char *)malloc (sizeof(char) * (len + 1));
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (len--)
-	{
-		res[i] = str[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
+	camera = (t_camera *) malloc(sizeof(t_camera));
+	if (!camera)
+		return (0);
+	camera->thetaX = 0;
+	camera->thetaY = 0;
+	camera->thetaZ = 0;
+	camera->depth = 1;
+	camera->zoom = 30;
+	camera->move_x = 0;
+	camera->move_y = 0;
+	return (camera);
 }

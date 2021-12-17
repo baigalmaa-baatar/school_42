@@ -32,7 +32,13 @@ HEADERS = $(addprefix $(HEADERS_DIRECTORY), $(HEADERS_LIST))
 
 SOURCES_DIRECTORY = ./srcs/
 SOURCES_LIST = main.c\
-				get_numbers.c
+				init.c\
+				get_numbers.c\
+				keyboard.c\
+				mouse.c\
+				rotate.c\
+				plot_line.c\
+				transform.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
 

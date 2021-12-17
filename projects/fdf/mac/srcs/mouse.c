@@ -1,33 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   mouse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/03 10:35:39 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/05/21 12:33:47 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/12/17 01:13:11 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/12/17 01:13:14 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/libft.h"
+#include "../includes/fdf.h"
 
-char	*ft_strdup(const char *str)
+int	mouse_hook(int button, int x, int y, t_image *data)
 {
-	char			*res;
-	unsigned int	len;
-	unsigned int	i;
-
-	len = ft_strlen (str);
-	res = (char *)malloc (sizeof(char) * (len + 1));
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (len--)
-	{
-		res[i] = str[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
+	(void)x;
+	(void)y;
+	if (button == 4)
+		data->camera->zoom += 0.5;
+	if (button == 5)
+		data->camera->zoom -= 0.5;
+	return (0);
 }

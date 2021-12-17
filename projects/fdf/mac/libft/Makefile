@@ -11,7 +11,7 @@ RM		= rm -f
 CFLAGS = -Wall -Wextra -Werror
 
 .c.o:
-		${CC} ${CFLAGS} -Ilibft -c $< -o ${<:.c=.o}
+		${CC} ${CFLAGS} -I/includes -c $< -o ${<:.c=.o}
 
 $(NAME): ${OBJS}
 		ar rcs ${NAME} ${OBJS}
