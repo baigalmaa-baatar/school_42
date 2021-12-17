@@ -144,10 +144,6 @@ void plot_line_low(t_coord a, t_coord b, t_data *img, t_image data)
 	x = a.x;
 	while (x < b.x)
 	{
-		if (dx > dy)
-			percentage = percent(data.min, data.max, a.x);
-		else
-			percentage = percent(data.min, data.max, a.y);
 		my_mlx_pixel_put(img, x, y, get_color(x, y, percentage));
 		if (d > 0)
 		{
@@ -180,10 +176,6 @@ void plot_line_high(t_coord a, t_coord b, t_data *img, t_image data)
 	x = a.x;
 	while (y < b.y)
 	{
-		if (dx > dy)
-			percentage = percent(data.min, data.max, a.x);
-		else
-			percentage = percent(data.min, data.max, a.y);
 		my_mlx_pixel_put(img, x, y, get_color(x, y, percentage));
 		if (d > 0)
 		{

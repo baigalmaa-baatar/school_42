@@ -19,7 +19,8 @@
 # include <stdarg.h>
 # include <limits.h>
 # include <string.h>
-// # include "../mlx/mlx.h"
+#include <mlx.h>
+#include <math.h>
 # include "../libft/includes/libft.h"
 
 # define W_HEIGHT			1080
@@ -73,8 +74,19 @@ typedef struct s_image {
 	t_camera	*camera;
 }	t_image;
 
-void get_min_max(t_image input);
 int	main(int argc, char *argv[]);
-int	get_numbers(char *line, long long *nbrs);
+t_camera	*angle_init(void);
+int		get_z_color(t_image *data, int z);
+int		get_color_comb(t_coord a, t_coord b, t_coord curr);
+void	xaxis_rot(int *y, int *z, double theta);
+void	yaxis_rot(int *x, int *z, double theta);
+void	zaxis_rot(int *x, int *y, double theta);
+void	get_min_max(t_image input);
+int		get_map(char *argv, t_image *input);
+int		key_hook(int keycode, t_image *data);
+int		mouse_hook(int button, int x, int y, t_image *data);
+void	calc_points_x(t_image *data, t_data img);
+void	calc_points_y(t_image *data, t_data img);
+void	plot_line(t_coord a, t_coord b, t_data *img);
 
 #endif

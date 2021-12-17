@@ -6,42 +6,11 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 21:55:23 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/10/30 13:36:06 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/12/17 00:41:11 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
-
-// void get_min_max(t_image input)
-// {
-// 	int min;
-// 	int max;
-// 	int x;
-// 	int y;
-
-// 	x = 0;
-// 	y = 0;
-// 	printf("min is : %d\n", input.min);
-// 	min = input.points[x][y];
-// 	max = input.points[x][y];
-// 	while (x < input.width)
-// 	{
-// 		y = 0;
-// 		while (y < input.height)
-// 		{
-// 			if (input.points[x][y] < min)
-// 				min = input.points[x][y];
-// 			if (input.points[x][y] > max)
-// 				max = input.points[x][y];
-// 			y++;
-// 		}
-// 		x++;
-// 	}
-// 	input.min = min;
-// 	input.max = max;
-// 	printf("min is : %d\n", input.min);
-// 	printf("max is : %d\n", input.max);
-// }
 
 static void	*ft_malloc_free(char **tab)
 {
@@ -53,7 +22,7 @@ static void	*ft_malloc_free(char **tab)
 		free(tab[i]);
 		i++;
 	}
-	free(tab);
+	free (tab);
 	return (NULL);
 }
 
@@ -85,4 +54,25 @@ int	get_numbers(char *line, long long *nbrs)
 	if (!size)
 		return (0);
 	return (size);
+}
+
+int	get_map(char *argv, t_image *input)
+{
+	char	*line;
+	int		fd;
+	int		width;
+	int		height;
+
+	fd = open(argv, O_RDONLY);
+	width = 0;
+	height = 0;
+	while (get_next_line(fd, &line) == 1)
+	{
+		width = get_numbers(line, input->points[height]);
+		height++;
+		free (line);
+	}
+	input->height = height;
+	input->width = width;
+	return (0);
 }
