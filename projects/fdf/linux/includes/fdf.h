@@ -72,9 +72,11 @@ typedef struct s_image {
 	void *mlx;
 	void *window;
 	t_camera	*camera;
+	int finished;
 }	t_image;
 
 int	main(int argc, char *argv[]);
+int	err_handler(char *str);
 t_camera	*angle_init(void);
 int		get_z_color(t_image *data, int z);
 int		get_color_comb(t_coord a, t_coord b, t_coord curr);

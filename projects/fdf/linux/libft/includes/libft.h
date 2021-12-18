@@ -22,6 +22,7 @@
 # include "../get_next_line.h"
 
 size_t	ft_strlen(const	char	*str);
+void	ft_putendl_fd(char *s, int fd);
 char	*ft_substr_changed(const char *s, unsigned int start_pos, size_t len);
 char	**ft_split_changed(char const *s, char c);
 int		ft_atoi_changed(const char *str, long long *nbr);

@@ -93,19 +93,22 @@ int	get_map(char *argv, t_image *input)
 	int		height;
 
 	fd = open(argv, O_RDONLY);
+	if (fd < 0)
+		return(1);
 	width = 0;
 	height = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
 		width = get_numbers(line, input->points[height]);
+		if(!width)
+			return(err_handler("File error, not numbers!"));
 		height++;
 		free (line);
 	}
+	free (line);
 	input->height = height;
 	input->width = width;
 	min_max(input);
-	printf("min is %d\n", input->min);
-	printf("max is %d\n", input->max);
 	return (0);
 }
 

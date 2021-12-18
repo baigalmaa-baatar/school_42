@@ -43,9 +43,10 @@ if (keycode == 65429) {
 
 int	key_hook(int keycode, t_image *data)
 {
-if (keycode == 65307) {
+	if (keycode == 65307) {
 		// CLOSE WINDOW
-		mlx_destroy_window(data->mlx, data->window);
+		//mlx_destroy_window(data->mlx, data->window);
+		data->finished = 1;
 	}
 	if (keycode == 65362) {
 		// UP

@@ -56,7 +56,7 @@ OBJECTS	= $(addprefix $(OBJECTS_DIRECTORY), $(OBJECTS_LIST))
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(MINILIBX) $(OBJECTS_DIRECTORY) $(OBJECTS)
-	@$(CC) $(FLAGS) $(LIBRARIES) $(INCLUDES) $(OBJECTS) libft/libft.a -o $(NAME) $(LFLAGS)
+	@$(CC) $(FLAGS) -g $(LIBRARIES) $(INCLUDES) $(OBJECTS) libft/libft.a -o $(NAME) $(LFLAGS)
 
 $(OBJECTS_DIRECTORY):
 	@mkdir -p $(OBJECTS_DIRECTORY)
