@@ -2,7 +2,7 @@ Assignment name  : micro_paint
 Expected files   : *.c *.h
 Allowed functions: fopen, fread, fscanf, fclose, write, malloc, calloc, realloc, free, memset, powf, sqrtf
 --------------------------------------------------------------------------------------
-//ask if last line applies or not
+
 Write a program that will read an "operation file" and print the result in the terminal
 
 Your program must take one argument, it will be the path to the "operation file"
