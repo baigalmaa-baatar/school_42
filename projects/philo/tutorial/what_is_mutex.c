@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
+#include "my_thread.h"
 
 int mails = 0;
 pthread_mutex_t     mutex;
@@ -21,14 +18,17 @@ pthread_mutex_t     mutex;
 void    *routine(void   *vargarp)
 {
     int i = 0;
+
+    (void)vargarp;
     
-    while (i < 10000000)
+    while (i < 10)
     {
         pthread_mutex_lock(&mutex);
         mails++;
         pthread_mutex_unlock(&mutex);
         i++;
     }
+    return ((void *)1);
 }
 
 int main(void)
@@ -58,5 +58,4 @@ int main(void)
     pthread_mutex_destroy(&mutex);
     printf("Number of mails %d\n", mails);
     return (0);
-
 }

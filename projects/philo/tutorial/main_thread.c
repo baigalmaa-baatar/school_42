@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
+#include "my_thread.h"
 
 int x = 2;
 
@@ -22,12 +19,14 @@ void    *routing(void   *vargarp)
     x++;
     sleep(2);
     printf("Value of x is  %d\n", x);
+    return (vargarp);
 }
 
 void    *routing2(void   *vargarp)
 {
     sleep(2);
     printf("Value of x is  %d\n", x);
+    return (vargarp);
 }
 
 int main(void)
@@ -42,7 +41,5 @@ int main(void)
         return (1);
     if (pthread_join(p2, NULL))
         return (1);
-
     return (0);
-
 }

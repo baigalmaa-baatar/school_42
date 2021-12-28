@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/29 12:14:48 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/11/29 12:14:50 by bbaatar          ###   ########.fr       */
+/*   Created: 2021/05/21 12:56:08 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/05/21 12:59:25 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <sys/types.h>
+#include "libft.h"
 
-int main(void)
+size_t	ft_strlen(const	char	*str)
 {
-    int x = 2;
-    int pid = fork();
-    if (pid == -1)
-    {
-        return (1);
-    }
-    if (pid == 0)
-        x++;
-    sleep(2);
-    printf("Value of x is  %d\n", x);
-    printf("Process ID %d\n", getpid());
-    if (pid != 0)
-    {
-        wait(0);
-    }        
-    return (0);
+	size_t	len;
+
+	len = 0;
+	if (str[0] == '\0')
+		return (len);
+	while (str[len] != '\0')
+	{
+		len++;
+	}
+	return (len);
 }
