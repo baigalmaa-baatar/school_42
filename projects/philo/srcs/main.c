@@ -12,24 +12,14 @@
 
 #include "../includes/philo.h"
 
-#define PHILO_NBR   2
-#define ERR_CRT "Failed to create thread"
-#define ERR_JOIN "Failed to join thread"
-#define ERR_DET "Failed to detach thread"
+#define PHILOSOPHERS_NUMBER 4
+#define TIME_TO_DIE 5 //500ms
+#define TIME_TO_EAT 2 //200ms
+#define TIME_TO_SLEEP 2 //200ms
 
-size_t	ft_strlen(const	char	*str)
-{
-	size_t	len;
-
-	len = 0;
-	if (str[0] == '\0')
-		return (len);
-	while (str[len] != '\0')
-	{
-		len++;
-	}
-	return (len);
-}
+pthread_mutex_t forks[PHILOSOPHERS_NUMBER];
+pthread_mutex_t leftFork;
+pthread_mutex_t rightFork;
 
 int str_err(char *str, int ret)
 {
@@ -39,39 +29,71 @@ int str_err(char *str, int ret)
 
 void    *routine(void   *arg)
 {
-    printf("Thread has started\n");
+    int philo;
 
+    philo = *(int *)arg;
+
+    pthread_mutex_lock(&leftFork);
+    printf("timestamp_in_ms %d has taken a left fork\n", philo);
+    pthread_mutex_lock(&rightFork);
+    printf("timestamp_in_ms %d has taken a right fork\n", philo);
+    printf("timestamp_in_ms %d is eating\n", philo);
+    sleep(TIME_TO_EAT);
+    pthread_mutex_unlock(&leftFork);
+    pthread_mutex_unlock(&rightFork);
+    printf("timestamp_in_ms %d is sleeping\n", philo);
+    sleep(TIME_TO_SLEEP);
+    printf("timestamp_in_ms %d is thinking\n", philo);
+          
     return (arg);
 }
 
 int main(void)
 {
     int i;
-    pthread_t   p[PHILO_NBR];
+    int *philo_num;
+
+    pthread_t   philo[PHILOSOPHERS_NUMBER];
 
     i = 0;
-    while(i < 2)
+    while (i < PHILOSOPHERS_NUMBER)
     {
-        if (pthread_create(&p[i], NULL, &routine, NULL) != 0)
+        pthread_mutex_init(&forks[i], NULL);
+        i++;
+    }
+    pthread_mutex_init(&leftFork, NULL);
+    pthread_mutex_init(&rightFork, NULL);
+    i = 0;
+    while(i < PHILOSOPHERS_NUMBER)
+    {
+        philo_num = malloc(sizeof(int));
+        *philo_num = i;
+        if (pthread_create(&philo[i], NULL, &routine, philo_num) != 0)
             str_err(ERR_CRT, 1);
-        i++;
+        free(philo_num);
+        i += 1;
     }
     i = 0;
-    while(i < 2)
+    while(i < PHILOSOPHERS_NUMBER)
     {
-        if (pthread_join(p[i], NULL) != 0)
+        if (pthread_join(philo[i], NULL) != 0)
             str_err(ERR_JOIN, 1);
-        i++;
+        i += 1;
     }
+    // i = 0;
+    // while(i < 2)
+    // {
+    //     if (pthread_detach(p[i]) != 0)
+    //         str_err(ERR_DET, 1);
+    //     i += 2;
+    // }
     i = 0;
-    while(i < 2)
+    while (i < PHILOSOPHERS_NUMBER)
     {
-        if (pthread_detach(p[i]) != 0)
-            str_err(ERR_DET, 1);
+        pthread_mutex_destroy(&forks[i]);
         i++;
     }
-    
+    pthread_mutex_destroy(&leftFork);
+    pthread_mutex_destroy(&rightFork);
     return (0);
-
 }
-

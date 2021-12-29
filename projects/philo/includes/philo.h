@@ -20,6 +20,12 @@
 #include <pthread.h>
 #include <time.h>
 #include <errno.h>
-#include "../libft/libft.h"
+
+#define PHILO_NBR   2
+#define ERR_CRT "Failed to create thread\n"
+#define ERR_JOIN "Failed to join thread\n"
+#define ERR_DET "Failed to detach thread\n"
+
+size_t	ft_strlen(const	char	*str);
 
 #endif

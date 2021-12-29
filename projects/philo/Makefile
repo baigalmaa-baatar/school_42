@@ -12,6 +12,7 @@
 
 NAME = philo
 SRCS =  srcs/main.c\
+		srcs/utils.c
 
 INCLUDE = includes
 OBJS = ${SRCS:.c=.o}
@@ -23,17 +24,16 @@ LIBS	= -lpthread
 		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o $@
 
 $(NAME): ${OBJS}
-		make -C libft/
-		$(CC) $(CFLAGS) $(OBJS) $(INCLUDES) libft/libft.a -o $(NAME) $(LIBS)
+		$(CC) $(CFLAGS) $(OBJS) $(INCLUDES) -o $(NAME) $(LIBS)
 
 all:	${NAME}
 
 clean:
-		make clean -C libft/
 		${RM} ${OBJS}
 
 fclean:	clean
 		${RM} ${NAME}
-		make fclean -C libft/
 
 re:		fclean all
+
+.PHONY: all clean fclean re
