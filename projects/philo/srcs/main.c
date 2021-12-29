@@ -18,8 +18,7 @@
 #define TIME_TO_SLEEP 2 //200ms
 
 pthread_mutex_t forks[PHILOSOPHERS_NUMBER];
-pthread_mutex_t leftFork;
-pthread_mutex_t rightFork;
+
 
 int str_err(char *str, int ret)
 {
@@ -33,18 +32,29 @@ void    *routine(void   *arg)
 
     philo = *(int *)arg;
 
-    pthread_mutex_lock(&leftFork);
-    printf("timestamp_in_ms %d has taken a left fork\n", philo);
-    pthread_mutex_lock(&rightFork);
-    printf("timestamp_in_ms %d has taken a right fork\n", philo);
-    printf("timestamp_in_ms %d is eating\n", philo);
-    sleep(TIME_TO_EAT);
-    pthread_mutex_unlock(&leftFork);
-    pthread_mutex_unlock(&rightFork);
-    printf("timestamp_in_ms %d is sleeping\n", philo);
-    sleep(TIME_TO_SLEEP);
-    printf("timestamp_in_ms %d is thinking\n", philo);
-          
+    pthread_mutex_t leftFork;
+    pthread_mutex_t rightFork;
+
+    pthread_mutex_init(&leftFork, NULL);
+    pthread_mutex_init(&rightFork, NULL);
+    while (1)
+    {
+        leftFork = forks[philo];
+        rightFork = forks[(philo + 1) % PHILOSOPHERS_NUMBER];
+        pthread_mutex_lock(&leftFork);
+        printf("timestamp_in_ms %d has taken a left fork\n", philo);
+        pthread_mutex_lock(&rightFork);
+        printf("timestamp_in_ms %d has taken a right fork\n", philo);
+        printf("timestamp_in_ms %d is eating\n", philo);
+        sleep(TIME_TO_EAT);
+        pthread_mutex_unlock(&leftFork);
+        pthread_mutex_unlock(&rightFork);
+        printf("timestamp_in_ms %d is sleeping\n", philo);
+        sleep(TIME_TO_SLEEP);
+        printf("timestamp_in_ms %d is thinking\n", philo);
+    }
+        pthread_mutex_destroy(&leftFork);
+        pthread_mutex_destroy(&rightFork);
     return (arg);
 }
 
@@ -52,7 +62,6 @@ int main(void)
 {
     int i;
     int *philo_num;
-
     pthread_t   philo[PHILOSOPHERS_NUMBER];
 
     i = 0;
@@ -61,8 +70,6 @@ int main(void)
         pthread_mutex_init(&forks[i], NULL);
         i++;
     }
-    pthread_mutex_init(&leftFork, NULL);
-    pthread_mutex_init(&rightFork, NULL);
     i = 0;
     while(i < PHILOSOPHERS_NUMBER)
     {
@@ -93,7 +100,11 @@ int main(void)
         pthread_mutex_destroy(&forks[i]);
         i++;
     }
-    pthread_mutex_destroy(&leftFork);
-    pthread_mutex_destroy(&rightFork);
+    i = 0;
+    while (i < PHILOSOPHERS_NUMBER)
+    {
+        pthread_mutex_destroy(&forks[i]);
+        i++;
+    }
     return (0);
 }
