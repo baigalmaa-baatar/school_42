@@ -19,42 +19,48 @@
 
 pthread_mutex_t forks[PHILOSOPHERS_NUMBER];
 
-
 int str_err(char *str, int ret)
 {
     write(1, str, ft_strlen(str));
     return (ret);
 }
 
+unsigned long long getTime()
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	unsigned long long millisecondsSinceEpoch = (unsigned long long)(tv.tv_sec) * 1000 + (unsigned long long)(tv.tv_usec) / 1000;
+	return (millisecondsSinceEpoch);
+}
+
 void    *routine(void   *arg)
 {
     int philo;
+	pthread_mutex_t *leftFork;
+    pthread_mutex_t *rightFork;
 
     philo = *(int *)arg;
-
-    pthread_mutex_t leftFork;
-    pthread_mutex_t rightFork;
-
-    pthread_mutex_init(&leftFork, NULL);
-    pthread_mutex_init(&rightFork, NULL);
-    while (1)
-    {
-        leftFork = forks[philo];
-        rightFork = forks[(philo + 1) % PHILOSOPHERS_NUMBER];
-        pthread_mutex_lock(&leftFork);
-        printf("timestamp_in_ms %d has taken a left fork\n", philo);
-        pthread_mutex_lock(&rightFork);
-        printf("timestamp_in_ms %d has taken a right fork\n", philo);
-        printf("timestamp_in_ms %d is eating\n", philo);
+	
+	// printf("%llu\n", getTime());
+	printf("thread has created!!!: %d\n", philo);
+	sleep(1);
+    // while (1)
+    // {
+        leftFork = &forks[philo];
+        rightFork = &forks[(philo + 1) % PHILOSOPHERS_NUMBER];
+        pthread_mutex_lock(leftFork);
+        printf("%llu %d has taken a left fork\n", getTime(), philo);
+        pthread_mutex_lock(rightFork);
+        printf("%llu %d has taken a right fork\n", getTime(), philo);
+        printf("%llu %d is eating\n", getTime(), philo);
         sleep(TIME_TO_EAT);
-        pthread_mutex_unlock(&leftFork);
-        pthread_mutex_unlock(&rightFork);
-        printf("timestamp_in_ms %d is sleeping\n", philo);
+        pthread_mutex_unlock(leftFork);
+        pthread_mutex_unlock(rightFork);
+        printf("%llu %d is sleeping\n", getTime(), philo);
         sleep(TIME_TO_SLEEP);
-        printf("timestamp_in_ms %d is thinking\n", philo);
-    }
-        pthread_mutex_destroy(&leftFork);
-        pthread_mutex_destroy(&rightFork);
+        printf("%llu %d is thinking\n", getTime(), philo);
+    // }
     return (arg);
 }
 
@@ -62,6 +68,7 @@ int main(void)
 {
     int i;
     int *philo_num;
+    
     pthread_t   philo[PHILOSOPHERS_NUMBER];
 
     i = 0;

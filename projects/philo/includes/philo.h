@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <errno.h>
+#include <sys/time.h>
 
 #define PHILO_NBR   2
 #define ERR_CRT "Failed to create thread\n"
