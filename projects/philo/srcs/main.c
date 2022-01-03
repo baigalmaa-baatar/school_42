@@ -12,12 +12,17 @@
 
 #include "../includes/philo.h"
 
-#define PHILOSOPHERS_NUMBER 4
-#define TIME_TO_DIE 5 //500ms
-#define TIME_TO_EAT 2 //200ms
-#define TIME_TO_SLEEP 2 //200ms
+#define TIME_TO_DIE 500000 //500ms
+#define TIME_TO_EAT 200000 //200ms
+#define TIME_TO_SLEEP 200000 //200ms
 
-pthread_mutex_t forks[PHILOSOPHERS_NUMBER];
+typedef struct s_philo
+{
+	unsigned int philoNum;
+	int pId;
+	unsigned long long *ltaArr;
+	pthread_mutex_t *forks;
+}	t_philo;
 
 int str_err(char *str, int ret)
 {
@@ -34,63 +39,79 @@ unsigned long long getTime()
 	return (millisecondsSinceEpoch);
 }
 
-void    *routine(void   *arg)
+void    *routine(void *arg)
 {
-    int philo;
 	pthread_mutex_t *leftFork;
     pthread_mutex_t *rightFork;
 
-    philo = *(int *)arg;
-	
-	// printf("%llu\n", getTime());
-	printf("thread has created!!!: %d\n", philo);
-	sleep(1);
-    // while (1)
-    // {
-        leftFork = &forks[philo];
-        rightFork = &forks[(philo + 1) % PHILOSOPHERS_NUMBER];
+	t_philo *philos;
+	philos = (t_philo *)arg;
+	printf("Thread has created!!!: %d\n", philos->pId);
+    while (1)
+    {
+        leftFork = &philos->forks[philos->pId];
+        rightFork = &philos->forks[(philos->pId + 1) % philos->philoNum];
         pthread_mutex_lock(leftFork);
-        printf("%llu %d has taken a left fork\n", getTime(), philo);
+        printf("%llu %d has taken a left fork\n", getTime(), philos->pId);
         pthread_mutex_lock(rightFork);
-        printf("%llu %d has taken a right fork\n", getTime(), philo);
-        printf("%llu %d is eating\n", getTime(), philo);
-        sleep(TIME_TO_EAT);
+        printf("%llu %d has taken a right fork\n", getTime(), philos->pId);
+        printf("%llu %d is eating\n", getTime(), philos->pId);
+        usleep(TIME_TO_EAT);
         pthread_mutex_unlock(leftFork);
         pthread_mutex_unlock(rightFork);
-        printf("%llu %d is sleeping\n", getTime(), philo);
-        sleep(TIME_TO_SLEEP);
-        printf("%llu %d is thinking\n", getTime(), philo);
-    // }
-    return (arg);
+        printf("%llu %d is sleeping\n", getTime(), philos->pId);
+        usleep(TIME_TO_SLEEP);
+        printf("%llu %d is thinking\n", getTime(), philos->pId);
+    }
+    return (philos);
 }
 
-int main(void)
+bool	init_philos(t_philo *philos, int philoNum)
 {
-    int i;
-    int *philo_num;
-    
-    pthread_t   philo[PHILOSOPHERS_NUMBER];
+	int i;
 
+	philos->philoNum = philoNum;
+	philos->pId = 0;
+	i = 0;
+
+	return (true);
+}
+
+int main(int argc, char *argv[])
+{
+    unsigned int i;
+
+	(void)argc;
+	(void)argv;
+	unsigned int numbers_of_philos = 4;
+    pthread_t   p_th[100];
+	unsigned long long ltaArr[100];
+	pthread_mutex_t forks[100];
+	t_philo philos[100];
+
+	i = 0;
+	while (i < numbers_of_philos)
+	{
+		ltaArr[i] = getTime();
+		pthread_mutex_init(&forks[i], NULL);
+		i++;
+	}
     i = 0;
-    while (i < PHILOSOPHERS_NUMBER)
+    while(i < numbers_of_philos)
     {
-        pthread_mutex_init(&forks[i], NULL);
-        i++;
-    }
-    i = 0;
-    while(i < PHILOSOPHERS_NUMBER)
-    {
-        philo_num = malloc(sizeof(int));
-        *philo_num = i;
-        if (pthread_create(&philo[i], NULL, &routine, philo_num) != 0)
+		philos[i].philoNum = numbers_of_philos;
+		philos[i].forks = forks;
+		philos[i].ltaArr = ltaArr;
+		philos[i].pId = i;
+		printf("philos[i].pId: %u\n", philos[i].pId);
+        if (pthread_create(&p_th[i], NULL, &routine, &philos[i]) != 0)
             str_err(ERR_CRT, 1);
-        free(philo_num);
-        i += 1;
+		i += 1;
     }
     i = 0;
-    while(i < PHILOSOPHERS_NUMBER)
+    while(i < numbers_of_philos)
     {
-        if (pthread_join(philo[i], NULL) != 0)
+        if (pthread_join(p_th[i], NULL) != 0)
             str_err(ERR_JOIN, 1);
         i += 1;
     }
@@ -102,16 +123,17 @@ int main(void)
     //     i += 2;
     // }
     i = 0;
-    while (i < PHILOSOPHERS_NUMBER)
+    while (i < numbers_of_philos)
     {
         pthread_mutex_destroy(&forks[i]);
         i++;
     }
     i = 0;
-    while (i < PHILOSOPHERS_NUMBER)
+    while (i < numbers_of_philos)
     {
         pthread_mutex_destroy(&forks[i]);
         i++;
     }
+	// free(philos);
     return (0);
 }
