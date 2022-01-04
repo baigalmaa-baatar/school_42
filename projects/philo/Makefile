@@ -11,8 +11,9 @@
 # **************************************************************************** #
 
 NAME = philo
-SRCS =  srcs/main.c\
-		srcs/utils.c
+SRCS =  srcs/get_args.c\
+		srcs/utils.c\
+		srcs/main.c
 
 INCLUDE = includes
 OBJS = ${SRCS:.c=.o}
