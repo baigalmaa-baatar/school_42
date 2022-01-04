@@ -49,9 +49,9 @@ unsigned long long getTime(void)
 	return (millisecondsSinceEpoch);
 }
 
-void preciseSleep(int ms) {
-    struct timespec ts;
-    ts.tv_sec = ms / 1000;
-    ts.tv_nsec = ms % 1000 * 1000000;
-    nanosleep(&ts, &ts);
-}
+// void preciseSleep(int ms) {
+//     struct timespec ts;
+//     ts.tv_sec = ms / 1000;
+//     ts.tv_nsec = ms % 1000 * 1000000;
+//     nanosleep(&ts, &ts);
+// }

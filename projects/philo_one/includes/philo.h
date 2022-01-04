@@ -48,6 +48,6 @@ size_t	ft_strlen(const	char	*str);
 unsigned long long getTime(void);
 void	ft_putnbr_fd(unsigned long long nbr, int fd);
 unsigned long long	get_args(int argc, char **argv, unsigned long long inputVal[5]);
-void preciseSleep(int ms);
+// void preciseSleep(int ms);
 
 #endif

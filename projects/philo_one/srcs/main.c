@@ -21,18 +21,15 @@ int str_err(char *str, int ret)
     return (ret);
 }
 
-#define UNUSED(x) (void)(x)
+// #define UNUSED(x) (void)(x)
 void display_stat(pthread_mutex_t *lock, unsigned long long pId, char *str)
-{/*
+{
 	pthread_mutex_lock(lock);
 	ft_putnbr_fd(getTime(), 1);
 	write(1," ", 1);
 	ft_putnbr_fd(pId, 1);
 	write(1, str, ft_strlen(str));
 	pthread_mutex_unlock(lock);
-	*/
-	UNUSED(lock);
-	printf("%llu %llu%s", getTime(), pId, str);
 }
 
 void    *routine(void *arg)
@@ -47,7 +44,6 @@ void    *routine(void *arg)
 	// printf("Thread has created!!!: %d\n", philos->pId);
     while (1)
     {
-        // printf("Creating the big thread pID : %llu\n", philos->pId);
 		if (!(*philos->running))
         {
             // printf("before break %llu\n", philos->pId);
@@ -101,20 +97,20 @@ void    *routine(void *arg)
 		else
 			ateCntr++;
 		// printf("inputval time to eat : %llu\n", philos->timeToEat);
-
 		philos->ltaArr[philos->pId] = getTime();
 		display_stat(philos->message, philos->pId," is eating\n");
-
-        preciseSleep(philos->timeToEat);
+        usleep(philos->timeToEat * 1000);
         pthread_mutex_unlock(leftFork);
         pthread_mutex_unlock(rightFork);
 		if (!(*philos->running))
 			break;
 		display_stat(philos->message, philos->pId," is sleeping\n");
 		// printf("%llu %llu is sleeping\n", getTime(), philos->pId);
-        preciseSleep(philos->timeToSleep);
+        usleep(philos->timeToSleep * 1000);
+		// preciseSleep(philos->timeToSleep);
 		if (!(*philos->running))
 			break;
+		display_stat(philos->message, philos->pId," is thinking\n");
         // printf("%llu %llu is thinking\n", getTime(), philos->pId);
     }
     return (NULL);
