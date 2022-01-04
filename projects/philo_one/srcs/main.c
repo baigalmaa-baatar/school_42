@@ -42,6 +42,7 @@ void    *routine(void *arg)
 	philos = (t_philo *)arg;
 	ateCntr = 0;
 	// printf("Thread has created!!!: %d\n", philos->pId);
+	
     while (1)
     {
 		if (!(*philos->running))
@@ -55,32 +56,36 @@ void    *routine(void *arg)
         rightFork = &philos->forks[(philos->pId + 1) % philos->philoNum];
 		// printf("aaaaaaaa %llu enen deer neg yum hevleed uz dee\n", philos->pId);
 
-        if(philos->pId % 2)
+        // if(philos->pId % 2)
+		// {
+		if (philos->pId % 2)
 		{
-			pthread_mutex_lock(leftFork);
-        	pthread_mutex_lock(rightFork);
-			if (!(*philos->running))
-			{
-        		pthread_mutex_unlock(leftFork);
-        		pthread_mutex_unlock(rightFork);
-				break;
-			}
-			display_stat(philos->message, philos->pId," has taken a fork\n");
-        	// printf("%llu %llu has taken a fork\n", getTime(), philos->pId);
+			usleep((float)philos->timeToDie * 0.9 + 1);
 		}
-		else
+		pthread_mutex_lock(leftFork);
+        pthread_mutex_lock(rightFork);
+		if (!(*philos->running))
 		{
-			pthread_mutex_lock(rightFork);
-			pthread_mutex_lock(leftFork);
-			if (!(*philos->running))
-			{
-        		pthread_mutex_unlock(rightFork);
-				pthread_mutex_unlock(leftFork);
-				break;
-			}
-			display_stat(philos->message, philos->pId," has taken a fork\n");
-        	// printf("%llu %llu has taken a fork\n", getTime(), philos->pId);
+        	pthread_mutex_unlock(leftFork);
+        	pthread_mutex_unlock(rightFork);
+			break;
 		}
+		display_stat(philos->message, philos->pId," has taken a fork\n");
+        // printf("%llu %llu has taken a fork\n", getTime(), philos->pId);
+		// }
+		// else
+		// {
+		// 	pthread_mutex_lock(rightFork);
+		// 	pthread_mutex_lock(leftFork);
+		// 	if (!(*philos->running))
+		// 	{
+        // 		pthread_mutex_unlock(rightFork);
+		// 		pthread_mutex_unlock(leftFork);
+		// 		break;
+		// 	}
+		// 	display_stat(philos->message, philos->pId + 1," has taken a fork\n");
+        // 	// printf("%llu %llu has taken a fork\n", getTime(), philos->pId);
+		// }
 		// printf("aaaaaaaa %llu enen deer neg yum hevleed uz dee\n", philos->pId);
 		if (!(*philos->running))
 			{
@@ -98,19 +103,19 @@ void    *routine(void *arg)
 			ateCntr++;
 		// printf("inputval time to eat : %llu\n", philos->timeToEat);
 		philos->ltaArr[philos->pId] = getTime();
-		display_stat(philos->message, philos->pId," is eating\n");
+		display_stat(philos->message, philos->pId + 1," is eating\n");
         usleep(philos->timeToEat * 1000);
         pthread_mutex_unlock(leftFork);
         pthread_mutex_unlock(rightFork);
 		if (!(*philos->running))
 			break;
-		display_stat(philos->message, philos->pId," is sleeping\n");
+		display_stat(philos->message, philos->pId + 1," is sleeping\n");
 		// printf("%llu %llu is sleeping\n", getTime(), philos->pId);
         usleep(philos->timeToSleep * 1000);
 		// preciseSleep(philos->timeToSleep);
 		if (!(*philos->running))
 			break;
-		display_stat(philos->message, philos->pId," is thinking\n");
+		display_stat(philos->message, philos->pId + 1," is thinking\n");
         // printf("%llu %llu is thinking\n", getTime(), philos->pId);
     }
     return (NULL);
@@ -135,7 +140,7 @@ int small_thread(t_philo *philos, unsigned long long deltaLTA)
 		// printf("timeToEat: %llu\n", philos->timeToEat);
        	if (deltaLTA >= philos->timeToDie)// || philos->timeToEat > philos->timeToDie)//|| philos->timeToDie < philos->timeToSleep)
 		{
-			display_stat(philos->message, philos->pId," died\n");
+			display_stat(philos->message, philos->pId + 1," died\n");
 			// printf("%llu %d died\n", getTime(), i);
 			*(philos->running) = false;
 			return (0);
