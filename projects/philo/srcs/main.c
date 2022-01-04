@@ -12,6 +12,8 @@
 
 #include "../includes/philo.h"
 
+//./philo 4 100 200 300 test it 40 times.
+
 int str_err(char *str, int ret)
 {
     write(1, str, ft_strlen(str));
@@ -37,10 +39,18 @@ void    *routine(void *arg)
 	// printf("Thread has created!!!: %d\n", philos->pId);
     while (1)
     {
+        printf("Creating the big thread pID : %u\n", philos->pId);
 		if (!(*philos->running))
+        {
+            printf("before break %d\n", philos->pId);
 			break;
+        }
+		printf("Why it is not breaking in previuos line?? %d\n", philos->pId);
+        
 		leftFork = &philos->forks[philos->pId];
         rightFork = &philos->forks[(philos->pId + 1) % philos->philoNum];
+		printf("aaaaaaaa %d enen deer neg yum hevleed uz dee\n", philos->pId);
+
         if(philos->pId % 2)
 		{
 			pthread_mutex_lock(leftFork);
@@ -57,18 +67,26 @@ void    *routine(void *arg)
 				break;
         	printf("%llu %d has taken a fork\n", getTime(), philos->pId);
 		}
+		printf("aaaaaaaa %d enen deer neg yum hevleed uz dee\n", philos->pId);
+
 		philos->ltaArr[philos->pId] = getTime();
 		if (!(*philos->running))
 			break;
         printf("%llu %d is eating\n", getTime(), philos->pId);
 		// printf("inputval time to eat : %llu\n", philos->timeToEat);
-        usleep(philos->timeToEat * 1000);
+        if (philos->timeToEat < philos->timeToDie)
+            usleep(philos->timeToEat * 1000);
+        else
+            break;
         pthread_mutex_unlock(leftFork);
         pthread_mutex_unlock(rightFork);
 		if (!(*philos->running))
 			break;
         printf("%llu %d is sleeping\n", getTime(), philos->pId);
-        usleep(philos->timeToSleep * 1000);
+        if (philos->timeToSleep < philos->timeToDie)
+            usleep(philos->timeToSleep * 1000);
+        else
+            break;
 		if (!(*philos->running))
 			break;
         printf("%llu %d is thinking\n", getTime(), philos->pId);
@@ -83,30 +101,42 @@ bool	init_philos(t_philo *philos, int philoNum)
 	return (true);
 }
 
-void    *detectDeath(void *arg)
+int small_thread(t_philo *philos, unsigned long long deltaLTA)
 {
 	unsigned int i;
-	unsigned long long delatLTA;
+    i = 0;
+    while(i < philos->philoNum)
+    {
+	    printf("Creating the small thread pId : %u\n", i);
+		deltaLTA = getTime() - philos->ltaArr[i];
+    	// printf("deltaLTA: %llu\n", deltaLTA);
+		// printf("timeToDie: %llu\n", philos->timeToDie);
+		// printf("timeToEat: %llu\n", philos->timeToEat);
+       	if (deltaLTA >= philos->timeToDie || philos->timeToEat > philos->timeToDie)//|| philos->timeToDie < philos->timeToSleep)
+		{
+	       	printf("%llu %d died\n", getTime(), i);
+			*(philos->running) = false;
+			return (0);
+		}
+        printf("NULL butsaasnii daraa\n");
+		i++;
+    }
+    return (1);
+}
+
+void    *detectDeath(void *arg)
+{
+	unsigned long long deltaLTA;
 	t_philo *philos;
 
 	philos = (t_philo *)arg;
+    deltaLTA = 0;
 	while (1)
 	{
-		i = 0;
-    	while(i < philos->philoNum)
-    	{
-			delatLTA = getTime() - philos->ltaArr[i];
-			// printf("deltaLTA: %llu\n", delatLTA);
-        	if (delatLTA >= philos->timeToDie)
-			{
-	        	printf("%llu %d died\n", getTime(), i);
-				*(philos->running) = false;
-				return (NULL);
-			}
-			i++;
-    	}
+		if (!small_thread(philos, deltaLTA))
+            return (NULL);
 		usleep(5000);
-		// printf("enen deer neg yum hevleed uz dee\n");
+		printf("enen deer neg yum hevleed uz dee\n");
 	}
 	return (NULL);
 }
@@ -134,10 +164,10 @@ int main(int argc, char *argv[])
 	timeToDie = inputVal[1];
 	timeToEat = inputVal[2];
 	timeToSleep = inputVal[3];
-	printf("Number of philo: %llu\n", philoNbr);
-	printf("Time to die : %llu\n", timeToDie);
-	printf("Time to eat : %llu\n", timeToEat);
-	printf("Time to sleep : %llu\n", timeToSleep);
+	// printf("Number of philo: %llu\n", philoNbr);
+	// printf("Time to die : %llu\n", timeToDie);
+	// printf("Time to eat : %llu\n", timeToEat);
+	// printf("Time to sleep : %llu\n", timeToSleep);
 	if (!philoNbr)
 		str_err(ERR_ARG, 1);
 	running = true;
@@ -156,11 +186,15 @@ int main(int argc, char *argv[])
 		philos[i].forks = &forks[0];
 		philos[i].ltaArr = &ltaArr[0];
 		philos[i].running = &running;
+		philos[i].timeToDie = timeToDie;
 		philos[i].timeToEat = timeToEat;
 		philos[i].timeToSleep = timeToSleep;
 		philos[i].pId = i;
         if (pthread_create(&p_th[i], NULL, &routine, &philos[i]) != 0)
-            str_err(ERR_CRT, 1);
+        {
+            printf("checking it is here %u\n", i);
+            return(str_err(ERR_CRT, 1));
+        }
 		i++;
 		// usleep(10000);
     }
@@ -168,15 +202,23 @@ int main(int argc, char *argv[])
     deathStr.ltaArr = &ltaArr[0];
 	deathStr.running = &running;
 	deathStr.timeToDie = timeToDie;
+	deathStr.timeToEat = timeToEat;
+	deathStr.timeToSleep = timeToSleep;
+	// printf("timeToDie : %llu\n", deathStr.timeToDie);
+	// printf("timeToEat : %llu\n", deathStr.timeToEat);
+	// printf("timeToSleep : %llu\n", deathStr.timeToSleep);
+
 	if (pthread_create(&deathThread, NULL, &detectDeath, &deathStr) != 0)
-        str_err(ERR_CRT, 1);
+        return (str_err(ERR_CRT, 1));
 	i = 0;
     while(i < philoNbr)
     {
-        if (pthread_join(p_th[i], NULL) != 0)
-            str_err(ERR_JOIN, 1);
+        if(pthread_join(p_th[i], NULL) != 0)
+            return (str_err(ERR_JOIN, 1));
         i += 1;
     }
+    if(pthread_join(deathThread, NULL) != 0)
+            return (str_err(ERR_JOIN, 1));
     // i = 0;
     // while(i < 2)
     // {
@@ -184,12 +226,6 @@ int main(int argc, char *argv[])
     //         str_err(ERR_DET, 1);
     //     i += 2;
     // }
-    i = 0;
-    while (i < philoNbr)
-    {
-        pthread_mutex_destroy(&forks[i]);
-        i++;
-    }
     i = 0;
     while (i < philoNbr)
     {
