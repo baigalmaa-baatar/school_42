@@ -12,22 +12,18 @@
 
 #include "../includes/philo.h"
 
-//./philo 4 100 200 300 test it 40 times.
-//./philo 4 410 200 200
-
 int str_err(char *str, int ret)
 {
-    write(1, str, ft_strlen(str));
-    return (ret);
+	write(1, str, ft_strlen(str));
+	return (ret);
 }
 
-// #define UNUSED(x) (void)(x)
 void display_stat(pthread_mutex_t *lock, unsigned long long pId, char *str)
 {
 	pthread_mutex_lock(lock);
 	ft_putnbr_fd(getTime(), 1);
 	write(1," ", 1);
-	ft_putnbr_fd(pId, 1);
+	ft_putnbr_fd(pId + 1, 1);
 	write(1, str, ft_strlen(str));
 	pthread_mutex_unlock(lock);
 }
@@ -36,89 +32,57 @@ void    *routine(void *arg)
 {
 	int ateCntr;
 	pthread_mutex_t *leftFork;
-    pthread_mutex_t *rightFork;
+	pthread_mutex_t *rightFork;
 	t_philo *philos;
 
 	philos = (t_philo *)arg;
 	ateCntr = 0;
-	// printf("Thread has created!!!: %d\n", philos->pId);
-	
-    while (1)
-    {
+	while (1)
+	{
 		if (!(*philos->running))
-        {
-            // printf("before break %llu\n", philos->pId);
 			break;
-        }
-		// printf("Why it is not breaking in previuos line?? %llu\n", philos->pId);
-        
 		leftFork = &philos->forks[philos->pId];
-        rightFork = &philos->forks[(philos->pId + 1) % philos->philoNum];
-		// printf("aaaaaaaa %llu enen deer neg yum hevleed uz dee\n", philos->pId);
-
-        // if(philos->pId % 2)
-		// {
+		rightFork = &philos->forks[(philos->pId + 1) % philos->philoNum];
 		if (philos->pId % 2)
-		{
 			usleep((float)philos->timeToDie * 0.9 + 1);
-		}
 		pthread_mutex_lock(leftFork);
-        pthread_mutex_lock(rightFork);
+		pthread_mutex_lock(rightFork);
 		if (!(*philos->running))
 		{
-        	pthread_mutex_unlock(leftFork);
-        	pthread_mutex_unlock(rightFork);
+			pthread_mutex_unlock(leftFork);
+			pthread_mutex_unlock(rightFork);
 			break;
 		}
 		display_stat(philos->message, philos->pId," has taken a fork\n");
-        // printf("%llu %llu has taken a fork\n", getTime(), philos->pId);
-		// }
-		// else
-		// {
-		// 	pthread_mutex_lock(rightFork);
-		// 	pthread_mutex_lock(leftFork);
-		// 	if (!(*philos->running))
-		// 	{
-        // 		pthread_mutex_unlock(rightFork);
-		// 		pthread_mutex_unlock(leftFork);
-		// 		break;
-		// 	}
-		// 	display_stat(philos->message, philos->pId + 1," has taken a fork\n");
-        // 	// printf("%llu %llu has taken a fork\n", getTime(), philos->pId);
-		// }
-		// printf("aaaaaaaa %llu enen deer neg yum hevleed uz dee\n", philos->pId);
+
 		if (!(*philos->running))
-			{
-        		pthread_mutex_unlock(rightFork);
-				pthread_mutex_unlock(leftFork);
-				break;
-			}
+		{
+			pthread_mutex_unlock(rightFork);
+			pthread_mutex_unlock(leftFork);
+			break;
+		}
 		if (ateCntr == (int)philos->mustEatNbr)
-			{
-        		pthread_mutex_unlock(rightFork);
-				pthread_mutex_unlock(leftFork);
-				break;
-			}
+		{
+			pthread_mutex_unlock(rightFork);
+			pthread_mutex_unlock(leftFork);
+			break;
+		}
 		else
 			ateCntr++;
-		// printf("inputval time to eat : %llu\n", philos->timeToEat);
 		philos->ltaArr[philos->pId] = getTime();
-		display_stat(philos->message, philos->pId + 1," is eating\n");
-        usleep(philos->timeToEat * 1000);
-        pthread_mutex_unlock(leftFork);
-        pthread_mutex_unlock(rightFork);
+		display_stat(philos->message, philos->pId," is eating\n");
+		usleep(philos->timeToEat * 1000);
+		pthread_mutex_unlock(leftFork);
+		pthread_mutex_unlock(rightFork);
 		if (!(*philos->running))
 			break;
-		display_stat(philos->message, philos->pId + 1," is sleeping\n");
-		// printf("%llu %llu is sleeping\n", getTime(), philos->pId);
-        usleep(philos->timeToSleep * 1000);
-		// preciseSleep(philos->timeToSleep);
+		display_stat(philos->message, philos->pId," is sleeping\n");
+		usleep(philos->timeToSleep * 1000);
 		if (!(*philos->running))
 			break;
-		display_stat(philos->message, philos->pId + 1," is thinking\n");
-        // printf("%llu %llu is thinking\n", getTime(), philos->pId);
-    }
-    return (NULL);
+		display_stat(philos->message, philos->pId," is thinking\n");
+	}
+	return (NULL);
 }
 
 bool	init_philos(t_philo *philos, int philoNum)
@@ -131,24 +95,19 @@ bool	init_philos(t_philo *philos, int philoNum)
 int small_thread(t_philo *philos, unsigned long long deltaLTA)
 {
 	unsigned int i;
-    i = 0;
-    while(i < philos->philoNum)
-    {
-	    // printf("Creating the small thread pId : %u\n", i);
+	i = 0;
+	while(i < philos->philoNum)
+	{
 		deltaLTA = getTime() - philos->ltaArr[i];
-		// printf("timeToDie: %llu\n", philos->timeToDie);
-		// printf("timeToEat: %llu\n", philos->timeToEat);
-       	if (deltaLTA >= philos->timeToDie)// || philos->timeToEat > philos->timeToDie)//|| philos->timeToDie < philos->timeToSleep)
+		if (deltaLTA >= philos->timeToDie)
 		{
-			display_stat(philos->message, philos->pId + 1," died\n");
-			// printf("%llu %d died\n", getTime(), i);
+			display_stat(philos->message, i," died\n");
 			*(philos->running) = false;
 			return (0);
 		}
-        // printf("NULL butsaasnii daraa\n");
 		i++;
-    }
-    return (1);
+	}
+	return (1);
 }
 
 void    *detectDeath(void *arg)
@@ -157,21 +116,20 @@ void    *detectDeath(void *arg)
 	t_philo *philos;
 
 	philos = (t_philo *)arg;
-    deltaLTA = 0;
+	deltaLTA = 0;
 	while (1)
 	{
 		if (!small_thread(philos, deltaLTA))
-            return (NULL);
+			return (NULL);
 		usleep(5000);
-		// printf("enen deer neg yum hevleed uz dee\n");
 	}
 	return (NULL);
 }
 
 int main(int argc, char *argv[])
 {
-    unsigned int i;
-    pthread_t   p_th[100];
+	unsigned int i;
+	pthread_t   p_th[100];
 	unsigned long long ltaArr[100];
 	pthread_mutex_t forks[100];
 	pthread_mutex_t message;
@@ -188,7 +146,6 @@ int main(int argc, char *argv[])
 
 	if (argc < 5 || argc > 6)
 		str_err(ERR_ARG, 1);
-	// philoNbr = get_args(argv, &inputVal);
 	philoNbr = get_args(argc, argv, inputVal);
 	timeToDie = inputVal[1];
 	timeToEat = inputVal[2];
@@ -197,10 +154,6 @@ int main(int argc, char *argv[])
 		mustEatNbr = inputVal[4];
 	else
 		mustEatNbr = -1;
-	// printf("Number of philo: %llu\n", philoNbr);
-	// printf("Time to die : %llu\n", timeToDie);
-	// printf("Time to eat : %llu\n", timeToEat);
-	// printf("Time to sleep : %llu\n", timeToSleep);
 	if (!philoNbr)
 		str_err(ERR_ARG, 1);
 	running = true;
@@ -212,10 +165,9 @@ int main(int argc, char *argv[])
 		i++;
 	}
 	pthread_mutex_init(&message, NULL);
-	// pthread_mutex_init(&deathlock, NULL);
-    i = 0;
-    while(i < philoNbr)
-    {
+	i = 0;
+	while(i < philoNbr)
+	{
 		philos[i].philoNum = philoNbr;
 		philos[i].forks = &forks[0];
 		philos[i].ltaArr = &ltaArr[0];
@@ -226,49 +178,39 @@ int main(int argc, char *argv[])
 		philos[i].mustEatNbr = mustEatNbr;
 		philos[i].message = &message;
 		philos[i].pId = i;
-        if (pthread_create(&p_th[i], NULL, &routine, &philos[i]) != 0)
-        {
-            // printf("checking it is here %u\n", i);
-            return(str_err(ERR_CRT, 1));
-        }
+		if (pthread_create(&p_th[i], NULL, &routine, &philos[i]) != 0)
+		{
+			return(str_err(ERR_CRT, 1));
+		}
 		i++;
-		// usleep(10000);
-    }
+	}
 	deathStr.philoNum = philoNbr;
-    deathStr.ltaArr = &ltaArr[0];
+	deathStr.ltaArr = &ltaArr[0];
 	deathStr.running = &running;
 	deathStr.timeToDie = timeToDie;
 	deathStr.timeToEat = timeToEat;
 	deathStr.timeToSleep = timeToSleep;
 	deathStr.message = &message;
-	// printf("timeToDie : %llu\n", deathStr.timeToDie);
-	// printf("timeToEat : %llu\n", deathStr.timeToEat);
-	// printf("timeToSleep : %llu\n", deathStr.timeToSleep);
-
 	if (pthread_create(&deathThread, NULL, &detectDeath, &deathStr) != 0)
-        return (str_err(ERR_CRT, 1));
+		return (str_err(ERR_CRT, 1));
 	i = 0;
-    while(i < philoNbr)
-    {
-        if(pthread_join(p_th[i], NULL) != 0)
-            return (str_err(ERR_JOIN, 1));
-        i += 1;
-    }
-    if(pthread_join(deathThread, NULL) != 0)
-            return (str_err(ERR_JOIN, 1));
-    // i = 0;
-    // while(i < 2)
-    // {
-    //     if (pthread_detach(p[i]) != 0)
-    //         str_err(ERR_DET, 1);
-    //     i += 2;
-    // }
-    i = 0;
-    while (i < philoNbr)
-    {
-        pthread_mutex_destroy(&forks[i]);
-        i++;
-    }
-	// free(philos);
-    return (0);
+	while(i < philoNbr)
+	{
+		if(pthread_join(p_th[i], NULL) != 0)
+			return (str_err(ERR_JOIN, 3));
+		i++;
+	}
+	if(pthread_join(deathThread, NULL) != 0)
+		return (str_err(ERR_JOIN, 1));
+	// pthread_join(philos[i].thread_id, NULL);
+	i = 0;
+	while (i < philoNbr)
+	{
+		pthread_mutex_destroy(&forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&message);
+	//free(detectDeath);
+	return (0);
 }
+

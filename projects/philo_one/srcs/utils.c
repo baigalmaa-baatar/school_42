@@ -35,9 +35,14 @@ void	ft_putnbr_fd(unsigned long long nbr, int fd)
 {
 	if (nbr > 9)
 	{
-		ft_putnbr_fd (nbr / 10, fd);
+		ft_putnbr_fd(nbr / 10, fd);
+		ft_putnbr_fd(nbr % 10, fd);
 	}
-	ft_putchar_fd (nbr % 10 + '0', fd);
+	else
+	{
+		if (fd >= 0)
+			ft_putchar_fd(nbr + 48, fd);
+	}
 }
 
 unsigned long long getTime(void)
