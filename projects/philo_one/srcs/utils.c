@@ -45,6 +45,33 @@ void	ft_putnbr_fd(unsigned long long nbr, int fd)
 	}
 }
 
+int	ft_atoi(const char *str)
+{
+	size_t				i;
+	unsigned long long	res;
+	int					neg;
+
+	res = 0;
+	neg = 1;
+	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			neg *= (-1);
+		i++;
+	}
+	while (str[i] >= 48 && str[i] <= 57)
+	{
+		res = res * 10 + (str[i] - 48);
+		i++;
+	}
+	if (res > LLONG_MAX && neg == 1)
+		return (-1);
+	if (res > LLONG_MAX && neg == -1)
+		return (0);
+	return (res * neg);
+}
+
 unsigned long long getTime(void)
 {
 	struct timeval tv;
@@ -53,10 +80,3 @@ unsigned long long getTime(void)
 	unsigned long long millisecondsSinceEpoch = (unsigned long long)(tv.tv_sec) * 1000 + (unsigned long long)(tv.tv_usec) / 1000;
 	return (millisecondsSinceEpoch);
 }
-
-// void preciseSleep(int ms) {
-//     struct timespec ts;
-//     ts.tv_sec = ms / 1000;
-//     ts.tv_nsec = ms % 1000 * 1000000;
-//     nanosleep(&ts, &ts);
-// }

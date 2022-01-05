@@ -11,8 +11,7 @@
 # **************************************************************************** #
 
 NAME = philo_one
-SRCS =  srcs/get_args.c\
-		srcs/utils.c\
+SRCS =  srcs/utils.c\
 		srcs/main.c
 
 INCLUDE = includes

@@ -18,7 +18,7 @@ int str_err(char *str, int ret)
 	return (ret);
 }
 
-void display_stat(pthread_mutex_t *lock, unsigned long long pId, char *str)
+void display_stat(pthread_mutex_t *lock, unsigned long long pId, char *str, unsigned long long timeToDo)
 {
 	pthread_mutex_lock(lock);
 	ft_putnbr_fd(getTime(), 1);
@@ -26,6 +26,31 @@ void display_stat(pthread_mutex_t *lock, unsigned long long pId, char *str)
 	ft_putnbr_fd(pId + 1, 1);
 	write(1, str, ft_strlen(str));
 	pthread_mutex_unlock(lock);
+	usleep(timeToDo * 1000);
+}
+
+int	checkPhiloDied(bool running, pthread_mutex_t *leftFork, pthread_mutex_t *rightFork)
+{
+	if (!running)
+		{
+			pthread_mutex_unlock(leftFork);
+			pthread_mutex_unlock(rightFork);
+			return (0);
+		}
+	return (1);
+}
+
+int	checkAteEnough(int	*ateCntr, int mustEatNbr, pthread_mutex_t *leftFork, pthread_mutex_t *rightFork)
+{
+	if (*ateCntr == mustEatNbr)
+	{
+		pthread_mutex_unlock(rightFork);
+		pthread_mutex_unlock(leftFork);
+		return (0);
+	}
+	else
+		(*ateCntr)++;
+	return (1);
 }
 
 void    *routine(void *arg)
@@ -47,40 +72,23 @@ void    *routine(void *arg)
 			usleep((float)philos->timeToDie * 0.9 + 1);
 		pthread_mutex_lock(leftFork);
 		pthread_mutex_lock(rightFork);
-		if (!(*philos->running))
-		{
-			pthread_mutex_unlock(leftFork);
-			pthread_mutex_unlock(rightFork);
+		if (!checkPhiloDied(*(philos->running), leftFork, rightFork))
 			break;
-		}
-		display_stat(philos->message, philos->pId," has taken a fork\n");
-
-		if (!(*philos->running))
-		{
-			pthread_mutex_unlock(rightFork);
-			pthread_mutex_unlock(leftFork);
+		display_stat(philos->message, philos->pId," has taken a fork\n", 0);
+		if (!checkPhiloDied(*(philos->running), leftFork, rightFork))
 			break;
-		}
-		if (ateCntr == (int)philos->mustEatNbr)
-		{
-			pthread_mutex_unlock(rightFork);
-			pthread_mutex_unlock(leftFork);
+		if (!checkAteEnough(&ateCntr, (int)philos->mustEatNbr, leftFork, rightFork))
 			break;
-		}
-		else
-			ateCntr++;
 		philos->ltaArr[philos->pId] = getTime();
-		display_stat(philos->message, philos->pId," is eating\n");
-		usleep(philos->timeToEat * 1000);
+		display_stat(philos->message, philos->pId," is eating\n", philos->timeToEat);
 		pthread_mutex_unlock(leftFork);
 		pthread_mutex_unlock(rightFork);
 		if (!(*philos->running))
 			break;
-		display_stat(philos->message, philos->pId," is sleeping\n");
-		usleep(philos->timeToSleep * 1000);
+		display_stat(philos->message, philos->pId," is sleeping\n", philos->timeToSleep);
 		if (!(*philos->running))
 			break;
-		display_stat(philos->message, philos->pId," is thinking\n");
+		display_stat(philos->message, philos->pId," is thinking\n", 0);
 	}
 	return (NULL);
 }
@@ -101,7 +109,7 @@ int small_thread(t_philo *philos, unsigned long long deltaLTA)
 		deltaLTA = getTime() - philos->ltaArr[i];
 		if (deltaLTA >= philos->timeToDie)
 		{
-			display_stat(philos->message, i," died\n");
+			display_stat(philos->message, i," died\n", 0);
 			*(philos->running) = false;
 			return (0);
 		}
@@ -126,36 +134,58 @@ void    *detectDeath(void *arg)
 	return (NULL);
 }
 
+int	joinThr(unsigned long long philoNbr, pthread_t *p_th)
+{
+	unsigned int i;
+
+	i = 0;
+	while(i < philoNbr)
+	{
+		if(pthread_join(p_th[i], NULL) != 0)
+			return (str_err(ERR_JOIN, 3));
+		i++;
+	}
+	return (0);
+}
+int	destThr(unsigned long long philoNbr, pthread_t *forks)
+{
+	unsigned int i;
+
+	i = 0;
+	while (i < philoNbr)
+	{
+		pthread_mutex_destroy(&forks[i]);
+		i++;
+	}
+}
 int main(int argc, char *argv[])
 {
 	unsigned int i;
-	pthread_t   p_th[100];
-	unsigned long long ltaArr[100];
-	pthread_mutex_t forks[100];
+	pthread_t   p_th[2000];
+	unsigned long long ltaArr[2000];
+	pthread_mutex_t forks[2000];
 	pthread_mutex_t message;
-	t_philo philos[100];
+	t_philo philos[2000];
 	t_philo deathStr;
 	pthread_t deathThread;
 	bool running;
-	unsigned long long inputVal[5];
 	unsigned long long philoNbr;
 	unsigned long long timeToDie;
 	unsigned long long timeToEat;
 	unsigned long long timeToSleep;
 	unsigned long long mustEatNbr;
 
-	if (argc < 5 || argc > 6)
-		str_err(ERR_ARG, 1);
-	philoNbr = get_args(argc, argv, inputVal);
-	timeToDie = inputVal[1];
-	timeToEat = inputVal[2];
-	timeToSleep = inputVal[3];
+	if ((argc < 5 || argc > 6) && ft_atoi(argv[1]) < 2)
+		return (str_err(ERR_ARG, 1));
+	philoNbr = ft_atoi(argv[1]);
+	
+	timeToDie = ft_atoi(argv[2]);
+	timeToEat = ft_atoi(argv[3]);
+	timeToSleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		mustEatNbr = inputVal[4];
+		mustEatNbr = ft_atoi(argv[5]);
 	else
 		mustEatNbr = -1;
-	if (!philoNbr)
-		str_err(ERR_ARG, 1);
 	running = true;
 	i = 0;
 	while (i < philoNbr)
@@ -193,24 +223,11 @@ int main(int argc, char *argv[])
 	deathStr.message = &message;
 	if (pthread_create(&deathThread, NULL, &detectDeath, &deathStr) != 0)
 		return (str_err(ERR_CRT, 1));
-	i = 0;
-	while(i < philoNbr)
-	{
-		if(pthread_join(p_th[i], NULL) != 0)
-			return (str_err(ERR_JOIN, 3));
-		i++;
-	}
+	joinThr(philoNbr, p_th);
 	if(pthread_join(deathThread, NULL) != 0)
 		return (str_err(ERR_JOIN, 1));
-	// pthread_join(philos[i].thread_id, NULL);
-	i = 0;
-	while (i < philoNbr)
-	{
-		pthread_mutex_destroy(&forks[i]);
-		i++;
-	}
+	destThr();
 	pthread_mutex_destroy(&message);
-	//free(detectDeath);
 	return (0);
 }
 

@@ -19,6 +19,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <limits.h>
 #include <time.h>
 #include <errno.h>
 #include <sys/time.h>
@@ -47,7 +48,6 @@ typedef struct s_philo
 size_t	ft_strlen(const	char	*str);
 unsigned long long getTime(void);
 void	ft_putnbr_fd(unsigned long long nbr, int fd);
-unsigned long long	get_args(int argc, char **argv, unsigned long long inputVal[5]);
-// void preciseSleep(int ms);
+int	ft_atoi(const char *str);
 
 #endif
