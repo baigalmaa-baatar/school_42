@@ -171,13 +171,26 @@ int	joinThr(t_inputVal inputVal, pthread_t *p_th, pthread_t *deathThread)
 	return (0);
 }
 
+pthread_t	create_sub_thread(t_inputVal inputVal, unsigned long long ltaArr[], bool running, pthread_mutex_t *message)
+{
+	pthread_t deathThread;
+	t_philo deathStr;
+
+	deathStr.ltaArr = &ltaArr[0];
+	deathStr.running = &running;
+	deathStr.message = message;
+	deathStr.inputVal = inputVal;
+	if (pthread_create(&deathThread, NULL, &detectDeath, &deathStr) != 0)
+		return (str_err(ERR_CRT, 3));
+	return (deathThread);
+}
+
 int	createThrds(t_inputVal inputVal, unsigned long long ltaArr[], pthread_mutex_t forks[], pthread_mutex_t *message)
 {
 	unsigned int i;
 	pthread_t   p_th[2000];
 	pthread_t deathThread;
 	t_philo philos[2000];
-	t_philo deathStr;
 	bool running;
 
 	running = true;
@@ -194,12 +207,7 @@ int	createThrds(t_inputVal inputVal, unsigned long long ltaArr[], pthread_mutex_
 			return(str_err(ERR_CRT, 3));
 		i++;
 	}
-	deathStr.ltaArr = &ltaArr[0];
-	deathStr.running = &running;
-	deathStr.message = message;
-	deathStr.inputVal = inputVal;
-	if (pthread_create(&deathThread, NULL, &detectDeath, &deathStr) != 0)
-		return (str_err(ERR_CRT, 3));
+	deathThread = create_sub_thread(inputVal, ltaArr, forks, message);
 	if (joinThr(inputVal, p_th, &deathThread))
 		return (str_err(ERR_JOIN, 4));
 	return (0);
