@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 10:17:41 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/29 10:17:43 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/01/05 17:58:54 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,13 @@ int	ft_atoi(const char *str)
 	return (res * neg);
 }
 
-unsigned long long getTime(void)
+unsigned long long	get_time(void)
 {
-	struct timeval tv;
+	struct timeval		tv;
+	unsigned long long	milliseconds_since_epoch;
 
-	gettimeofday(&tv, NULL);
-	unsigned long long millisecondsSinceEpoch = (unsigned long long)(tv.tv_sec) * 1000 + (unsigned long long)(tv.tv_usec) / 1000;
-	return (millisecondsSinceEpoch);
+	gettimeofday (&tv, NULL);
+	milliseconds_since_epoch = (unsigned long long)(tv.tv_sec)*1000
+		+ (unsigned long long)(tv.tv_usec) / 1000;
+	return (milliseconds_since_epoch);
 }
