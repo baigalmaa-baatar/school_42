@@ -10,9 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo_one
-SRCS =  srcs/get_args.c\
+NAME = philo
+SRCS =  srcs/create_thrds.c\
+		srcs/check_died_or_ate.c\
 		srcs/utils.c\
+		srcs/join_thrds.c\
+		srcs/take_release_forks.c\
+		srcs/display_stat.c\
 		srcs/main.c
 
 INCLUDE = includes

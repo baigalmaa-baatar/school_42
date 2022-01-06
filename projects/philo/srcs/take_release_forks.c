@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_args.c                                         :+:      :+:    :+:   */
+/*   take_release_forks.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/05 17:53:12 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/05 17:53:17 by bbaatar          ###   ########.fr       */
+/*   Created: 2022/01/06 03:47:47 by bbaatar           #+#    #+#             */
+/*   Updated: 2022/01/06 03:47:48 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	get_args(int argc, char *argv[], t_inputVal *inputVal)
+void	take_forks(t_philo *philos, pthread_mutex_t *left,
+	pthread_mutex_t *right)
 {
-	if ((argc == 5 || argc == 6) && ft_atoi(argv[1]) > 1)
-	{
-		inputVal->philoNbr = ft_atoi(argv[1]);
-		inputVal->timeToDie = ft_atoi(argv[2]);
-		inputVal->timeToEat = ft_atoi(argv[3]);
-		inputVal->timeToSleep = ft_atoi(argv[4]);
-		if (argc == 6)
-			inputVal->mustEatNbr = ft_atoi(argv[5]);
-		else
-			inputVal->mustEatNbr = -1;
-		return (1);
-	}
-	return (0);
+	pthread_mutex_lock(left);
+	pthread_mutex_lock(right);
+	display_stat(philos, " has taken a fork\n", 0);
+}
+
+void	release_forks(pthread_mutex_t *left, pthread_mutex_t *right)
+{
+	pthread_mutex_unlock(left);
+	pthread_mutex_unlock(right);
 }
