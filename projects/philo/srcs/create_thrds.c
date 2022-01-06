@@ -28,9 +28,8 @@ void	*routine(void *arg)
 		left_fork = &philos->forks[philos->pid];
 		right_fork = &philos->forks[philos->pid + 1];
 	}
-	//left_fork = &philos->forks[philos->pid];
-	//right_fork = &philos->forks[
-	//	(philos->pid + 1) % philos->input_val.philo_nbr];
+/*	left_fork = &philos->forks[philos->pid];
+	right_fork = &philos->forks[(philos->pid + 1) % philos->input_val.philo_nbr];*/
 	usleep((philos->pid % 2) * 15000);
 	while (1)
 	{

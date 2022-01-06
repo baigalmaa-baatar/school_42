@@ -24,7 +24,7 @@ INCLUDE = includes
 OBJS = ${SRCS:.c=.o}
 CC		= clang
 RM		= rm -f
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 LIBS	= -lpthread
 .c.o:
 		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o $@
