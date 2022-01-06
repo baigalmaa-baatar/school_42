@@ -21,9 +21,16 @@ void	*routine(void *arg)
 
 	philos = (t_philo *)arg;
 	ate_cntr = 0;
-	left_fork = &philos->forks[philos->pid];
-	right_fork = &philos->forks[
-		(philos->pid + 1) % philos->input_val.philo_nbr];
+	if (philos->pid == philos->input_val.philo_nbr - 1) {
+		left_fork = &philos->forks[0];
+		right_fork = &philos->forks[philos->input_val.philo_nbr - 1];
+	} else {
+		left_fork = &philos->forks[philos->pid];
+		right_fork = &philos->forks[philos->pid + 1];
+	}
+	//left_fork = &philos->forks[philos->pid];
+	//right_fork = &philos->forks[
+	//	(philos->pid + 1) % philos->input_val.philo_nbr];
 	usleep((philos->pid % 2) * 15000);
 	while (1)
 	{

@@ -12,7 +12,8 @@
 
 NAME = philo
 SRCS =  srcs/create_thrds.c\
-		srcs/check_died_or_ate.c\
+		srcs/check_ate_enough.c\
+		srcs/eat.c\
 		srcs/utils.c\
 		srcs/join_thrds.c\
 		srcs/take_release_forks.c\

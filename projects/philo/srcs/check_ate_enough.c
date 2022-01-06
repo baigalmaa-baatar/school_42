@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   display_stat.c                                     :+:      :+:    :+:   */
+/*   check_died_or_ate.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/06 03:49:05 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/06 03:49:06 by bbaatar          ###   ########.fr       */
+/*   Created: 2022/01/06 03:47:25 by bbaatar           #+#    #+#             */
+/*   Updated: 2022/01/06 03:47:26 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	display_stat(t_philo *philos, char *str, unsigned long long timeToDo)
+int	check_ate_enough(int *ate_cntr, int must_eat_nbr,
+	pthread_mutex_t *left_fork, pthread_mutex_t *right_fork)
 {
-	if (!*philos->running)
-		return (0);
-	pthread_mutex_lock(philos->message);
-	ft_putnbr_fd(get_time(), 1);
-	write (1, " ", 1);
-	ft_putnbr_fd(philos->pid + 1, 1);
-	write(1, str, ft_strlen(str));
-	pthread_mutex_unlock(philos->message);
-	if (timeToDo)
+	if (*ate_cntr == must_eat_nbr)
 	{
-		// pthread_mutex_lock();
-		usleep(timeToDo * 1000);
-		// pthread_mutex_unlock();
+		pthread_mutex_unlock(right_fork);
+		pthread_mutex_unlock(left_fork);
+		return (0);
 	}
 	return (1);
 }

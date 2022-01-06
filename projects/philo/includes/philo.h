@@ -71,5 +71,6 @@ int					display_stat(t_philo *philos, char *str,
 						unsigned long long timeToDo);
 int					join_thrd(t_input_val input_val, pthread_t *p_th,
 						pthread_t *death_thread);
+void				eat(t_philo *philos, int *ate_cntr);
 
 #endif
