@@ -123,8 +123,9 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-int	small_thread(t_philo *philos, unsigned long long deltaLTA)
+int	small_thread(t_philo *philos)
 {
+	unsigned long long deltaLTA;
 	unsigned int	i;
 	
 	i = 0;
@@ -145,17 +146,17 @@ int	small_thread(t_philo *philos, unsigned long long deltaLTA)
 
 void	*detectDeath(void *arg)
 {
-	unsigned long long deltaLTA;
 	t_philo *philos;
 
 	philos = (t_philo *)arg;
-	deltaLTA = 0;
+	// printf("philonbr: %u\n",philos->inputVal.philoNbr);
 	while (1)
 	{
-		if (!small_thread(philos, deltaLTA))
-			return (NULL);
+		if (!small_thread(philos))
+			break;
 		usleep(5000);
 	}
+	free(philos);
 	return (NULL);
 }
 
@@ -175,16 +176,18 @@ int	joinThr(t_inputVal inputVal, pthread_t *p_th, pthread_t *deathThread)
 	return (0);
 }
 
-pthread_t	create_sub_thread(t_inputVal inputVal, unsigned long long ltaArr[], bool running, pthread_mutex_t *message)
+pthread_t	create_sub_thread(t_inputVal inputVal, unsigned long long ltaArr[], bool *running, pthread_mutex_t *message)
 {
 	pthread_t deathThread;
-	t_philo deathStr;
+	t_philo *deathStr;
 
-	deathStr.ltaArr = &ltaArr[0];
-	deathStr.running = &running;
-	deathStr.message = message;
-	deathStr.inputVal = inputVal;
-	if (pthread_create(&deathThread, NULL, &detectDeath, &deathStr) != 0)
+	deathStr = malloc(sizeof(t_philo));
+	deathStr->ltaArr = &ltaArr[0];
+	deathStr->running = running;
+	deathStr->message = message;
+	deathStr->inputVal = inputVal;
+	// printf("philonbr: %u\n",inputVal.philoNbr);
+	if (pthread_create(&deathThread, NULL, &detectDeath, deathStr) != 0)
 		str_err(ERR_CRT, 3);
 	return (deathThread);
 }
@@ -211,7 +214,8 @@ int	createThrds(t_inputVal inputVal, unsigned long long ltaArr[], pthread_mutex_
 			return(str_err(ERR_CRT, 3));
 		i++;
 	}
-	deathThread = create_sub_thread(inputVal, ltaArr, running, message);
+
+	deathThread = create_sub_thread(inputVal, ltaArr, &running, message);
 	if (joinThr(inputVal, p_th, &deathThread))
 		return (str_err(ERR_JOIN, 4));
 	return (0);
