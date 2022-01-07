@@ -23,10 +23,6 @@ int	display_stat(t_philo *philos, char *str, unsigned long long timeToDo)
 	write(1, str, ft_strlen(str));
 	pthread_mutex_unlock(philos->message);
 	if (timeToDo)
-	{
-		// pthread_mutex_lock();
 		usleep(timeToDo * 1000);
-		// pthread_mutex_unlock();
-	}
 	return (1);
 }

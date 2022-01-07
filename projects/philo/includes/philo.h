@@ -42,23 +42,22 @@ typedef struct s_input_val
 typedef struct s_philo
 {
 	bool				*running;
-	pthread_mutex_t		*forks;
+	pthread_mutex_t		forks;
 	pthread_mutex_t		*message;
-	unsigned long long	*lta_arr;
+	pthread_mutex_t		eat_mutex;
+	unsigned long long	lta;
 	unsigned long long	pid;
 	t_input_val			input_val;
 }	t_philo;
+
 int					ft_atoi(const char *str);
 int					str_err(char *str, int ret);
-int					init(t_input_val *input_val, unsigned long long lta_arr[],
-						pthread_mutex_t forks[], pthread_mutex_t *message);
+int					init(t_input_val *input_val, t_philo *philos);
 size_t				ft_strlen(const	char	*str);
 unsigned long long	get_time(void);
 int					get_args(int argc, char *argv[], t_input_val *input_val);
 void				ft_putnbr_fd(unsigned long long nbr, int fd);
-int					create_thrds(t_input_val input_val,
-						unsigned long long lta_arr[], pthread_mutex_t forks[],
-						pthread_mutex_t *message);
+int					create_thrds(t_input_val input_val, t_philo *philos);
 void				take_forks(t_philo *philos, pthread_mutex_t *left,
 						pthread_mutex_t *right);
 void				release_forks(pthread_mutex_t *left,

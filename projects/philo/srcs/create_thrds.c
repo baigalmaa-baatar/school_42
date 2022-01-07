@@ -22,14 +22,12 @@ void	*routine(void *arg)
 	philos = (t_philo *)arg;
 	ate_cntr = 0;
 	if (philos->pid == philos->input_val.philo_nbr - 1) {
-		left_fork = &philos->forks[0];
-		right_fork = &philos->forks[philos->input_val.philo_nbr - 1];
+		left_fork = &philos[0].forks;
+		right_fork = &philos[philos->input_val.philo_nbr - 1].forks;
 	} else {
-		left_fork = &philos->forks[philos->pid];
-		right_fork = &philos->forks[philos->pid + 1];
+		left_fork = &philos[philos->pid].forks;
+		right_fork = &philos[philos->pid + 1].forks;
 	}
-/*	left_fork = &philos->forks[philos->pid];
-	right_fork = &philos->forks[(philos->pid + 1) % philos->input_val.philo_nbr];*/
 	usleep((philos->pid % 2) * 15000);
 	while (1)
 	{
@@ -55,7 +53,9 @@ int	small_thread(t_philo *philos)
 	i = 0;
 	while (i < philos->input_val.philo_nbr)
 	{
-		delta_lta = get_time() - philos->lta_arr[i];
+		pthread_mutex_lock(&philos->eat_mutex);
+		delta_lta = get_time() - philos[i].lta;
+		pthread_mutex_unlock(&philos->eat_mutex);
 		if (delta_lta >= philos->input_val.time_to_die)
 		{
 			philos->pid = i;
@@ -84,14 +84,14 @@ void	*detect_death(void *arg)
 }
 
 pthread_t	create_sub_thread(t_input_val input_val,
-	unsigned long long lta_arr[], bool *running,
+	unsigned long long lta[], bool *running,
 	pthread_mutex_t *message)
 {
 	pthread_t	death_thread;
 	t_philo		*death_struct;
 
 	death_struct = malloc(sizeof(t_philo));
-	death_struct->lta_arr = &lta_arr[0];
+	death_struct->lta = *lta;
 	death_struct->running = running;
 	death_struct->message = message;
 	death_struct->input_val = input_val;
@@ -100,13 +100,12 @@ pthread_t	create_sub_thread(t_input_val input_val,
 	return (death_thread);
 }
 
-int	create_thrds(t_input_val input_val, unsigned long long lta_arr[],
-	pthread_mutex_t forks[], pthread_mutex_t *message)
+int	create_thrds(t_input_val input_val, t_philo *philos)
 {
 	unsigned int	i;
 	pthread_t		p_th[2000];
 	pthread_t		death_thread;
-	t_philo			philos[2000];
+	// t_philo			philos[2000];
 	bool			running;
 
 	running = true;
@@ -114,16 +113,16 @@ int	create_thrds(t_input_val input_val, unsigned long long lta_arr[],
 	while (i < input_val.philo_nbr)
 	{
 		philos[i].input_val = input_val;
-		philos[i].forks = &forks[0];
-		philos[i].lta_arr = &lta_arr[0];
+		// philos[i].forks = &philos[0].forks;
+		// philos[i].lta = philos[i].lta;
 		philos[i].running = &running;
-		philos[i].message = message;
+		philos[i].message = philos->message;
 		philos[i].pid = i;
 		if (pthread_create(&p_th[i], NULL, &routine, &philos[i]) != 0)
 			return (str_err(ERR_CRT, 3));
 		i++;
 	}
-	death_thread = create_sub_thread(input_val, lta_arr, &running, message);
+	death_thread = create_sub_thread(input_val, &philos->lta, &running, philos->message);
 	if (join_thrd(input_val, p_th, &death_thread))
 		return (str_err(ERR_JOIN, 4));
 	return (0);

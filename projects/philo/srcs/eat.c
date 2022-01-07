@@ -14,7 +14,9 @@
 
 void	eat(t_philo *philos, int *ate_cntr)
 {
-	philos->lta_arr[philos->pid] = get_time();
+	pthread_mutex_lock(&philos->eat_mutex);
+	philos[philos->pid].lta = get_time();
+	pthread_mutex_unlock(philos->message);
 	display_stat(philos, " is eating\n", philos->input_val.time_to_eat);
 	(*ate_cntr)++;
 }

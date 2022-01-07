@@ -35,50 +35,55 @@ int	get_args(int argc, char *argv[], t_input_val *input_val)
 	return (0);
 }
 
-int	init(t_input_val *input_val, unsigned long long lta_arr[],
-		pthread_mutex_t forks[], pthread_mutex_t *message)
+int	init(t_input_val *input_val, t_philo *philos)
 {
 	unsigned int	i;
-
+	
+	philos->message = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	i = 0;
 	while (i < input_val->philo_nbr)
 	{
-		lta_arr[i] = get_time();
-		pthread_mutex_init(&forks[i], NULL);
+		philos[i].lta = get_time();
+		pthread_mutex_init(&philos[i].forks, NULL);
 		i++;
 	}
-	pthread_mutex_init(message, NULL);
+	pthread_mutex_init(philos->message, NULL);
+	pthread_mutex_init(&philos->eat_mutex, NULL);
+	// printf("here\n");
+	// pthread_mutex_init(philos->running_mutex, NULL);
 	return (1);
 }
 
-int	clean(t_input_val *input_val, pthread_mutex_t forks[],
-		pthread_mutex_t *message)
+int	clean_free(t_input_val *input_val, t_philo *philos)
 {
 	unsigned int	i;
 
 	i = 0;
 	while (i < input_val->philo_nbr)
 	{
-		pthread_mutex_destroy(&forks[i]);
+		pthread_mutex_destroy(&philos[i].forks);
 		i++;
 	}
-	pthread_mutex_destroy(message);
+	pthread_mutex_destroy(philos->message);
+	pthread_mutex_destroy(&philos->eat_mutex);
+	// pthread_mutex_destroy(philos->running_mutex);
+	free(philos->message);
+	free(philos);
 	return (1);
 }
 
 int	main(int argc, char *argv[])
 {
 	t_input_val			input_val;
-	unsigned long long	lta_arr[2000];
-	pthread_mutex_t		forks[2000];
-	pthread_mutex_t		message;
-
+	t_philo				*philos;
+	
 	if (!(get_args(argc, argv, &input_val)))
 		return (str_err(ERR_ARG, 1));
-	if (!(init(&input_val, lta_arr, forks, &message)))
-		return (str_err(ERR_INIT, 1));
-	if (create_thrds(input_val, lta_arr, forks, &message))
-		return (str_err(ERR_CRT, 1));
-	clean(&input_val, forks, &message);
+	philos = malloc(sizeof(t_philo) * input_val.philo_nbr);
+	if (!(init(&input_val, philos)))
+		return (str_err(ERR_INIT, 1) && clean_free(&input_val, philos));
+	if (create_thrds(input_val, philos))
+		return (str_err(ERR_CRT, 1) && clean_free(&input_val, philos));
+	clean_free(&input_val, philos);
 	return (0);
 }
