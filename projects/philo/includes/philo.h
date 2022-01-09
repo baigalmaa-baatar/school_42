@@ -57,6 +57,7 @@ int					str_err(char *str, int ret);
 void				init(t_input_val *input_val, t_philo *philos);
 size_t				ft_strlen(const	char	*str);
 unsigned long long	get_time(void);
+void 				precise_sleep(unsigned long long);
 int					get_args(int argc, char *argv[], t_input_val *input_val);
 void				ft_putnbr_fd(unsigned long long nbr, int fd);
 int					create_thrds(t_input_val input_val, t_philo *philos);

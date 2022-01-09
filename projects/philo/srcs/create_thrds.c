@@ -30,50 +30,54 @@ void stop_running(t_philo *philosopher)
 	pthread_mutex_unlock(philosopher->running_mutex);
 }
 
-pthread_mutex_t *resolve_left_fork(t_philo *philosopher)
+pthread_mutex_t *resolve_first_fork(t_philo *philosopher)
 {
 	t_philo			*first_philosopher;
 
 	first_philosopher = philosopher - philosopher->pid;
-	if (philosopher->input_val.philo_nbr == 2)
+	if (philosopher->pid % 2 == 0) {
+		return &(philosopher->fork);
+	}
+	if (philosopher->pid == philosopher->input_val.philo_nbr - 1)
 		return &first_philosopher->fork;
-	return &(philosopher->fork);
+	return &(philosopher[1].fork);
 }
 
-pthread_mutex_t *resolve_right_fork(t_philo *philosopher)
+pthread_mutex_t *resolve_second_fork(t_philo *philosopher)
 {
 	t_philo			*first_philosopher;
 
 	first_philosopher = philosopher - philosopher->pid;
-	if (philosopher->input_val.philo_nbr == 2)
-		return &first_philosopher[1].fork;
-	if (philosopher->pid == philosopher->input_val.philo_nbr - 1)
-		return &(first_philosopher->fork);
-	return &(philosopher[1].fork);
+	if (philosopher->pid % 2 == 0) {
+		if (philosopher->pid == philosopher->input_val.philo_nbr - 1)
+			return &first_philosopher->fork;
+		return &(philosopher[1].fork);
+	}
+	return &(philosopher->fork);
 }
 
 void	*routine(void *arg)
 {
 	int				ate_cntr;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*first_fork;
+	pthread_mutex_t	*second_fork;
 	t_philo			*philosopher;
 
 	philosopher = (t_philo *)arg;
 	ate_cntr = 0;
-	left_fork = resolve_left_fork(philosopher);
-	right_fork = resolve_right_fork(philosopher);
-	usleep((philosopher->pid % 2) * 15000);
+	first_fork = resolve_first_fork(philosopher);
+	second_fork = resolve_second_fork(philosopher);
+	usleep((philosopher->pid % 2) * 15);
 	while (1)
 	{
 		if (!is_running(philosopher))
 			break;
-		take_forks(philosopher, left_fork, right_fork);
+		take_forks(philosopher, first_fork, second_fork);
 		eat(philosopher, &ate_cntr);
 		if (!check_ate_enough (&ate_cntr, (int)philosopher->input_val.must_eat_nbr,
-				left_fork, right_fork))
+				first_fork, second_fork))
 			break ;
-		release_forks(left_fork, right_fork);
+		release_forks(first_fork, second_fork);
 		display_stat(philosopher, " is sleeping\n", philosopher->input_val.time_to_sleep);
 		display_stat(philosopher, " is thinking\n", 0);
 	}

@@ -28,6 +28,6 @@ int	display_stat(t_philo *philosopher, char *str, unsigned long long timeToDo)
 	write(1, str, ft_strlen(str));
 	pthread_mutex_unlock(philosopher->message);
 	if (timeToDo)
-		usleep(timeToDo * 1000);
+		precise_sleep(timeToDo);
 	return (1);
 }

@@ -82,3 +82,12 @@ unsigned long long	get_time(void)
 		+ (unsigned long long)(tv.tv_usec) / 1000;
 	return (milliseconds_since_epoch);
 }
+
+void precise_sleep(unsigned long long ms)
+{
+	unsigned long long start_time;
+
+	start_time = get_time();
+	while (get_time() - start_time < ms)
+		usleep(100);
+}
