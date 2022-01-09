@@ -12,55 +12,89 @@
 
 #include "../includes/philo.h"
 
+bool is_running(t_philo *philosopher)
+{
+	bool running;
+
+	pthread_mutex_lock(philosopher->running_mutex);
+	running = *philosopher->running;
+	pthread_mutex_unlock(philosopher->running_mutex);
+
+	return running;
+}
+
+void stop_running(t_philo *philosopher)
+{
+	pthread_mutex_lock(philosopher->running_mutex);
+	*philosopher->running = false;
+	pthread_mutex_unlock(philosopher->running_mutex);
+}
+
+pthread_mutex_t *resolve_left_fork(t_philo *philosopher)
+{
+	t_philo			*first_philosopher;
+
+	first_philosopher = philosopher - philosopher->pid;
+	if (philosopher->input_val.philo_nbr == 2)
+		return &first_philosopher->fork;
+	return &(philosopher->fork);
+}
+
+pthread_mutex_t *resolve_right_fork(t_philo *philosopher)
+{
+	t_philo			*first_philosopher;
+
+	first_philosopher = philosopher - philosopher->pid;
+	if (philosopher->input_val.philo_nbr == 2)
+		return &first_philosopher[1].fork;
+	if (philosopher->pid == philosopher->input_val.philo_nbr - 1)
+		return &(first_philosopher->fork);
+	return &(philosopher[1].fork);
+}
+
 void	*routine(void *arg)
 {
 	int				ate_cntr;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	t_philo			*philos;
+	t_philo			*philosopher;
 
-	philos = (t_philo *)arg;
+	philosopher = (t_philo *)arg;
 	ate_cntr = 0;
-	if (philos->pid == philos->input_val.philo_nbr - 1) {
-		left_fork = &philos[0].forks;
-		right_fork = &philos[philos->input_val.philo_nbr - 1].forks;
-	} else {
-		left_fork = &philos[philos->pid].forks;
-		right_fork = &philos[philos->pid + 1].forks;
-	}
-	usleep((philos->pid % 2) * 15000);
+	left_fork = resolve_left_fork(philosopher);
+	right_fork = resolve_right_fork(philosopher);
+	usleep((philosopher->pid % 2) * 15000);
 	while (1)
 	{
-		if (!(*philos->running))
-			break ;
-		take_forks(philos, left_fork, right_fork);
-		eat(philos, &ate_cntr);
-		if (!check_ate_enough (&ate_cntr, (int)philos->input_val.must_eat_nbr,
+		if (!is_running(philosopher))
+			break;
+		take_forks(philosopher, left_fork, right_fork);
+		eat(philosopher, &ate_cntr);
+		if (!check_ate_enough (&ate_cntr, (int)philosopher->input_val.must_eat_nbr,
 				left_fork, right_fork))
 			break ;
 		release_forks(left_fork, right_fork);
-		display_stat(philos, " is sleeping\n", philos->input_val.time_to_sleep);
-		display_stat(philos, " is thinking\n", 0);
+		display_stat(philosopher, " is sleeping\n", philosopher->input_val.time_to_sleep);
+		display_stat(philosopher, " is thinking\n", 0);
 	}
 	return (NULL);
 }
 
-int	small_thread(t_philo *philos)
+int	small_thread(t_philo *philosophers)
 {
 	unsigned long long	delta_lta;
 	unsigned int		i;
 
 	i = 0;
-	while (i < philos->input_val.philo_nbr)
+	while (i < philosophers->input_val.philo_nbr)
 	{
-		pthread_mutex_lock(&philos->eat_mutex);
-		delta_lta = get_time() - philos[i].lta;
-		pthread_mutex_unlock(&philos->eat_mutex);
-		if (delta_lta >= philos->input_val.time_to_die)
+		pthread_mutex_lock(&philosophers[i].eat_mutex);
+		delta_lta = get_time() - philosophers[i].lta;
+		pthread_mutex_unlock(&philosophers[i].eat_mutex);
+		if (delta_lta >= philosophers->input_val.time_to_die)
 		{
-			philos->pid = i;
-			display_stat(philos, " died\n", 0);
-			*(philos->running) = false;
+			display_stat(&philosophers[i], " died\n", 0);
+			stop_running(&philosophers[i]);
 			return (0);
 		}
 		i++;
@@ -70,60 +104,43 @@ int	small_thread(t_philo *philos)
 
 void	*detect_death(void *arg)
 {
-	t_philo	*philos;
+	t_philo	*philosophers;
 
-	philos = (t_philo *)arg;
+	philosophers = (t_philo *)arg;
 	while (1)
 	{
-		if (!small_thread(philos))
+		if (!small_thread(philosophers))
 			break ;
 		usleep(5000);
 	}
-	free(philos);
+	free(philosophers);
 	return (NULL);
 }
 
-pthread_t	create_sub_thread(t_input_val input_val,
-	unsigned long long lta[], bool *running,
-	pthread_mutex_t *message)
-{
-	pthread_t	death_thread;
-	t_philo		*death_struct;
-
-	death_struct = malloc(sizeof(t_philo));
-	death_struct->lta = *lta;
-	death_struct->running = running;
-	death_struct->message = message;
-	death_struct->input_val = input_val;
-	if (pthread_create(&death_thread, NULL, &detect_death, death_struct) != 0)
-		str_err(ERR_CRT, 3);
-	return (death_thread);
-}
-
-int	create_thrds(t_input_val input_val, t_philo *philos)
+int	create_thrds(t_input_val input_val, t_philo *philosophers)
 {
 	unsigned int	i;
 	pthread_t		p_th[2000];
 	pthread_t		death_thread;
-	// t_philo			philos[2000];
 	bool			running;
 
 	running = true;
 	i = 0;
 	while (i < input_val.philo_nbr)
 	{
-		philos[i].input_val = input_val;
-		// philos[i].forks = &philos[0].forks;
-		// philos[i].lta = philos[i].lta;
-		philos[i].running = &running;
-		philos[i].message = philos->message;
-		philos[i].pid = i;
-		if (pthread_create(&p_th[i], NULL, &routine, &philos[i]) != 0)
+		philosophers[i].running = &running;
+		if (pthread_create(&p_th[i], NULL, &routine, &philosophers[i]) != 0)
 			return (str_err(ERR_CRT, 3));
 		i++;
 	}
-	death_thread = create_sub_thread(input_val, &philos->lta, &running, philos->message);
-	if (join_thrd(input_val, p_th, &death_thread))
+	if (pthread_create(&death_thread, NULL, &detect_death, philosophers) != 0)
+		str_err(ERR_CRT, 3);
+	i = 0;
+	while (i < input_val.philo_nbr)
+		if (pthread_join(p_th[i++], NULL) != 0)
+			return (str_err(ERR_JOIN, 4));
+	stop_running(&philosophers[0]);
+	if (pthread_join(death_thread, NULL) != 0)
 		return (str_err(ERR_JOIN, 4));
 	return (0);
 }

@@ -35,23 +35,29 @@ int	get_args(int argc, char *argv[], t_input_val *input_val)
 	return (0);
 }
 
-int	init(t_input_val *input_val, t_philo *philos)
+void	init(t_input_val *input_val, t_philo *philosophers)
 {
 	unsigned int	i;
+	pthread_mutex_t *message;
+	pthread_mutex_t *running_mutex;
 	
-	philos->message = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	message = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	running_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(message, NULL);
+	pthread_mutex_init(running_mutex, NULL);
 	i = 0;
 	while (i < input_val->philo_nbr)
 	{
-		philos[i].lta = get_time();
-		pthread_mutex_init(&philos[i].forks, NULL);
+		philosophers[i].pid = i;
+		philosophers[i].lta = get_time();
+		philosophers[i].start_time = philosophers[i].lta;
+		philosophers[i].running_mutex = running_mutex;
+		philosophers[i].message = message;
+		philosophers[i].input_val = *input_val;
+		pthread_mutex_init(&philosophers[i].fork, NULL);
+		pthread_mutex_init(&philosophers[i].eat_mutex, NULL);
 		i++;
 	}
-	pthread_mutex_init(philos->message, NULL);
-	pthread_mutex_init(&philos->eat_mutex, NULL);
-	// printf("here\n");
-	// pthread_mutex_init(philos->running_mutex, NULL);
-	return (1);
 }
 
 int	clean_free(t_input_val *input_val, t_philo *philos)
@@ -61,13 +67,14 @@ int	clean_free(t_input_val *input_val, t_philo *philos)
 	i = 0;
 	while (i < input_val->philo_nbr)
 	{
-		pthread_mutex_destroy(&philos[i].forks);
+		pthread_mutex_destroy(&philos[i].fork);
+		pthread_mutex_destroy(&philos[i].eat_mutex);
 		i++;
 	}
 	pthread_mutex_destroy(philos->message);
-	pthread_mutex_destroy(&philos->eat_mutex);
-	// pthread_mutex_destroy(philos->running_mutex);
+	pthread_mutex_destroy(philos->running_mutex);
 	free(philos->message);
+	free(philos->running_mutex);
 	free(philos);
 	return (1);
 }
@@ -80,8 +87,7 @@ int	main(int argc, char *argv[])
 	if (!(get_args(argc, argv, &input_val)))
 		return (str_err(ERR_ARG, 1));
 	philos = malloc(sizeof(t_philo) * input_val.philo_nbr);
-	if (!(init(&input_val, philos)))
-		return (str_err(ERR_INIT, 1) && clean_free(&input_val, philos));
+	init(&input_val, philos);
 	if (create_thrds(input_val, philos))
 		return (str_err(ERR_CRT, 1) && clean_free(&input_val, philos));
 	clean_free(&input_val, philos);

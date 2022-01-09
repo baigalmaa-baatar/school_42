@@ -42,9 +42,11 @@ typedef struct s_input_val
 typedef struct s_philo
 {
 	bool				*running;
-	pthread_mutex_t		forks;
+	pthread_mutex_t		fork;
 	pthread_mutex_t		*message;
 	pthread_mutex_t		eat_mutex;
+	pthread_mutex_t		*running_mutex;
+	unsigned long long	start_time;
 	unsigned long long	lta;
 	unsigned long long	pid;
 	t_input_val			input_val;
@@ -52,7 +54,7 @@ typedef struct s_philo
 
 int					ft_atoi(const char *str);
 int					str_err(char *str, int ret);
-int					init(t_input_val *input_val, t_philo *philos);
+void				init(t_input_val *input_val, t_philo *philos);
 size_t				ft_strlen(const	char	*str);
 unsigned long long	get_time(void);
 int					get_args(int argc, char *argv[], t_input_val *input_val);
