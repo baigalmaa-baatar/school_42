@@ -6,7 +6,7 @@
 #    By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/28 13:49:18 by bbaatar           #+#    #+#              #
-#    Updated: 2021/10/28 13:49:21 by bbaatar          ###   ########.fr        #
+#    Updated: 2022/01/09 17:20:30 by bbaatar          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,8 @@ INCLUDE = includes
 OBJS = ${SRCS:.c=.o}
 CC		= clang
 RM		= rm -f
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
-# CFLAGS = -Wall -Wextra -Werror -g
+# CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g
 LIBS	= -lpthread
 .c.o:
 		${CC} ${CFLAGS} -I $(INCLUDE) -c $< -o $@

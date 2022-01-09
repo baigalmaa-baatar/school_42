@@ -117,7 +117,6 @@ void	*detect_death(void *arg)
 			break ;
 		usleep(5000);
 	}
-	// free(philosophers);
 	return (NULL);
 }
 

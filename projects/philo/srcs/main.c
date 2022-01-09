@@ -70,7 +70,6 @@ int	clean_free(t_input_val *input_val, t_philo *philos)
 	i = 0;
 	while (i < input_val->philo_nbr)
 	{
-		printf("i: %u\n", i);
 		pthread_mutex_destroy(&philos[i].fork);
 		pthread_mutex_destroy(&philos[i].eat_mutex);
 		i++;
