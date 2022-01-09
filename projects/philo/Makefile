@@ -6,17 +6,18 @@
 #    By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/28 13:49:18 by bbaatar           #+#    #+#              #
-#    Updated: 2022/01/09 17:20:30 by bbaatar          ###   ########.fr        #
+#    Updated: 2022/01/09 18:49:14 by bbaatar          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 SRCS =  srcs/create_thrds.c\
 		srcs/check_ate_enough.c\
+		srcs/is_stop_running.c\
 		srcs/eat.c\
 		srcs/utils.c\
 		srcs/join_thrds.c\
-		srcs/take_release_forks.c\
+		srcs/take_release_forks_running.c\
 		srcs/display_stat.c\
 		srcs/main.c
 

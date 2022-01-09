@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/24 16:31:33 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/06 03:20:42 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/01/09 18:19:48 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ typedef struct s_philo
 
 int					ft_atoi(const char *str);
 int					str_err(char *str, int ret);
-int				init(t_input_val *input_val, t_philo *philos);
+int					init(t_input_val *input_val, t_philo *philos);
 size_t				ft_strlen(const	char	*str);
 unsigned long long	get_time(void);
-void 				precise_sleep(unsigned long long);
+void				precise_sleep(unsigned long long ms);
 int					get_args(int argc, char *argv[], t_input_val *input_val);
 void				ft_putnbr_fd(unsigned long long nbr, int fd);
 int					create_thrds(t_input_val input_val, t_philo *philos);
@@ -74,5 +74,10 @@ int					display_stat(t_philo *philos, char *str,
 int					join_thrd(t_input_val input_val, pthread_t *p_th,
 						pthread_t *death_thread);
 int					clean_free(t_input_val *input_val, t_philo *philos);
+bool				is_running(t_philo *philosopher);
+void				stop_running(t_philo *philosopher);
+pthread_mutex_t		*resolve_first_fork(t_philo *philosopher);
+pthread_mutex_t		*resolve_second_fork(t_philo *philosopher);
+void				precise_sleep(unsigned long long ms);
 
 #endif

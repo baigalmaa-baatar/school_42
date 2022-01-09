@@ -31,3 +31,12 @@ int	display_stat(t_philo *philosopher, char *str, unsigned long long timeToDo)
 		precise_sleep(timeToDo);
 	return (1);
 }
+
+void	precise_sleep(unsigned long long ms)
+{
+	unsigned long long	start_time;
+
+	start_time = get_time();
+	while (get_time() - start_time < ms)
+		usleep(100);
+}

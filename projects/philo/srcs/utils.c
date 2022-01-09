@@ -54,11 +54,9 @@ int	ft_atoi(const char *str)
 	res = 0;
 	neg = 1;
 	i = 0;
-	if (str[i] == '+' || str[i] == '-')
+	if (('0' > str[i] && '9' < str[i]) || str[i] == '-')
 	{
-		if (str[i] == '-')
-			neg *= (-1);
-		i++;
+		return (0);
 	}
 	while (str[i] >= 48 && str[i] <= 57)
 	{
@@ -81,13 +79,4 @@ unsigned long long	get_time(void)
 	milliseconds_since_epoch = (unsigned long long)(tv.tv_sec)*1000
 		+ (unsigned long long)(tv.tv_usec) / 1000;
 	return (milliseconds_since_epoch);
-}
-
-void precise_sleep(unsigned long long ms)
-{
-	unsigned long long start_time;
-
-	start_time = get_time();
-	while (get_time() - start_time < ms)
-		usleep(100);
 }
