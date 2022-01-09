@@ -67,7 +67,7 @@ void	*routine(void *arg)
 	ate_cntr = 0;
 	first_fork = resolve_first_fork(philosopher);
 	second_fork = resolve_second_fork(philosopher);
-	usleep((philosopher->pid % 2) * 15);
+	usleep((philosopher->pid % 2) * 15000);
 	while (1)
 	{
 		if (!is_running(philosopher))
@@ -117,7 +117,7 @@ void	*detect_death(void *arg)
 			break ;
 		usleep(5000);
 	}
-	free(philosophers);
+	// free(philosophers);
 	return (NULL);
 }
 
@@ -146,5 +146,6 @@ int	create_thrds(t_input_val input_val, t_philo *philosophers)
 	stop_running(&philosophers[0]);
 	if (pthread_join(death_thread, NULL) != 0)
 		return (str_err(ERR_JOIN, 4));
+	clean_free(&input_val, philosophers);
 	return (0);
 }

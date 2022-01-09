@@ -43,8 +43,8 @@ typedef struct s_philo
 {
 	bool				*running;
 	pthread_mutex_t		fork;
-	pthread_mutex_t		*message;
 	pthread_mutex_t		eat_mutex;
+	pthread_mutex_t		*message;
 	pthread_mutex_t		*running_mutex;
 	unsigned long long	start_time;
 	unsigned long long	lta;
@@ -54,7 +54,7 @@ typedef struct s_philo
 
 int					ft_atoi(const char *str);
 int					str_err(char *str, int ret);
-void				init(t_input_val *input_val, t_philo *philos);
+int				init(t_input_val *input_val, t_philo *philos);
 size_t				ft_strlen(const	char	*str);
 unsigned long long	get_time(void);
 void 				precise_sleep(unsigned long long);
@@ -73,6 +73,6 @@ int					display_stat(t_philo *philos, char *str,
 						unsigned long long timeToDo);
 int					join_thrd(t_input_val input_val, pthread_t *p_th,
 						pthread_t *death_thread);
-void				eat(t_philo *philos, int *ate_cntr);
+int					clean_free(t_input_val *input_val, t_philo *philos);
 
 #endif

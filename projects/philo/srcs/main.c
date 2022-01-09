@@ -35,14 +35,16 @@ int	get_args(int argc, char *argv[], t_input_val *input_val)
 	return (0);
 }
 
-void	init(t_input_val *input_val, t_philo *philosophers)
+int	init(t_input_val *input_val, t_philo *philosophers)
 {
 	unsigned int	i;
 	pthread_mutex_t *message;
 	pthread_mutex_t *running_mutex;
 	
-	message = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	running_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	if(!(message = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t))))
+		return (1);
+	if(!(running_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t))))
+		return (1);
 	pthread_mutex_init(message, NULL);
 	pthread_mutex_init(running_mutex, NULL);
 	i = 0;
@@ -58,6 +60,7 @@ void	init(t_input_val *input_val, t_philo *philosophers)
 		pthread_mutex_init(&philosophers[i].eat_mutex, NULL);
 		i++;
 	}
+	return (0);
 }
 
 int	clean_free(t_input_val *input_val, t_philo *philos)
@@ -67,6 +70,7 @@ int	clean_free(t_input_val *input_val, t_philo *philos)
 	i = 0;
 	while (i < input_val->philo_nbr)
 	{
+		printf("i: %u\n", i);
 		pthread_mutex_destroy(&philos[i].fork);
 		pthread_mutex_destroy(&philos[i].eat_mutex);
 		i++;
@@ -87,7 +91,8 @@ int	main(int argc, char *argv[])
 	if (!(get_args(argc, argv, &input_val)))
 		return (str_err(ERR_ARG, 1));
 	philos = malloc(sizeof(t_philo) * input_val.philo_nbr);
-	init(&input_val, philos);
+	if (init(&input_val, philos))
+		return (str_err(ERR_INIT, 1) && clean_free(&input_val, philos));
 	if (create_thrds(input_val, philos))
 		return (str_err(ERR_CRT, 1) && clean_free(&input_val, philos));
 	clean_free(&input_val, philos);
