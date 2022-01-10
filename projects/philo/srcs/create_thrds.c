@@ -22,6 +22,8 @@ void	*routine(void *arg)
 	philosopher = (t_philo *)arg;
 	ate_cntr = 0;
 	first_fork = resolve_first_fork(philosopher);
+	if (philosopher->input_val.philo_nbr == 1)
+		return (0);
 	second_fork = resolve_second_fork(philosopher);
 	usleep((philosopher->pid % 2) * 15000);
 	while (1)

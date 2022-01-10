@@ -20,7 +20,7 @@ int	str_err(char *str, int ret)
 
 int	get_args(int argc, char *argv[], t_input_val *input_val)
 {
-	if ((argc == 5 || argc == 6) && ft_atoi(argv[1]) > 1)
+	if ((argc == 5 || argc == 6))
 	{
 		input_val->philo_nbr = ft_atoi(argv[1]);
 		input_val->time_to_die = ft_atoi(argv[2]);

@@ -24,6 +24,8 @@ bool	is_running(t_philo *philosopher)
 
 void	stop_running(t_philo *philosopher)
 {
+	if (philosopher->input_val.philo_nbr == 1)
+		return ;
 	pthread_mutex_lock(philosopher->running_mutex);
 	*philosopher->running = false;
 	pthread_mutex_unlock(philosopher->running_mutex);
