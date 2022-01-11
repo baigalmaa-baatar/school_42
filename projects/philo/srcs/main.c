@@ -18,28 +18,28 @@ int	str_err(char *str, int ret)
 	return (ret);
 }
 
-int	get_args(int argc, char *argv[], t_input_val *input_val)
+int	get_args(int argc, char *argv[], t_in_v *in_v)
 {
 	if ((argc == 5 || argc == 6))
 	{
-		input_val->philo_nbr = ft_atoi(argv[1]);
-		input_val->time_to_die = ft_atoi(argv[2]);
-		input_val->time_to_eat = ft_atoi(argv[3]);
-		input_val->time_to_sleep = ft_atoi(argv[4]);
+		in_v->philo_nbr = ft_atoi(argv[1]);
+		in_v->time_to_die = ft_atoi(argv[2]);
+		in_v->time_to_eat = ft_atoi(argv[3]);
+		in_v->ttosleep = ft_atoi(argv[4]);
 		if (argc == 6)
-			input_val->must_eat_nbr = ft_atoi(argv[5]);
+			in_v->must_eat_nbr = ft_atoi(argv[5]);
 		else
-			input_val->must_eat_nbr = -1;
-		if (!input_val->philo_nbr || !input_val->time_to_die
-			|| !input_val->time_to_eat || !input_val->time_to_sleep
-			|| !input_val->must_eat_nbr)
+			in_v->must_eat_nbr = -1;
+		if (!in_v->philo_nbr || !in_v->time_to_die
+			|| !in_v->time_to_eat || !in_v->ttosleep
+			|| !in_v->must_eat_nbr)
 			return (0);
 		return (1);
 	}
 	return (0);
 }
 
-int	init(t_input_val *input_val, t_philo *philosophers)
+int	init(t_in_v *in_v, t_philo *philors)
 {
 	unsigned int	i;
 	pthread_mutex_t	*message;
@@ -52,27 +52,27 @@ int	init(t_input_val *input_val, t_philo *philosophers)
 	pthread_mutex_init(message, NULL);
 	pthread_mutex_init(running_mutex, NULL);
 	i = 0;
-	while (i < input_val->philo_nbr)
+	while (i < in_v->philo_nbr)
 	{
-		philosophers[i].pid = i;
-		philosophers[i].lta = get_time();
-		philosophers[i].start_time = philosophers[i].lta;
-		philosophers[i].running_mutex = running_mutex;
-		philosophers[i].message = message;
-		philosophers[i].input_val = *input_val;
-		pthread_mutex_init(&philosophers[i].fork, NULL);
-		pthread_mutex_init(&philosophers[i].eat_mutex, NULL);
+		philors[i].pid = i;
+		philors[i].lta = get_time();
+		philors[i].start_time = philors[i].lta;
+		philors[i].running_mutex = running_mutex;
+		philors[i].message = message;
+		philors[i].in_v = *in_v;
+		pthread_mutex_init(&philors[i].fork, NULL);
+		pthread_mutex_init(&philors[i].eat_mutex, NULL);
 		i++;
 	}
 	return (0);
 }
 
-int	clean_free(t_input_val *input_val, t_philo *philos)
+int	clean_free(t_in_v *in_v, t_philo *philos)
 {
 	unsigned int	i;
 
 	i = 0;
-	while (i < input_val->philo_nbr)
+	while (i < in_v->philo_nbr)
 	{
 		pthread_mutex_destroy(&philos[i].fork);
 		pthread_mutex_destroy(&philos[i].eat_mutex);
@@ -88,16 +88,16 @@ int	clean_free(t_input_val *input_val, t_philo *philos)
 
 int	main(int argc, char *argv[])
 {
-	t_input_val			input_val;
+	t_in_v				in_v;
 	t_philo				*philos;
 
-	if (!(get_args(argc, argv, &input_val)))
+	if (!(get_args(argc, argv, &in_v)))
 		return (str_err(ERR_ARG, 1));
-	philos = malloc(sizeof(t_philo) * input_val.philo_nbr);
-	if (init(&input_val, philos))
-		return (str_err(ERR_INIT, 1) && clean_free(&input_val, philos));
-	if (create_thrds(input_val, philos))
-		return (str_err(ERR_CRT, 1) && clean_free(&input_val, philos));
-	clean_free(&input_val, philos);
+	philos = malloc(sizeof(t_philo) * in_v.philo_nbr);
+	if (init(&in_v, philos))
+		return (str_err(ERR_INIT, 1) && clean_free(&in_v, philos));
+	if (create_thrds(in_v, philos))
+		return (str_err(ERR_CRT, 1) && clean_free(&in_v, philos));
+	clean_free(&in_v, philos);
 	return (0);
 }

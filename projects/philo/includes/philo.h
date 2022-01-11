@@ -30,14 +30,14 @@
 # define ERR_INIT "Failed to initiliaze\n"
 # define ERR_DETECTD "Failed to detect death\n"
 
-typedef struct s_input_val
+typedef struct s_in_v
 {
 	unsigned int		philo_nbr;
 	unsigned long long	time_to_die;
 	unsigned long long	time_to_eat;
-	unsigned long long	time_to_sleep;
+	unsigned long long	ttosleep;
 	unsigned long long	must_eat_nbr;
-}	t_input_val;
+}	t_in_v;
 
 typedef struct s_philo
 {
@@ -49,35 +49,35 @@ typedef struct s_philo
 	unsigned long long	start_time;
 	unsigned long long	lta;
 	unsigned long long	pid;
-	t_input_val			input_val;
+	t_in_v				in_v;
 }	t_philo;
 
 int					ft_atoi(const char *str);
 int					str_err(char *str, int ret);
-int					init(t_input_val *input_val, t_philo *philos);
+int					init(t_in_v *in_v, t_philo *philos);
 size_t				ft_strlen(const	char	*str);
 unsigned long long	get_time(void);
 void				precise_sleep(unsigned long long ms);
-int					get_args(int argc, char *argv[], t_input_val *input_val);
+int					get_args(int argc, char *argv[], t_in_v *in_v);
 void				ft_putnbr_fd(unsigned long long nbr, int fd);
-int					create_thrds(t_input_val input_val, t_philo *philos);
+int					create_thrds(t_in_v in_v, t_philo *philos);
 void				take_forks(t_philo *philos, pthread_mutex_t *left,
 						pthread_mutex_t *right);
 void				release_forks(pthread_mutex_t *left,
 						pthread_mutex_t *right);
-void				eat(t_philo *philos, int *ate_cntr);
-int					check_ate_enough(int *ate_cntr, int must_eat_nbr,
+void				eat(t_philo *philos, int *a_cntr);
+int					ch_ate_e(int *a_cntr, int must_eat_nbr,
 						pthread_mutex_t *left_fork,
 						pthread_mutex_t *right_fork);
 int					display_stat(t_philo *philos, char *str,
 						unsigned long long timeToDo);
-int					join_thrd(t_input_val input_val, pthread_t *p_th,
+int					join_thrd(t_in_v in_v, pthread_t *p_th,
 						pthread_t *death_thread);
-int					clean_free(t_input_val *input_val, t_philo *philos);
-bool				is_running(t_philo *philosopher);
-void				stop_running(t_philo *philosopher);
-pthread_mutex_t		*resolve_first_fork(t_philo *philosopher);
-pthread_mutex_t		*resolve_second_fork(t_philo *philosopher);
+int					clean_free(t_in_v *in_v, t_philo *philos);
+bool				is_running(t_philo *philor);
+void				stop_running(t_philo *philor);
+pthread_mutex_t		*resolve_f_fork(t_philo *philor);
+pthread_mutex_t		*resolve_s_fork(t_philo *philor);
 void				precise_sleep(unsigned long long ms);
 
 #endif

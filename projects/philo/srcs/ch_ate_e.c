@@ -12,10 +12,10 @@
 
 #include "../includes/philo.h"
 
-int	check_ate_enough(int *ate_cntr, int must_eat_nbr,
+int	ch_ate_e(int *a_cntr, int must_eat_nbr,
 	pthread_mutex_t *left_fork, pthread_mutex_t *right_fork)
 {
-	if (*ate_cntr == must_eat_nbr)
+	if (*a_cntr == must_eat_nbr)
 	{
 		pthread_mutex_unlock(right_fork);
 		pthread_mutex_unlock(left_fork);

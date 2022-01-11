@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 03:23:04 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/09 18:38:41 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/01/11 00:55:45 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,50 +14,48 @@
 
 void	*routine(void *arg)
 {
-	int					ate_cntr;
-	pthread_mutex_t		*first_fork;
-	pthread_mutex_t		*second_fork;
-	t_philo				*philosopher;
+	int					a_cntr;
+	pthread_mutex_t		*f_fork;
+	pthread_mutex_t		*s_fork;
+	t_philo				*philor;
 
-	philosopher = (t_philo *)arg;
-	ate_cntr = 0;
-	first_fork = resolve_first_fork(philosopher);
-	if (philosopher->input_val.philo_nbr == 1)
+	philor = (t_philo *)arg;
+	a_cntr = 0;
+	f_fork = resolve_f_fork(philor);
+	if (philor->in_v.philo_nbr == 1)
 		return (0);
-	second_fork = resolve_second_fork(philosopher);
-	usleep((philosopher->pid % 2) * 15000);
+	s_fork = resolve_s_fork(philor);
+	usleep((philor->pid % 2) * 15000);
 	while (1)
 	{
-		if (!is_running(philosopher))
+		if (!is_running(philor))
 			break ;
-		take_forks(philosopher, first_fork, second_fork);
-		eat(philosopher, &ate_cntr);
-		if (!check_ate_enough (&ate_cntr, (int)philosopher
-				->input_val.must_eat_nbr, first_fork, second_fork))
+		take_forks(philor, f_fork, s_fork);
+		eat(philor, &a_cntr);
+		if (!ch_ate_e (&a_cntr, (int)philor->in_v.must_eat_nbr, f_fork, s_fork))
 			break ;
-		release_forks(first_fork, second_fork);
-		display_stat(philosopher, " is sleeping\n",
-			philosopher->input_val.time_to_sleep);
-		display_stat(philosopher, " is thinking\n", 0);
+		release_forks(f_fork, s_fork);
+		display_stat(philor, " is sleeping\n", philor->in_v.ttosleep);
+		display_stat(philor, " is thinking\n", 0);
 	}
 	return (NULL);
 }
 
-int	small_thread(t_philo *philosophers)
+int	small_thread(t_philo *philors)
 {
 	unsigned long long	delta_lta;
 	unsigned int		i;
 
 	i = 0;
-	while (i < philosophers->input_val.philo_nbr)
+	while (i < philors->in_v.philo_nbr)
 	{
-		pthread_mutex_lock(&philosophers[i].eat_mutex);
-		delta_lta = get_time() - philosophers[i].lta;
-		pthread_mutex_unlock(&philosophers[i].eat_mutex);
-		if (delta_lta >= philosophers->input_val.time_to_die)
+		pthread_mutex_lock(&philors[i].eat_mutex);
+		delta_lta = get_time() - philors[i].lta;
+		pthread_mutex_unlock(&philors[i].eat_mutex);
+		if (delta_lta >= philors->in_v.time_to_die)
 		{
-			display_stat(&philosophers[i], " died\n", 0);
-			stop_running(&philosophers[i]);
+			display_stat(&philors[i], " died\n", 0);
+			stop_running(&philors[i]);
 			return (0);
 		}
 		i++;
@@ -67,19 +65,19 @@ int	small_thread(t_philo *philosophers)
 
 void	*detect_death(void *arg)
 {
-	t_philo			*philosophers;
+	t_philo			*philors;
 
-	philosophers = (t_philo *)arg;
+	philors = (t_philo *)arg;
 	while (1)
 	{
-		if (!small_thread(philosophers))
+		if (!small_thread(philors))
 			break ;
 		usleep(5000);
 	}
 	return (NULL);
 }
 
-int	create_thrds(t_input_val input_val, t_philo *philosophers)
+int	create_thrds(t_in_v in_v, t_philo *philors)
 {
 	unsigned int		i;
 	pthread_t			p_th[2000];
@@ -88,20 +86,20 @@ int	create_thrds(t_input_val input_val, t_philo *philosophers)
 
 	running = true;
 	i = 0;
-	while (i < input_val.philo_nbr)
+	while (i < in_v.philo_nbr)
 	{
-		philosophers[i].running = &running;
-		if (pthread_create(&p_th[i], NULL, &routine, &philosophers[i]) != 0)
+		philors[i].running = &running;
+		if (pthread_create(&p_th[i], NULL, &routine, &philors[i]) != 0)
 			return (str_err(ERR_CRT, 3));
 		i++;
 	}
-	if (pthread_create(&death_thread, NULL, &detect_death, philosophers) != 0)
+	if (pthread_create(&death_thread, NULL, &detect_death, philors) != 0)
 		str_err(ERR_CRT, 3);
 	i = 0;
-	while (i < input_val.philo_nbr)
+	while (i < in_v.philo_nbr)
 		if (pthread_join(p_th[i++], NULL) != 0)
 			return (str_err(ERR_JOIN, 4));
-	stop_running(&philosophers[0]);
+	stop_running(&philors[0]);
 	if (pthread_join(death_thread, NULL) != 0)
 		return (str_err(ERR_JOIN, 4));
 	return (0);

@@ -26,28 +26,28 @@ void	release_forks(pthread_mutex_t *left, pthread_mutex_t *right)
 	pthread_mutex_unlock(right);
 }
 
-pthread_mutex_t	*resolve_first_fork(t_philo *philosopher)
+pthread_mutex_t	*resolve_f_fork(t_philo *philor)
 {
-	t_philo			*first_philosopher;
+	t_philo			*first_philor;
 
-	first_philosopher = philosopher - philosopher->pid;
-	if (philosopher->pid % 2 == 0)
-		return (&(philosopher->fork));
-	if (philosopher->pid == philosopher->input_val.philo_nbr - 1)
-		return (&first_philosopher->fork);
-	return (&(philosopher[1].fork));
+	first_philor = philor - philor->pid;
+	if (philor->pid % 2 == 0)
+		return (&(philor->fork));
+	if (philor->pid == philor->in_v.philo_nbr - 1)
+		return (&first_philor->fork);
+	return (&(philor[1].fork));
 }
 
-pthread_mutex_t	*resolve_second_fork(t_philo *philosopher)
+pthread_mutex_t	*resolve_s_fork(t_philo *philor)
 {
-	t_philo			*first_philosopher;
+	t_philo			*first_philor;
 
-	first_philosopher = philosopher - philosopher->pid;
-	if (philosopher->pid % 2 == 0)
+	first_philor = philor - philor->pid;
+	if (philor->pid % 2 == 0)
 	{
-		if (philosopher->pid == philosopher->input_val.philo_nbr - 1)
-			return (&first_philosopher->fork);
-		return (&(philosopher[1].fork));
+		if (philor->pid == philor->in_v.philo_nbr - 1)
+			return (&first_philor->fork);
+		return (&(philor[1].fork));
 	}
-	return (&(philosopher->fork));
+	return (&(philor->fork));
 }

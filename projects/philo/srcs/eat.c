@@ -12,11 +12,11 @@
 
 #include "../includes/philo.h"
 
-void	eat(t_philo *philos, int *ate_cntr)
+void	eat(t_philo *philos, int *a_cntr)
 {
 	pthread_mutex_lock(&philos->eat_mutex);
 	philos->lta = get_time();
 	pthread_mutex_unlock(&philos->eat_mutex);
-	display_stat(philos, " is eating\n", philos->input_val.time_to_eat);
-	(*ate_cntr)++;
+	display_stat(philos, " is eating\n", philos->in_v.time_to_eat);
+	(*a_cntr)++;
 }

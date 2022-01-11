@@ -12,7 +12,7 @@
 
 NAME = philo
 SRCS =  srcs/create_thrds.c\
-		srcs/check_ate_enough.c\
+		srcs/ch_ate_e.c\
 		srcs/is_stop_running.c\
 		srcs/eat.c\
 		srcs/utils.c\

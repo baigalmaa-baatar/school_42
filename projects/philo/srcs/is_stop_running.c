@@ -12,21 +12,21 @@
 
 #include "../includes/philo.h"
 
-bool	is_running(t_philo *philosopher)
+bool	is_running(t_philo *philor)
 {
 	bool			running;
 
-	pthread_mutex_lock(philosopher->running_mutex);
-	running = *philosopher->running;
-	pthread_mutex_unlock(philosopher->running_mutex);
+	pthread_mutex_lock(philor->running_mutex);
+	running = *philor->running;
+	pthread_mutex_unlock(philor->running_mutex);
 	return (running);
 }
 
-void	stop_running(t_philo *philosopher)
+void	stop_running(t_philo *philor)
 {
-	if (philosopher->input_val.philo_nbr == 1)
+	if (philor->in_v.philo_nbr == 1)
 		return ;
-	pthread_mutex_lock(philosopher->running_mutex);
-	*philosopher->running = false;
-	pthread_mutex_unlock(philosopher->running_mutex);
+	pthread_mutex_lock(philor->running_mutex);
+	*philor->running = false;
+	pthread_mutex_unlock(philor->running_mutex);
 }
