@@ -1,133 +1,161 @@
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   micro.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/23 19:02:37 by bbaatar           #+#    #+#             */
+/*   Updated: 2021/12/23 19:02:38 by bbaatar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <math.h>
+#include <stdbool.h>
 
 #define ERR_ARG "Error: argument\n"
-#define ERR_OPF "Error: Operation file corrupted\n"
+#define ERR_OPE "Error: Operation file corrupted\n"
 
-#define SCAN_CONF "%d %d %c\n"
-#define SCAN_SHAPE "%c %f %f %f %f %c\n"
-
-typedef struct s_config{
-	int w;
-	int h;
-	char bg;
-}	t_config;
-
-typedef struct s_shape{
-	char type;
-	float x;
-	float y;
-	float w;
-	float h;
-	char c;
-}	t_shape;
-
-static int ft_strlen(char *s)
+typedef struct s_config
 {
-	int i= 0;
-	while (s[i])
-		i++;	
-	return (i);
-}
+    char    background;
+    int     w;
+    int     h;
+}   t_config;
 
-static void ft_putstr(char *s)
+typedef struct s_shape
 {
-	if (s)
-		write(1, s, ft_strlen(s));
-}
+    char    type;
+    char   c;
+    float   x;
+    float   y;
+    float   w;
+    float   h;
+}   t_shape;
 
-static bool is_conf(int a)
+size_t  ft_strlen(const char *str)
 {
-	return (a > 0 && a <= 300);
+    size_t i;
+
+    i = 0;
+    while (str[i])
+    {
+        i++;
+    }
+    return (i);
 }
 
-static char *make_canvas(FILE *file, t_config *config) {
-	char *ret = NULL;
-	int count = fscanf(file, SCAN_CONF, &config->w, &config->h, &config->bg);
-
-	if (count == 3 && is_conf(config->w) && is_conf(config->h)) {
-		ret = (char*)calloc(config->w * config->h + 1, 1);
-		ret = memset(ret, config->bg, config->w * config->h);
-	}
-	return (ret);
-}
-
-static int is_in_shape(float x, float y, t_shape *tmp)
+int str_err(const char *str, int ret)
 {
-	float e = 1.00000000;
-
-	if(x < tmp->x || tmp->x + tmp->w < x || y < tmp->y || tmp->y + tmp->h < y)
-		return (0);
-	if(x - tmp->x < e || tmp->x + tmp->w - x < e || y - tmp->y < e || tmp->y + tmp->h - y < e)
-		return (2);
-	return (1);
+    write(1, str, ft_strlen(str));
+    return (ret);
 }
 
-static void put_shape_on_canvas(t_config *config, char *buf, t_shape *tmp)
+int close_and_free(FILE *file, char *str)
 {
-	for (int y = 0; y < config->h; y++) {
-		for(int x = 0; x < config->w; x++) {
-			int flag = is_in_shape((float) x, (float) y, tmp);
-			if ((flag == 2 && tmp->type == 'r') || (flag && tmp->type == 'R')) {
-				buf[y * config->w + x] = tmp->c;
-			}
-		}
-	}
+    fclose(file);
+    if (str)
+        free(str);
+    return (1);
 }
 
-static bool do_shapes(FILE *file, t_config *config, char *buf) {
-	t_shape tmp = {0};
-	int count = 0;
-	while((count = fscanf(file, SCAN_SHAPE, &tmp.type, &tmp.x, &tmp.y, &tmp.w, &tmp.h, &tmp.c)) == 6) {
-		if (tmp.w > 0.00000000 && tmp.h > 0.00000000 && (tmp.type == 'r' || tmp.type == 'R'))		{			
-			put_shape_on_canvas(config, buf, &tmp);
-			//shape on canvas
-		} else {
-			return (false);
-		}
-	}
-	if (count != -1)
-		return (false);
-	return (true);
+char    *create_canvas(FILE *file, t_config *config)
+{
+    int ret_scanf;
+    char    *buff = NULL;
+
+    ret_scanf = fscanf(file, "%d %d %c\n", &config->w, &config->h, &config->background);
+    if (ret_scanf == 3 && config->w > 0 && config->w <= 300 && config->h > 0 && config->h <= 300)
+    {
+        buff = (char *)calloc (config->w * config->h + 1, sizeof(char));
+        buff = memset (buff, config->background, config->w * config->h);
+    }
+    return (buff);
 }
 
-static void paint(char *canvas, t_config *config){
-	for(int i = 0; i<config->h; i++) {
-		write(1, canvas + (i * config->w), config->w);
-		write(1, "\n", 1);
-	}
+static int  is_in_shape(float x, float y, t_shape *tmp)
+{
+    float e = 1.00000000;
+
+    if (x < tmp->x || x > (tmp->x + tmp->w) || y < tmp->y || y > (tmp->y + tmp->h))
+        return (0);
+    if (x - tmp->x < e || (tmp->x + tmp->w - x) < e || y - tmp->y < e || (tmp->y + tmp->h - y) < e)
+        return (2);
+    return (1);
+}
+
+void    make_shapes_on_canvas(t_config *config, t_shape *tmp, char *buff)
+{
+    int x;
+    int y;
+    int flag;
+    
+    y = 0;
+    while (y < config->h)
+    {
+        x = 0;
+        while (x < config->w)
+        {
+            flag = is_in_shape((float)x, (float)y, tmp);
+            if ((flag == 2 && tmp->type == 'r') || (flag && tmp->type == 'R'))
+                buff[config->w * y + x] = tmp->c;
+            x++;
+        }
+        y++;
+    }
+}
+
+bool do_shapes(FILE *file, t_config *config, char *buff)
+{
+    int ret_scanf;
+    t_shape tmp;
+
+    while((ret_scanf = fscanf(file, "%c %f %f %f %f %c\n", &tmp.type, &tmp.x, &tmp.y, &tmp.w, &tmp.h, &tmp.c)) == 6)
+    {
+        if (tmp.w > 0.00000000 && tmp.h > 0.00000000 && (tmp.type == 'r' || tmp.type == 'R'))
+            make_shapes_on_canvas(config, &tmp, buff);
+        else
+            return (false);
+    }
+    if (ret_scanf != -1)
+        return (false);
+    return (true);
+}
+
+void    paint(t_config *config, char *canvas)
+{
+    int i;
+    i = 0;
+    while (i < config->h)
+    {
+        write (1, canvas + (i * config->w), config->w);
+        write (1, "\n", 1);
+        i++;
+    }
 }
 
 int main(int argc, char *argv[])
 {
-	int ret = 1;
-	FILE *file = NULL;
-	char *canvas = NULL;
-	t_config config = {0};
+    char        *canvas;
+    FILE        *file;
+    t_config    config;
 
-	if (argc != 2)	{
-		ft_putstr(ERR_ARG);
-	} else if (!(file = fopen(argv[1], "r"))) {
-		ft_putstr(ERR_OPF);
-	} else if (!(canvas = make_canvas(file, &config))) {
-		ft_putstr(ERR_OPF);
-	} else if (!do_shapes(file, &config, canvas)){
-		ft_putstr(ERR_OPF);
-	} else {
-		paint(canvas, &config);
-		ret = 0;
-	}
-
-
-	if (file) {
-		fclose(file);
-	}
-	if (canvas) {
-		free(canvas);
-	}
-	return (ret);
+    config.w = 0;
+    config.h = 0;
+    config.background = 0;
+    if (argc != 2)
+        return (str_err(ERR_ARG, 1));
+    if (!(file = fopen(argv[1], "r")))
+        return (close_and_free(file, NULL) && str_err(ERR_OPE, 1));
+    if (!(canvas = create_canvas(file, &config)))
+        return (close_and_free(file, NULL) && str_err(ERR_OPE, 1));
+    if (!do_shapes(file, &config, canvas))
+        return (close_and_free(file, canvas) && str_err(ERR_OPE, 1));
+    paint(&config, canvas);
+    close_and_free(file, canvas);
+    return (0);
 }
