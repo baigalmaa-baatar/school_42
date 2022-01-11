@@ -36,7 +36,7 @@ void	*routine(void *arg)
 			break ;
 		release_forks(f_fork, s_fork);
 		display_stat(philor, " is sleeping\n", philor->in_v.ttosleep);
-		display_stat(philor, " is thinking\n", 0);
+		dis_think(philor);
 	}
 	return (NULL);
 }

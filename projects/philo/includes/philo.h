@@ -79,5 +79,6 @@ void				stop_running(t_philo *philor);
 pthread_mutex_t		*resolve_f_fork(t_philo *philor);
 pthread_mutex_t		*resolve_s_fork(t_philo *philor);
 void				precise_sleep(unsigned long long ms);
+void				dis_think(t_philo *philor);
 
 #endif

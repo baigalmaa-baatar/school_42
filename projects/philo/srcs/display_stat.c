@@ -12,6 +12,31 @@
 
 #include "../includes/philo.h"
 
+void	precise_sleep(unsigned long long ms)
+{
+	unsigned long long	start_time;
+
+	start_time = get_time();
+	while (get_time() - start_time < ms)
+		usleep(100);
+}
+
+int	max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+void	dis_think(t_philo *philor)
+{
+	if (philor->in_v.philo_nbr % 2 == 0)
+		display_stat(philor, " is thinking\n", 0);
+	else
+		display_stat(philor, " is thinking\n", max(philor->in_v.time_to_eat + 1
+				- philor->in_v.ttosleep, 0));
+}
+
 int	display_stat(t_philo *philor, char *str, unsigned long long timeToDo)
 {
 	pthread_mutex_lock(philor->running_mutex);
@@ -30,13 +55,4 @@ int	display_stat(t_philo *philor, char *str, unsigned long long timeToDo)
 	if (timeToDo)
 		precise_sleep(timeToDo);
 	return (1);
-}
-
-void	precise_sleep(unsigned long long ms)
-{
-	unsigned long long	start_time;
-
-	start_time = get_time();
-	while (get_time() - start_time < ms)
-		usleep(100);
 }
