@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 03:49:05 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/06 03:49:06 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/01/11 02:02:40 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	dis_think(t_philo *philor)
 	if (philor->in_v.philo_nbr % 2 == 0)
 		display_stat(philor, " is thinking\n", 0);
 	else
-		display_stat(philor, " is thinking\n", max(philor->in_v.time_to_eat + 1
+		display_stat(philor, " is thinking\n", max(philor->in_v.time_to_eat + 5
 				- philor->in_v.ttosleep, 0));
 }
 
