@@ -6,28 +6,28 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 12:20:09 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/06/02 09:40:35 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/01/21 16:17:01 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parse/parse.h"
 
 static int	ft_cnt_words(char *s, char c)
 {
 	int		i;
-	int		is_word;
+	int		a_word;
 
 	i = 0;
-	is_word = 0;
+	a_word = 0;
 	while (*s)
 	{
-		if (is_word == 0 && *s != c)
+		if (a_word == 0 && *s != c)
 		{
-			is_word = 1;
+			a_word = 1;
 			i++;
 		}
-		else if (is_word == 1 && *s == c)
-			is_word = 0;
+		else if (a_word == 1 && *s == c)
+			a_word = 0;
 		s++;
 	}
 	return (i);
@@ -53,7 +53,7 @@ static void	*ft_malloc_free(char **tab, int i)
 		free(tab[i]);
 	}
 	free(tab);
-	return (NULL);
+	return (0);
 }
 
 char	**ft_split(char const *s, char c)
@@ -63,11 +63,11 @@ char	**ft_split(char const *s, char c)
 	int		i;
 
 	if (!s)
-		return (NULL);
+		return (0);
 	nb_ofwords = ft_cnt_words((char *)s, c);
 	tab = (char **)malloc((nb_ofwords + 1) * sizeof(char *));
 	if (!tab)
-		return (NULL);
+		return (0);
 	i = 0;
 	while (nb_ofwords--)
 	{
@@ -79,6 +79,6 @@ char	**ft_split(char const *s, char c)
 		s = s + ft_len_word((char *)s, c);
 		i++;
 	}
-	tab[i] = NULL;
+	tab[i] = 0;
 	return (tab);
 }
