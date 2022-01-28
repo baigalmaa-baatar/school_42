@@ -1,0 +1,17 @@
+./params.sh 'echo $USER'
+./params.sh 'echo "$USER"'
+./params.sh "echo '$USER'"
+./params.sh 'echo "$USER$USER$USER"'
+./params.sh 'echo "$USER$USER=lol$USER"'
+./params.sh 'echo "   $USER lol $USER"'
+./params.sh 'echo $USER$USER$USER'
+./params.sh 'echo $USER$USER=lol$USER""lol'
+./params.sh 'echo    $USER lol $USER'
+./params.sh 'echo test "" test "" test'
+./params.sh 'echo "\$USER"'
+./params.sh 'echo "$=USER"'
+./params.sh 'echo "$"'
+# ./params.sh 'echo "$?USER"' need to fix
+./params.sh 'echo $USER $USER'
+./params.sh 'echo "$USER"'
+./params.sh 'echo "$USER"'
