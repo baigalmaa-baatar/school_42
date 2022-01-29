@@ -14,7 +14,8 @@ NAME		=	minishell
 
 CC			=	clang
 
-CFLAGS		=	-Wall -Wextra -Werror -g
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+# CFLAGS		=	-Wall -Wextra -Werror -g
 
 LIBFT		=	libft.a
 

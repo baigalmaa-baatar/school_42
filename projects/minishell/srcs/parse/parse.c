@@ -95,3 +95,21 @@ char	**split(char *s)
 	}
 	return (split_tab(tab, j + 1));
 }
+
+int main(void)
+{
+	char *s= "echo test     \\    test";
+	
+	int i;
+	char **res = NULL;
+	
+	res = malloc (100 * sizeof(char));
+	res = split(s);
+	i = 0;
+	while (i < 6)
+	{
+		printf("param[%d] is : |%s|\n", i, res[i]);
+		i++;
+	}
+	return(0);
+}

@@ -30,20 +30,6 @@ typedef struct s_process
 	//char	*redirect;
 }	t_process;
 
-/* how I will pass the arguments to Marwa:
-
-Example: ls -l | grep minishell | wc -l
-
-t_process	*processes;
-
-processes[0].params[0] = "ls";
-processes[0].params[1] = "-l";
-processes[1].params[0] = "grep";
-processes[1].params[1] = "minishell";
-processes[2].params[0] = "wc";
-processes[2].params[1] = "-l";
-*/
-
 typedef struct s_elements
 {
 	int		*child;
