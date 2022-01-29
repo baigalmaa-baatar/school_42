@@ -24,7 +24,6 @@
 typedef struct s_process
 {
 	char	**params;
-	int		param_nb;
 	//char	*redirect;	/* not sure this moment, if we need it we will use it for redirection. */
 }			t_process;
 

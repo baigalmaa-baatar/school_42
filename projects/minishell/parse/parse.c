@@ -84,6 +84,11 @@ char	**split(char *s)
 				tab[j][k++] = s[i++];
 			}
 		}
+		else if (s[i] == '\\')
+		{
+			i++;
+			tab[j][k++] = s[i];
+		}
 		else
 			tab[j][k++] = s[i];
 		i++;
@@ -93,14 +98,15 @@ char	**split(char *s)
 
 int main(void)
 {
-	char *s =  "echo $USER$USER=lol$USER\"";
+	char *s= "echo test     \\    test";
+	
 	int i;
 	char **res = NULL;
 	
 	res = malloc (100 * sizeof(char));
 	res = split(s);
 	i = 0;
-	while (i < 5)
+	while (i < 6)
 	{
 		printf("param[%d] is : |%s|\n", i, res[i]);
 		i++;

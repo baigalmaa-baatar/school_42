@@ -42,7 +42,7 @@ char	*find_env(char *s)
 			i++;
 	}
 	res[j] = '\0';
-	if (!j)
+	if (j < 2)
 		return (0);
 	return (res);
 }
@@ -67,8 +67,11 @@ char	*replace_env(char *haystack, char *needle, char *env)
 char	*resolve_env(char *s)
 {
 	char	*env;
+	char	*s_old;
+	size_t	len_s;
 
 	env = malloc(1000 * sizeof(char));
+	s_old = malloc(1000 * sizeof(char));
 	env = find_env(s);
 	if (!env)
 	{
@@ -82,32 +85,18 @@ char	*resolve_env(char *s)
 	}
 	while(env)
 	{
+		len_s = ft_strlen(s);
+		s_old = ft_strdup(s);
 		s = replace_env(s, env, getenv(&env[1]));
 		if(!s)
-			break;
+		{
+			if (ft_strlen(env) == len_s)
+				break;
+			s = ft_substr(s_old, ft_strlen(env), len_s - ft_strlen(env));
+		}
 		env = find_env(s);
 	}
 	if (env)
 		free(env);
 	return (s);
 }
-
-// char	*check_env(char	*s) 
-// {
-// 	int i;
-// 	int j;
-// 	char	*res;
-
-// 	i = 0;
-// 	j = 0;
-// 	res = malloc(1000 * sizeof(char));
-// 	while(s[i])
-// 	{	
-// 		if (s[i] == '$')
-// 			res = resolve_env(s);
-// 		else
-// 			res[j++] = s[i];
-// 		i++;
-// 	}
-// 	return (res);
-// }
