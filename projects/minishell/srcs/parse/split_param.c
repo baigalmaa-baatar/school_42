@@ -14,44 +14,53 @@
 
 #define ERR_OPE "Operation error!\n"
 
-char	**alloc_t(char **arr)
+void free_t(char **arr)
 {
 	int i;
 
-	arr = (char **)malloc(100 * sizeof(char *));
-	memset (arr, 0, 100 * sizeof(char *));
 	i = 0;
 	while (i < 100)
 	{
-		arr[i] = (char *)malloc(100 * sizeof(char));
-		memset (arr[i], 0, 100 * sizeof(char));
+		free(arr[i]);
 		i++;
 	}
-	return (arr);
+	free(arr);
+	return;
 }
 
 char	**split_tab(char **tab, int nb)
 {
 	int	i;
+	int	k;
+	char **result;
 
 	i = 0;
+	result = (char **)malloc((nb + 1) * sizeof(char *));
 	while(i < nb)
 	{
-		if(!(tab[i] = ft_strdup(resolve_env(tab[i]))))
-			break;
+		result[i] = resolve_env(tab[i]);
+		k = 0;
+		while (result[i][k])
+		{
+			if (result[i][k] == 1)
+				result[i][k] = '$';
+			k++;
+		}
 		i++;
 	}
-	return (tab);
+	result[i] = NULL;
+	return (result);
 }
 
-char	**split(char *s)
+char	**split_param(char *s)
 {
 	int		i;
 	int		j;
 	int		k;
-	char	**tab = NULL;
+	char	**tab;
+	char	**result;
 
-	tab = alloc_t(tab);
+	tab = alloc_t();
 	i = 0;
 	j = 0;
 	k = 0;
@@ -69,9 +78,13 @@ char	**split(char *s)
 			i++;
 			while (s[i] != '\'')
 			{
+				if (s[i] != '$')
+					tab[j][k++] = s[i];
+				else
+					tab[j][k++] = 1;
+				i++;
 				// if (s[i] != '\'' && !s[i])
 				// 	return (1); //add later
-				tab[j][k++] = s[i++];
 			}
 		}
 		else if (s[i] == '"')
@@ -93,23 +106,7 @@ char	**split(char *s)
 			tab[j][k++] = s[i];
 		i++;
 	}
-	return (split_tab(tab, j + 1));
-}
-
-int main(void)
-{
-	char *s= "echo test     \\    test";
-	
-	int i;
-	char **res = NULL;
-	
-	res = malloc (100 * sizeof(char));
-	res = split(s);
-	i = 0;
-	while (i < 6)
-	{
-		printf("param[%d] is : |%s|\n", i, res[i]);
-		i++;
-	}
-	return(0);
+	result = split_tab(tab, j + 1);
+	free_t(tab);
+	return (result);
 }

@@ -43,60 +43,50 @@ char	*find_env(char *s)
 	}
 	res[j] = '\0';
 	if (j < 2)
+	{
+		free(res);
 		return (0);
+	}
 	return (res);
 }
-
 
 char	*replace_env(char *haystack, char *needle, char *env)
 {
 	int pos;
 	char *res;
+	char *substr;
+	char *prefix;
 
-	res = malloc (100 * sizeof(char));
 	pos = find_pos(haystack, needle, ft_strlen(haystack));
 	if (pos < 0)
-		return (0);
+		return (ft_strdup(haystack));
 	if (!pos)
-		res = strjoin(env, &haystack[pos + ft_strlen(needle)]);
-	else
-		res = strjoin(strjoin((ft_substr(haystack, 0, pos)), env), &haystack[pos + ft_strlen(needle)]);
+		return (strjoin(env, &haystack[ft_strlen(needle)]));
+	substr = ft_substr(haystack, 0, pos);
+	prefix = strjoin((substr), env);
+	res = strjoin(prefix, &haystack[pos + ft_strlen(needle)]);
+	free(substr);
+	free(prefix);
 	return (res);
 }
 
 char	*resolve_env(char *s)
 {
 	char	*env;
-	char	*s_old;
-	size_t	len_s;
+	char	*result;
+	char	*env_val;
+	char	*tmp;
 
-	env = malloc(1000 * sizeof(char));
-	s_old = malloc(1000 * sizeof(char));
-	env = find_env(s);
-	if (!env)
+	result = ft_strdup(s);
+	while((env = find_env(result)))
 	{
-		if (ft_strlen(env) == ft_strlen(s))
-			return (s);
-		else
-		{
-			s = strjoin("", &s[ft_strlen(env)]);
-			env = find_env(s);
-		}
-	}
-	while(env)
-	{
-		len_s = ft_strlen(s);
-		s_old = ft_strdup(s);
-		s = replace_env(s, env, getenv(&env[1]));
-		if(!s)
-		{
-			if (ft_strlen(env) == len_s)
-				break;
-			s = ft_substr(s_old, ft_strlen(env), len_s - ft_strlen(env));
-		}
-		env = find_env(s);
-	}
-	if (env)
+		env_val = getenv(&env[1]);
+		if (!env_val)
+			env_val = "";
+		tmp = result;
+		result = replace_env(result, env, env_val);
+		free(tmp);
 		free(env);
-	return (s);
+	}
+	return (result);
 }

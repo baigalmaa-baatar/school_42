@@ -53,9 +53,11 @@ void	error_fct(char *msg, int exit_value);
 /* parsing */
 int		str_err(char *err, int i);
 int		is_space(char	*str, int i);
-char	**split(char *s);
+char	**split_param(char *s);
 char	*resolve_env(char *s);
 int		find_pos(const char *haystack, const char *needle, int len);
 char	*strjoin(char const *s1, char const *s2);
+char	**split_pipe(char *s);
+char	**alloc_t(void);
 
 #endif

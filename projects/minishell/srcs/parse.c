@@ -26,10 +26,11 @@ t_process	*line_to_processes(char *line, int nb_pipes) //temporary
 
 	i = 0;
 	processes = malloc(sizeof(t_process) * (nb_pipes + 1));
-	tmp = ft_split(line, '|');
+	// tmp = ft_split(line, '|');
+	tmp = split_pipe(line);
 	while (tmp[i])
 	{
-		processes[i].params = split(tmp[i]);
+		processes[i].params = split_param(tmp[i]);
 		i++;
 	}
 	ft_free_tab(tmp);
