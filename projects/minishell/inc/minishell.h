@@ -30,7 +30,7 @@ typedef struct s_process
 {
 	char	**params;
 	//char	*redirect;
-}	t_process;
+}			t_process;
 
 typedef struct s_elements
 {
@@ -39,9 +39,18 @@ typedef struct s_elements
 	int		**pipe_fd;
 }			t_elements;
 
-void	parse(char *line, char *envp[]);
+typedef struct s_data
+{
+	char		*line;
+	char		**path;
+	char		**my_envp;
+	t_process	*process;
+}				t_data;
+
+
+void	parse(t_data *data);
 void	ft_echo(char **complete_cmd);
-void	ft_pwd(void);
+void	ft_pwd(t_data *data);
 void	ft_env(char *envp[]);
 void	ft_cd(char **complete_cmd);
 void	ft_exit(char **complete_cmd);
@@ -49,9 +58,10 @@ char	**find_path(void);
 char	**find_cmds(char **complete_cmd, char **path);
 char	*test_cmd_path(char **path, char *cmd);
 int		find_built_ins(char *cmd);
-void	exec_cmds(t_process *process, char **path, char *envp[]);
-void	exec_pipes(t_process *process, char **path, char *envp[], int nb_pipes);
-void	error_fct(char *msg, int exit_value);
+void	exec_cmds(t_data *data);
+void	exec_pipes(t_data *data, int nb_pipes);
+void	free_data(t_data *data);
+void	error_fct(t_data *data, char *msg, int exit_value);
 /* parsing */
 int		str_err(char *err, int i);
 int		is_space(char	*str, int i);

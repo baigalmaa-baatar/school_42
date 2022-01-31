@@ -19,16 +19,16 @@ int	find_built_ins(char *cmd)  //returns a code for each built-in, 0 if no built
 	return (0);
 }
 
-void	exec_cmds(t_process *process, char **path, char *envp[])
+void	exec_cmds(t_data *data)
 {
 	int	child;
 	int	built_in;
 
-	built_in = find_built_ins(process[0].params[0]);
+	built_in = find_built_ins(data->process[0].params[0]);
 	if (built_in > 3)    // built-ins that shouldn't be forked
 	{
 		if (built_in == 4)
-			ft_cd(process[0].params);
+			ft_cd(data->process[0].params);
 		else if (built_in == 5)
 			printf("ft_export\n");  //not implemented yet
 		else if (built_in == 6)
@@ -36,31 +36,31 @@ void	exec_cmds(t_process *process, char **path, char *envp[])
 		else if (built_in == 7)
 		{
 			printf("exit\n");
-			ft_exit(process[0].params);
+			ft_exit(data->process[0].params);
 		}
 		return ;
 	}
 	if (!built_in)
-		process[0].params = find_cmds(process[0].params, path);
-	if (!process[0].params)
+		data->process[0].params = find_cmds(data->process[0].params, data->path);
+	if (!data->process[0].params)
 		return ;
 	child = fork();
 	if (child == -1)
-		error_fct("minishell: Fork failure", 6);
+		error_fct(data, "minishell: Fork failure", 6);
 	if (!child)   // child process, executes commands
 	{
 		if (built_in == 1)
-			ft_echo(process[0].params);
+			ft_echo(data->process[0].params);
 		else if (built_in == 2)
-			ft_env(envp);
+			ft_env(data->my_envp);
 		else if (built_in == 3)
-			ft_pwd();
-		else if (execve(process[0].params[0], process[0].params, envp) == -1)
-			error_fct("minishell: Execve failure", 7);
+			ft_pwd(data);
+		else if (execve(data->process[0].params[0], data->process[0].params, data->my_envp) == -1)
+			error_fct(data, "minishell: Execve failure", 7);
+		free_data(data);
 		exit(exit_status);
 	}
 	waitpid(child, &exit_status, 0);
-//	exit_status = WEXITSTATUS(exit_status);
 	if (WIFEXITED(exit_status))
 		exit_status = WEXITSTATUS(exit_status);
 	if (WIFSIGNALED(exit_status))

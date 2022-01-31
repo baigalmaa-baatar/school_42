@@ -15,7 +15,7 @@ char	**find_path(void)
 	if (!path)
 	{
 		perror("minishell: Malloc failure");
-		exit(3);
+		exit(2);
 	}
 	return (path);
 }
