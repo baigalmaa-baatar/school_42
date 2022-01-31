@@ -19,7 +19,7 @@ char	*find_env(char *s)
 	int flag;
 	char	*res = NULL;
 
-	res = malloc(100 * sizeof(char) + 1);
+	res = malloc(MAX_ALLOC * sizeof(char));
 	i = 0;
 	j = 0;
 	flag = 0;

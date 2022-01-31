@@ -1,32 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   split_param.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/24 01:40:32 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/24 01:40:34 by bbaatar          ###   ########.fr       */
+/*   Created: 2022/01/31 01:25:38 by bbaatar           #+#    #+#             */
+/*   Updated: 2022/01/31 01:25:43 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-#define ERR_OPE "Operation error!\n"
-
-void free_t(char **arr)
-{
-	int i;
-
-	i = 0;
-	while (i < 100)
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-	return;
-}
 
 char	**split_tab(char **tab, int nb)
 {

@@ -12,12 +12,29 @@
 
 #include "../../inc/minishell.h"
 
+char	**split_pipe_tab(char **tab, int nb)
+{
+	int	i;
+	char **result;
+
+	i = 0;
+	result = (char **)malloc((nb + 1) * sizeof(char *));
+	while(i < nb)
+	{
+		result[i] = ft_strdup(tab[i]);
+		i++;
+	}
+	result[i] = NULL;
+	return (result);
+}
+
 char	**split_pipe(char *s, int *nb_processes)
 {
 	int		i;
 	int		j;
 	int		k;
 	char	**tab;
+	char	**result;
 
 	tab = alloc_t();
 	i = 0;
@@ -50,7 +67,8 @@ char	**split_pipe(char *s, int *nb_processes)
 		i++;
 	}
 	// TODO: need to recreate tab with the correct size
-	tab[j + 1] = 0;
+	result = split_pipe_tab(tab, j + 1);
+	free_t(tab);
 	*nb_processes = j + 1;
-	return (tab);
+	return (result);
 }

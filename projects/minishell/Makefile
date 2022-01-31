@@ -14,8 +14,8 @@ NAME		=	minishell
 
 CC			=	clang
 
-# CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
-CFLAGS		=	-Wall -Wextra -Werror -g
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+# CFLAGS		=	-Wall -Wextra -Werror -g
 
 LIBFT		=	libft.a
 
@@ -25,6 +25,7 @@ SRCS		=	main.c ft_echo.c ft_env.c ft_pwd.c ft_cd.c ft_exit.c \
 				find_cmds.c find_path.c exec_cmds.c exec_pipes.c error_fct.c \
 				parse.c parse/split_param.c parse/resolve_env.c parse/utils_libft.c\
 				parse/utils_parse.c parse/split_pipe.c  parse/alloc_t.c\
+				parse/free_t.c
 				
 
 SRCS_DIR	=	srcs

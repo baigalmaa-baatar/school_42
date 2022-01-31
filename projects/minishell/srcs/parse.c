@@ -31,6 +31,8 @@ t_process	*line_to_processes(char *line, int *nb_processes)
 	while (tmp[i])
 	{
 		processes[i].params = split_param(tmp[i]);
+		for (int a = 0; processes[i].params[a]; a++)
+			printf("pro.p[%d] = \"%s\"\n", a, processes[i].params[a]);
 		i++;
 	}
 	ft_free_tab(tmp);

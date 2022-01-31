@@ -21,6 +21,8 @@
 #include <unistd.h>
 
 # define NF ": command not found"
+# define MAX_ALLOC 1000
+#define ERR_OPE "Operation error!\n"
 
 extern int exit_status;
 
@@ -59,5 +61,6 @@ int		find_pos(const char *haystack, const char *needle, int len);
 char	*strjoin(char const *s1, char const *s2);
 char	**split_pipe(char *s, int *nb_processes);
 char	**alloc_t(void);
+void 	free_t(char **arr);
 
 #endif
