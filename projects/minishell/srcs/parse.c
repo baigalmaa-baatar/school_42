@@ -18,16 +18,16 @@ int		ft_nb_occurences(char c, char *s)
 	return (count);
 }
 
-t_process	*line_to_processes(char *line, int nb_pipes) //temporary
+t_process	*line_to_processes(char *line, int *nb_processes)
 {
 	int			i;
 	char		**tmp;
 	t_process	*processes;
 
 	i = 0;
-	processes = malloc(sizeof(t_process) * (nb_pipes + 1));
+	tmp = split_pipe(line, nb_processes);
+	processes = malloc(sizeof(t_process) *(*nb_processes));
 	// tmp = ft_split(line, '|');
-	tmp = split_pipe(line);
 	while (tmp[i])
 	{
 		processes[i].params = split_param(tmp[i]);
@@ -41,18 +41,17 @@ void	parse(char *line, char *envp[]) //not really a parsing function, it's just 
 {
 	int		i;
 	char	**path;
-	int		nb_pipes;
+	int		nb_processes;
 	t_process	*processes;			//creating it for now, until I get it from Baigalmaa
 
 	path = find_path();
-	nb_pipes = ft_nb_occurences('|', line); //counting number of pipes in the line...
-	processes = line_to_processes(line, nb_pipes); //...and splitting cmds into process struct
-	if (!nb_pipes) 									//if no pipe -> one cmd
+	processes = line_to_processes(line, &nb_processes); //...and splitting cmds into process struct
+	if (nb_processes == 1)
 		exec_cmds(processes, path, envp);
 	else								// if pipe(s) -> various cmds
-		exec_pipes(processes, path, envp, nb_pipes);
+		exec_pipes(processes, path, envp, nb_processes - 1);
 	i = 0;
-	while (i <= nb_pipes)
+	while (i < nb_processes)
 		ft_free_tab(processes[i++].params);
 	free(processes);
 	ft_free_tab(path);

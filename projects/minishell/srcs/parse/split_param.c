@@ -52,6 +52,18 @@ char	**split_tab(char **tab, int nb)
 	return (result);
 }
 
+void	trim_right(char *s)
+{
+	int len;
+
+	len = ft_strlen(s);
+	while (len > 0 && s[len - 1] == ' ')
+	{
+		s[len - 1] = 0;
+		len--;
+	}
+}
+
 char	**split_param(char *s)
 {
 	int		i;
@@ -65,6 +77,7 @@ char	**split_param(char *s)
 	j = 0;
 	k = 0;
 	i = is_space(s, i);
+	trim_right(s);
 	while (s[i])
 	{
 		if (s[i] == ' ')

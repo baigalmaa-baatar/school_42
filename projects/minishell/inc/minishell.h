@@ -57,7 +57,7 @@ char	**split_param(char *s);
 char	*resolve_env(char *s);
 int		find_pos(const char *haystack, const char *needle, int len);
 char	*strjoin(char const *s1, char const *s2);
-char	**split_pipe(char *s);
+char	**split_pipe(char *s, int *nb_processes);
 char	**alloc_t(void);
 
 #endif

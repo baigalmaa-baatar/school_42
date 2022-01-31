@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-char	**split_pipe(char *s)
+char	**split_pipe(char *s, int *nb_processes)
 {
 	int		i;
 	int		j;
@@ -49,6 +49,8 @@ char	**split_pipe(char *s)
 			tab[j][k++] = s[i];
 		i++;
 	}
+	// TODO: need to recreate tab with the correct size
 	tab[j + 1] = 0;
+	*nb_processes = j + 1;
 	return (tab);
 }
