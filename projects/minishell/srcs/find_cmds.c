@@ -6,32 +6,43 @@ char	*test_cmd_path(char **path, char *cmd)
 	char	*cmd_path;
 
 	i = 0;
-	while (path[i])
+	if (path)
 	{
-		cmd_path = ft_mtp_strjoin(path[i], "/", cmd);
-		if (access(cmd_path, F_OK) == -1)
+		while (path[i])
 		{
-			free (cmd_path);
-			i++;
+			cmd_path = ft_mtp_strjoin(path[i], "/", cmd);
+			if (access(cmd_path, F_OK) == -1)
+			{
+				free (cmd_path);
+				i++;
+			}
+			else
+				return (cmd_path);
 		}
-		else
-			return (cmd_path);
 	}
 	if (access(cmd, F_OK) != -1)
 		return (ft_strdup(cmd));
 	return (NULL);
 }
 
-char	**find_cmds(char **complete_cmd, char **path)
+char	**find_cmds(char **complete_cmd, t_data *data)
 {
 	char	*tmp;
 
-	tmp = test_cmd_path(path, complete_cmd[0]);
+	/*****Update of path*****/
+	/*	I'll comment out this part for now.
+		We'll test it later with unset & export 
+
+	ft_free_tab(data->path);					
+	data->path = find_path(data->my_envp);
+	
+	*/
+	tmp = test_cmd_path(data->path, complete_cmd[0]);
 	if (!tmp)
 	{
 		ft_mtp_putendl_fd(STDERR_FILENO, "minishell: ", complete_cmd[0], NF);
 		ft_free_tab(complete_cmd);
-		exit_status = 127;
+		g_exit_status = 127;
 		return (NULL);
 	}
 	free(complete_cmd[0]);

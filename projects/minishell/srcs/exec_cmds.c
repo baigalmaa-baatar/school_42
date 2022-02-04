@@ -1,24 +1,5 @@
 #include "../inc/minishell.h"
 
-int	find_built_ins(char *cmd)  //returns a code for each built-in, 0 if no built-in
-{
-	if (ft_strnstr(cmd, "echo", 4) && !cmd[4])
-		return (1);
-	if (ft_strnstr(cmd, "env", 3) && !cmd[3])
-		return (2);
-	if (ft_strnstr(cmd, "pwd", 3) && !cmd[3])
-		return (3);
-	if (ft_strnstr(cmd, "cd", 2) && !cmd[2])
-		return (4);
-	if (ft_strnstr(cmd, "export", 6) && !cmd[6])
-		return (5);
-	if (ft_strnstr(cmd, "unset", 5) && !cmd[5])
-		return (6);
-	if (ft_strnstr(cmd, "exit", 4) && !cmd[4])
-		return (7);
-	return (0);
-}
-
 void	exec_cmds(t_data *data)
 {
 	int	child;
@@ -28,7 +9,7 @@ void	exec_cmds(t_data *data)
 	if (built_in > 3)    // built-ins that shouldn't be forked
 	{
 		if (built_in == 4)
-			ft_cd(data->process[0].params);
+			ft_cd(data->process[0].params, data);
 		else if (built_in == 5)
 			printf("ft_export\n");  //not implemented yet
 		else if (built_in == 6)
@@ -41,7 +22,7 @@ void	exec_cmds(t_data *data)
 		return ;
 	}
 	if (!built_in)
-		data->process[0].params = find_cmds(data->process[0].params, data->path);
+		data->process[0].params = find_cmds(data->process[0].params, data);
 	if (!data->process[0].params)
 		return ;
 	child = fork();
@@ -52,18 +33,18 @@ void	exec_cmds(t_data *data)
 		if (built_in == 1)
 			ft_echo(data->process[0].params);
 		else if (built_in == 2)
-			ft_env(data->my_envp);
+			ft_env(data->process[0].params, data->my_envp);
 		else if (built_in == 3)
-			ft_pwd(data);
+			ft_pwd();
 		else if (execve(data->process[0].params[0], data->process[0].params, data->my_envp) == -1)
 			error_fct(data, "minishell: Execve failure", 7);
 		free_data(data);
-		exit(exit_status);
+		exit(g_exit_status);
 	}
-	waitpid(child, &exit_status, 0);
-	if (WIFEXITED(exit_status))
-		exit_status = WEXITSTATUS(exit_status);
-	if (WIFSIGNALED(exit_status))
-		exit_status = WTERMSIG(exit_status);
-	printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", exit_status); //temp
+	waitpid(child, &g_exit_status, 0);
+	if (WIFEXITED(g_exit_status))
+		g_exit_status = WEXITSTATUS(g_exit_status);
+	if (WIFSIGNALED(g_exit_status))
+		g_exit_status = WTERMSIG(g_exit_status);
+	printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", g_exit_status); //temp
 }

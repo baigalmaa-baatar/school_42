@@ -1,13 +1,18 @@
 #include "../inc/minishell.h"
 
-void	ft_pwd(t_data *data)
+void	ft_pwd(void)
 {
 	char	*pathname;
 
 	pathname = getcwd(NULL, 0);
 	if (!pathname)
-		error_fct(data, "minishell: Getcwd failure", 8); //can be changed to a better error msg
+	{
+		ft_putstr_fd("minishell: pwd: Information not available\n",
+			STDERR_FILENO);
+		g_exit_status = 1;
+		return ;
+	}
 	printf("%s\n", pathname);
 	free(pathname);
-	exit_status = 0;
+	g_exit_status = 0;
 }

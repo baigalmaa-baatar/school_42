@@ -14,8 +14,8 @@ NAME		=	minishell
 
 CC			=	clang
 
-#CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+#CFLAGS		=	-Wall -Wextra -Werror
 
 LIBFT		=	libft.a
 
@@ -23,12 +23,10 @@ LIBFT_DIR	=	libft
 
 SRCS		=	main.c ft_echo.c ft_env.c ft_pwd.c ft_cd.c ft_exit.c \
 				find_cmds.c find_path.c exec_cmds.c exec_pipes.c error_fct.c \
-				free_data.c \
-				parse.c parse/split_param.c parse/resolve_env.c parse/utils_libft.c\
-				parse/utils_parse.c parse/split_pipe.c  parse/alloc_t.c\
-				parse/free_t.c
+				free_data.c my_getenv.c find_built_ins.c \
+				parse.c parse/parse_process.c parse/resolve_env.c parse/utils_libft.c\
+				parse/utils_parse.c	parse/free_t.c
 				
-
 SRCS_DIR	=	srcs
 
 OBJS		=	$(addprefix $(SRCS_DIR)/,$(SRCS:.c=.o))

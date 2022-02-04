@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:18:00 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/28 04:18:02 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/04 00:06:26 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	str_err(char *err, int i)
 	return (i);
 }
 
-int	is_space(char	*str, int i)
+int	skip_spaces(char	*str, int i)
 {
 	while (str[i] == ' ')
 		i++;
@@ -59,7 +59,7 @@ int	find_pos(const char *haystack, const char *needle, int len)
 		if (haystack[i] != needle[0])
 			i++;
 		else if (haystack[i] == needle[0])
-		{			
+		{
 			if (ft_find((char *)&haystack[i], (char *)needle, l, len - i) == 1)
 				return (i);
 			else

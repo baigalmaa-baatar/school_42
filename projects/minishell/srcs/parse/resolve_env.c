@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:19:34 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/28 04:19:37 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/04 00:22:31 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,14 @@ char	*replace_env(char *haystack, char *needle, char *env)
 	return (res);
 }
 
-char	*resolve_env(char *s)
+char	*resolve_env(char *s, t_data *data)
 {
 	char	*env;
 	char	*result;
 	char	*env_val;
 	char	*tmp;
 
+	(void)data;
 	result = ft_strdup(s);
 	while((env = find_env(result)))
 	{

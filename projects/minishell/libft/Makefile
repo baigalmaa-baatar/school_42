@@ -29,7 +29,8 @@ SRCS		=	ft_atoi.c ft_bzero.c ft_memset.c ft_memcpy.c ft_memchr.c ft_memcmp.c \
 				ft_convert_from_decimal.c ft_strfill.c \
 				ft_free_tab.c ft_mtp_free.c ft_mtp_putendl_fd.c ft_mtp_strjoin.c \
 				ft_atoll.c ft_convert_base.c ft_tab_len.c ft_mtp_free_tabs.c \
-				ft_tab_join.c ft_tab_str_join.c
+				ft_tab_join.c ft_tab_str_join.c \
+				ft_isspace.c ft_nb_occurences.c
 
 
 BONUS		=	ft_lstnew.c ft_lstsize.c ft_lstlast.c ft_lstadd_front.c \

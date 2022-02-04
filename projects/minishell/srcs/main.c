@@ -1,6 +1,6 @@
 #include "../inc/minishell.h"
 
-int	exit_status;
+int	g_exit_status;
 
 char	**dup_envp(char *envp[])
 {
@@ -11,30 +11,33 @@ char	**dup_envp(char *envp[])
 	my_envp = malloc(sizeof(char *) * (ft_tab_len(envp) + 1));
 	if (!my_envp)
 		error_fct(NULL, "minishell: Malloc failure", 2);
-	while (envp[i])
+	if (envp)
 	{
-		my_envp[i] = ft_strdup(envp[i]);
-		if (!my_envp[i])
-			error_fct(NULL, "minishell: Malloc failure", 2);
-		i++;
+		while (envp[i])
+		{
+			my_envp[i] = ft_strdup(envp[i]);
+			if (!my_envp[i])
+				error_fct(NULL, "minishell: Malloc failure", 2);
+			i++;
+		}
 	}
 	my_envp[i] = NULL;
 	return (my_envp);
 }
 
-int main(int argc, char *argv[], char *envp[])
+int	main(int argc, char *argv[], char *envp[])
 {
 	char	*prompt;
 	t_data	data;
 
-	if (argc != 1)
+	if (argc != 1)		// ---> we could add an error msg
 		return (0);
 	(void)argv;
-	exit_status = 0;
-	data.my_envp = dup_envp(envp);      // not sure about this yet
+	g_exit_status = 0;
+	data.my_envp = dup_envp(envp);
 //	data.my_envp = envp;
-	data.path = find_path();
-	prompt = "\033[96mMinishell > \033[0m"; // prompt (colored)
+	data.path = find_path(data.my_envp);
+	prompt = "\033[96mminishell > \033[0m"; // prompt (colored)
 	while (1)
 	{
 		data.line = readline(prompt);
@@ -46,7 +49,7 @@ int main(int argc, char *argv[], char *envp[])
 		}
 		data.line = NULL;
 	}
-	// rl_clear_history();
+	// rl_clear_history();  //Marwa, I couldn't compile, so I commented out. 
 	ft_free_tab(data.my_envp);
 	ft_free_tab(data.path);
 	return (0);

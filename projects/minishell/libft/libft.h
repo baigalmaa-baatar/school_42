@@ -95,4 +95,8 @@ void				ft_mtp_free_tabs(char **tabs1, char **tabs2, char **tabs3,
 char				**ft_tab_join(char **tab1, char **tab2);
 char				**ft_tab_str_join(char **tab, char *str);
 
+//	Minishell
+int					ft_isspace(int c);
+int					ft_nb_occurences(char c, char *s);
+
 #endif

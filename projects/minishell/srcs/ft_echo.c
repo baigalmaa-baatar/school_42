@@ -1,6 +1,6 @@
 #include "../inc/minishell.h"
 
-int	ft_strfind(char c, char *s) //searches for another character than c, in string s
+int	ft_strfind(char c, char *s)
 {
 	int	i;
 
@@ -20,7 +20,7 @@ int	option_n(char **complete_cmd, int *index)
 {
 	int	i;
 	int	newline;
-	
+
 	i = 1;
 	newline = 1;
 	while (complete_cmd[i])
@@ -32,8 +32,8 @@ int	option_n(char **complete_cmd, int *index)
 			if (!ft_strfind('n', &complete_cmd[i][1]))
 			{
 				if (i == 1)
-						newline = 1;
-					return (newline);
+					newline = 1;
+				return (newline);
 			}
 		}
 		else
@@ -50,13 +50,13 @@ void	ft_echo(char **complete_cmd)
 
 	if (complete_cmd[1])
 	{		
-		newline = option_n(complete_cmd, &i); //looks for option -n
-		if (complete_cmd[1][0] == '$' && complete_cmd[1][1] == '?') //temp, testing "$?" cmd (exit status)
+		newline = option_n(complete_cmd, &i);
+		/* if (complete_cmd[1][0] == '$' && complete_cmd[1][1] == '?')
 		{
-			char *tmp = ft_itoa(exit_status);
+		 	char *tmp = ft_itoa(g_exit_status);
 			free(complete_cmd[1]);
 			complete_cmd[1] = tmp;
-		}
+		}*/
 		while (complete_cmd[i])
 		{
 			if (newline && !complete_cmd[i + 1])
@@ -68,5 +68,5 @@ void	ft_echo(char **complete_cmd)
 			i++;
 		}
 	}
-	exit_status = 0;
+	g_exit_status = 0;
 }
