@@ -1,31 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/06 13:41:46 by mkhabou           #+#    #+#             */
+/*   Updated: 2022/02/06 13:41:51 by mkhabou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "../libft/libft.h"
-#include <dirent.h>
-#include <fcntl.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/ioctl.h>
-#include <sys/resource.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <termcap.h>
-#include <termios.h>
-#include <unistd.h>
-#include <stdbool.h>
+# include "../libft/libft.h"
+# include <dirent.h>
+# include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/ioctl.h>
+# include <sys/resource.h>
+# include <sys/stat.h>
+# include <sys/time.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <termcap.h>
+# include <termios.h>
+# include <unistd.h>
+# include <stdbool.h>
 
 # define NF ": command not found"
 # define MAX_ALLOC 1000
-#define ERR_OPE "Operation error!\n"
+# define ERR_OPE "Operation error!\n"
 
-extern int g_exit_status;
+extern int	g_exit_status;
 
 typedef struct s_process
 {
@@ -52,12 +64,11 @@ typedef struct s_data
 	int			nb_processes;
 }				t_data;
 
-
 void	parse(t_data *data);
-char 	*my_getenv(char *name, char **envp);
+char	*my_getenv(char *name, char **my_envp);
 void	ft_echo(char **complete_cmd);
-void	ft_pwd(void);
-void	ft_env(char **complete_cmd, char **envp);
+void	ft_pwd(char **my_envp);
+void	ft_env(char **complete_cmd, char **my_envp);
 void	ft_cd(char **complete_cmd, t_data *data);
 void	ft_exit(char **complete_cmd);
 char	**find_path(char **my_envp);
@@ -66,6 +77,7 @@ char	*test_cmd_path(char **path, char *cmd);
 int		find_built_ins(char *cmd);
 void	exec_cmds(t_data *data);
 void	exec_pipes(t_data *data, int nb_pipes);
+void	change_env_value(t_data *data, char *var, char *new_value);
 void	free_data(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
 /* parsing */
@@ -79,7 +91,7 @@ int		find_pos(const char *haystack, const char *needle, int len);
 char	*strjoin(char const *s1, char const *s2);
 // char	**split_pipe(char *s, int *nb_processes); //deleted
 char	**alloc_t(void);
-void 	free_t(char **arr);
+void	free_t(char **arr);
 int		count_elements(void **arr);
 
 #endif

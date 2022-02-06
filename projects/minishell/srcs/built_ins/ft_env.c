@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_nb_occurences.c                                 :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 13:40:23 by mkhabou           #+#    #+#             */
-/*   Updated: 2022/02/06 13:40:26 by mkhabou          ###   ########.fr       */
+/*   Created: 2022/02/06 15:07:15 by mkhabou           #+#    #+#             */
+/*   Updated: 2022/02/06 15:07:19 by mkhabou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/minishell.h"
 
-int	ft_nb_occurences(char c, char *s)
+void	ft_env(char **complete_cmd, char **my_envp)
 {
 	int	i;
-	int	count;
 
 	i = 0;
-	count = 0;
-	if (!s || !c)
-		return (0);
-	while (s[i])
+	if (complete_cmd[1])
 	{
-		if (s[i] == c)
-			count++;
-		i++;
+		ft_putstr_fd("minishell: env: too many arguments\n", STDERR_FILENO);
+		g_exit_status = 1;
+		return ;
 	}
-	return (count);
+	if (my_envp)
+	{
+		while (my_envp[i])
+		{
+			printf("%s\n", my_envp[i]);
+			i++;
+		}
+	}
+	g_exit_status = 0;
 }

@@ -1,23 +1,5 @@
 #include "../inc/minishell.h"
 
-int		ft_nb_occurences(char c, char *s)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	if (!s || !c)
-		return (0);
-	while (s[i])
-	{
-		if (s[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
-}
-
 int count_elements(void **arr)
 {
 	int i;
@@ -88,6 +70,7 @@ void	parse(t_data *data)
 		close(fd_in);
 	}
 	//<--- only for testing purpose
+
 	if (data->nb_processes == 1)
 		exec_cmds(data);
 	else
@@ -107,6 +90,15 @@ void	parse(t_data *data)
 	i = 0;
 	// while (data->process[i].params)		//deteled, because we found number of processes in previous step.
 	while (i < data->nb_processes)
-		ft_free_tab(data->process[i++].params);
+	{
+		ft_free_tab(data->process[i].params);
+		if (data->process[i].input)
+			free(data->process[i].input);
+		if (data->process[i].output)
+			free(data->process[i].output);
+		if (data->process[i].heredoc)
+			free(data->process[i].heredoc);
+		i++;
+    }
 	free(data->process);
 }

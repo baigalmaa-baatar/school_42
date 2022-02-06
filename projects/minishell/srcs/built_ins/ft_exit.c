@@ -1,4 +1,16 @@
-#include "../inc/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/06 15:07:28 by mkhabou           #+#    #+#             */
+/*   Updated: 2022/02/06 15:07:31 by mkhabou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../inc/minishell.h"
 
 int	has_digits(char *s)
 {
@@ -39,10 +51,9 @@ int	check_nb(char *str, long long *nb)
 	{
 		if (!ft_isdigit(str[i]))
 			return (0);
-		nbr = (nbr * 10) + str[i] - 48;
+		nbr = (nbr * 10) + str[i++] - 48;
 		if (nbr < 0)
 			return (0);
-		i++;
 	}
 	*nb = nbr * neg;
 	return (1);

@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_nb_occurences.c                                 :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 13:40:23 by mkhabou           #+#    #+#             */
-/*   Updated: 2022/02/06 13:40:26 by mkhabou          ###   ########.fr       */
+/*   Created: 2022/02/06 15:07:02 by mkhabou           #+#    #+#             */
+/*   Updated: 2022/02/06 15:07:06 by mkhabou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/minishell.h"
 
-int	ft_nb_occurences(char c, char *s)
+void	ft_pwd(char **my_envp)
 {
-	int	i;
-	int	count;
+	char	*pathname;
+	char	*env_pwd;
 
-	i = 0;
-	count = 0;
-	if (!s || !c)
-		return (0);
-	while (s[i])
+	pathname = getcwd(NULL, 0);
+	if (!pathname)
 	{
-		if (s[i] == c)
-			count++;
-		i++;
+		env_pwd = my_getenv("PWD", my_envp);
+		if (!env_pwd)
+		{
+			ft_putstr_fd("minishell: pwd: Information not available\n",
+				STDERR_FILENO);
+			g_exit_status = 1;
+			return ;
+		}
+		pathname = ft_strdup(env_pwd);
 	}
-	return (count);
+	printf("%s\n", pathname);
+	free(pathname);
+	g_exit_status = 0;
 }

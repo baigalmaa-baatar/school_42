@@ -81,7 +81,7 @@ char	*resolve_env(char *s, t_data *data)
 	result = ft_strdup(s);
 	while((env = find_env(result)))
 	{
-		env_val = getenv(&env[1]);
+		env_val = my_getenv(&env[1], data->my_envp);
 		if (!env_val)
 			env_val = "";
 		tmp = result;

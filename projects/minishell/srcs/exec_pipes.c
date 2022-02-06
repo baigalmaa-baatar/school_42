@@ -78,15 +78,13 @@ int	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes)
 
 void	exec_pipes(t_data *data, int nb_pipes)
 {
-	int		i;
-	int		j;
-	int		x;
-	t_elements elements;
+	int			i;
+	int			x;
+	t_elements	elements;
 //	int saved_stdout = dup(STDOUT_FILENO);
 //	int	saved_stdin = dup(STDIN_FILENO);
 
 	i = 0;
-	j = 0;
 	x = 0;
 	malloc_elements(data, &elements, nb_pipes);
 	if (!check_all_cmds(data, &elements, nb_pipes))
@@ -94,7 +92,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 		free_elements(&elements, nb_pipes);
 		return ;
 	}
-	while (j <= nb_pipes)
+	while (i <= nb_pipes)
 	{
 		elements.child[i] = fork();
 		if (elements.child[i] == -1)
@@ -125,9 +123,13 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			else if (elements.built_in[i] == 2)
 				ft_env(data->process[0].params, data->my_envp);
 			else if (elements.built_in[i] == 3)
-				ft_pwd();
+				ft_pwd(data->my_envp);
 			else if (elements.built_in[i] == 4)
 				ft_cd(data->process[i].params, data);
+			/*else if (elements.built_in[i] == 5)  //not implemented yet
+				ft_export();
+			else if (elements.built_in[i] == 6)
+				ft_unset();*/
 			else if (elements.built_in[i] == 7)
 				ft_exit(data->process[i].params);
 			else if (execve(data->process[i].params[0], data->process[i].params, data->my_envp) == -1)
@@ -136,7 +138,6 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			exit(g_exit_status);
 		}
 		i++;
-		j++;
 	}
 	close_fds(data, elements.pipe_fd, nb_pipes);
 	while (x <= nb_pipes)
