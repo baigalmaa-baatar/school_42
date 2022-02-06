@@ -102,22 +102,36 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			if (!i)
 			{
 				printf("\033[3;32;40m-----------FIRST PROCESS------------\033[0m\n");
-				dup2(elements.pipe_fd[i][1], 1);
-				close_fds(data, elements.pipe_fd, nb_pipes);
+				if (data->process[i].fd_input > -1)
+					dup2(data->process[i].fd_input, 0);
+				if (data->process[i].fd_output > -1)
+					dup2(data->process[i].fd_output, 1);
+				else
+					dup2(elements.pipe_fd[i][1], 1);
 			}
 			else if (i == nb_pipes)
 			{
 				printf("\033[3;31;40m------------LAST PROCESS------------\033[0m\n");
-				dup2(elements.pipe_fd[i - 1][0], 0);
-				close_fds(data, elements.pipe_fd, nb_pipes);
+				if (data->process[i].fd_input > -1)
+					dup2(data->process[i].fd_input, 0);
+				else
+					dup2(elements.pipe_fd[i - 1][0], 0);
+				if (data->process[i].fd_output > -1)
+					dup2(data->process[i].fd_output, 1);
 			}
 			else
 			{
 				printf("\033[3;33;40m-----------MIDDLE PROCESS-----------\033[0m\n");
-				dup2(elements.pipe_fd[i - 1][0], 0);
-				dup2(elements.pipe_fd[i][1], 1);
-				close_fds(data, elements.pipe_fd, nb_pipes);
+				if (data->process[i].fd_input > -1)
+					dup2(data->process[i].fd_input, 0);
+				else
+					dup2(elements.pipe_fd[i - 1][0], 0);
+				if (data->process[i].fd_output > -1)
+					dup2(data->process[i].fd_output, 1);
+				else
+					dup2(elements.pipe_fd[i][1], 1);
 			}
+			close_fds(data, elements.pipe_fd, i);
 			if (elements.built_in[i] == 1)
 				ft_echo(data->process[i].params);
 			else if (elements.built_in[i] == 2)
@@ -140,6 +154,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 		i++;
 	}
 	close_fds(data, elements.pipe_fd, nb_pipes);
+	close_redirection_fds(data);
 	while (x <= nb_pipes)
 	{
 		waitpid(elements.child[x], &g_exit_status, 0);

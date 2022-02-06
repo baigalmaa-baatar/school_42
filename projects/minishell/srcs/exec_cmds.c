@@ -28,6 +28,19 @@ void	exec_no_built_in(t_data *data)
 void	exec_cmds(t_data *data)
 {
 	int	built_in;
+	int stdin_copy;
+	int stdout_copy;
+
+	if (data->process[0].fd_input > -1)
+	{
+		stdin_copy = dup(0);
+		dup2(data->process[0].fd_input, 0);
+	}
+	if (data->process[0].fd_output > -1)
+	{
+		stdout_copy = dup(1);
+		dup2(data->process[0].fd_output, 1);
+	}
 
 	built_in = find_built_ins(data->process[0].params[0]);
 	if (built_in)    // built-ins : shouldn't be forked (if no pipe)
@@ -50,7 +63,12 @@ void	exec_cmds(t_data *data)
 			ft_exit(data->process[0].params);
 		}
 		printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", g_exit_status); //temp
-		return ;
 	}
-	exec_no_built_in(data);
+	else
+		exec_no_built_in(data);
+	if (data->process[0].fd_input > -1)
+		dup2(stdin_copy, 0);
+	if (data->process[0].fd_output > -1)
+		dup2(stdout_copy, 1);
+	close_redirection_fds(data);
 }

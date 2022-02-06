@@ -27,7 +27,8 @@ SRCS		=	main.c find_built_ins.c \
 				find_cmds.c find_path.c exec_cmds.c exec_pipes.c error_fct.c \
 				free_data.c my_getenv.c change_env_value.c \
 				parse.c parse/parse_process.c parse/resolve_env.c \
-				parse/utils_libft.c parse/utils_parse.c	parse/free_t.c
+				parse/utils_libft.c parse/utils_parse.c	parse/free_t.c\
+				redirection.c
 				
 SRCS_DIR	=	srcs
 

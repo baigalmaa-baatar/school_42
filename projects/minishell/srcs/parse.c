@@ -44,49 +44,19 @@ t_process	*from_line_to_processes(t_data *data)
 void	parse(t_data *data)
 {
 	int		i;
-	int 	stdout_copy; //only for testing purpose
-	int 	stdin_copy; //only for testing purpose
-	t_process last_process; //only for testing purpose
 
 	data->process = from_line_to_processes(data);
-	last_process = data->process[data->nb_processes - 1]; //only for testing purpose
-	//only for testing purpose --->
-	if (last_process.output)
+	if (!prepare_redirections(data))
 	{
-		int fd_out;
-		if (last_process.append)
-			fd_out = open(last_process.output, O_CREAT | O_RDWR |O_APPEND, 0644);
-		else
-			fd_out = open(last_process.output, O_CREAT | O_RDWR | O_TRUNC, 0644);
-		stdout_copy = dup(1);
-		dup2(fd_out, 1);
-		close(fd_out);
+		// Got an error when preparing redirections, probably one of the input/output file wasn't accessible.
+		// We should print an error.
+		return;
 	}
-	if (last_process.input)
-	{
-		int fd_in = open(last_process.input, O_RDONLY);
-		stdin_copy = dup(0);
-		dup2(fd_in, 0);
-		close(fd_in);
-	}
-	//<--- only for testing purpose
-
 	if (data->nb_processes == 1)
 		exec_cmds(data);
 	else
 		exec_pipes(data, data->nb_processes - 1);
-	//only for testing purpose --->
-	if (last_process.output)
-	{
-		dup2(stdout_copy, 1);
-		close(stdout_copy);
-	}
-	if (last_process.input)
-	{
-		dup2(stdin_copy, 0);
-		close(stdin_copy);
-	}
-	//<--- only for testing purpose
+
 	i = 0;
 	// while (data->process[i].params)		//deteled, because we found number of processes in previous step.
 	while (i < data->nb_processes)
@@ -99,6 +69,6 @@ void	parse(t_data *data)
 		if (data->process[i].heredoc)
 			free(data->process[i].heredoc);
 		i++;
-    }
+	}
 	free(data->process);
 }

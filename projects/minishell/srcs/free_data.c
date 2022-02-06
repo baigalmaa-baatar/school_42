@@ -6,7 +6,7 @@ void	free_data(t_data *data)
 
 	i = 0;
 	ft_free_tab(data->path);
-//	ft_free_tab(data->my_envp);
+	ft_free_tab(data->my_envp);
 	free(data->line);
 	while (i < data->nb_processes)	//changed i to nb_processes
 		ft_free_tab(data->process[i++].params);

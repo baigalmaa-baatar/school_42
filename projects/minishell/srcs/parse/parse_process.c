@@ -214,6 +214,8 @@ void	init_process(t_process *process)
 	process->output = NULL;
 	process->heredoc = NULL;
 	process->append = false;
+	process->fd_input = -1;
+	process->fd_output = -1;
 }
 
 int		locate_redirection_char(char *s)

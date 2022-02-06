@@ -46,6 +46,8 @@ typedef struct s_process
 	char	*output;
 	char	*heredoc;
 	bool	append;
+	int		fd_input;
+	int		fd_output;
 }			t_process;
 
 typedef struct s_elements
@@ -93,5 +95,10 @@ char	*strjoin(char const *s1, char const *s2);
 char	**alloc_t(void);
 void	free_t(char **arr);
 int		count_elements(void **arr);
+char	*eval(char *s, t_data *data);
+
+/* redirections */
+int     prepare_redirections(t_data *data);
+void    close_redirection_fds(t_data *data);
 
 #endif

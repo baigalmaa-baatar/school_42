@@ -24,7 +24,15 @@ char	**dup_envp(char *envp[])
 	my_envp[i] = NULL;
 	return (my_envp);
 }
-
+/*
+void	set_data(t_data *data)
+{
+	data->line = NULL;
+	data->path = NULL;
+	data->my_envp = NULL;
+	data->process = NULL;
+}
+*/
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*prompt;
@@ -34,6 +42,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (0);
 	(void)argv;
 	g_exit_status = 0;
+//	set_data(&data);
 	data.my_envp = dup_envp(envp);
 //	data.my_envp = envp;
 	data.path = find_path(data.my_envp);
@@ -50,7 +59,6 @@ int	main(int argc, char *argv[], char *envp[])
 		data.line = NULL;
 	}
 	// rl_clear_history();  //Marwa, I couldn't compile, so I commented out. 
-	ft_free_tab(data.my_envp);
-	ft_free_tab(data.path);
+	free_data(&data);
 	return (0);
 }
