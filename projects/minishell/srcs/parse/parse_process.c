@@ -35,7 +35,19 @@ char	*new_string(int capacity)
 	return result;
 }
 
-int		locate_char(char *s, char ch)
+bool	is_char_in(char ch, char *delimiters)
+{
+	while (*delimiters)
+	{
+		if (ch == *delimiters)
+			return (true);
+		delimiters++;
+	}
+
+	return (false);
+}
+
+int		locate_chars(char *s, char *delimiters)
 {
 	int i;
 	char open;
@@ -60,11 +72,20 @@ int		locate_char(char *s, char ch)
 				open = 0;
 		} else if (s[i] == '\\')
 			escape = true;
-		else if (open == 0 && s[i] == ch)
+		else if (open == 0 && is_char_in(s[i], delimiters))
 			return (i);
 		i++;
 	}
 	return (-1);
+}
+
+int		locate_char(char *s, char delimiter)
+{
+	char delimiters[2];
+
+	delimiters[0] = delimiter;
+	delimiters[1] = 0;
+	return (locate_chars(s, delimiters));
 }
 
 char	**split(char *s, char delimiter)
@@ -91,6 +112,56 @@ char	**split(char *s, char delimiter)
 		i += pos + 1;
 	}
 	return (result);
+}
+
+int		parse_redirection(char *s, int i, t_process *process, t_data *data)
+{
+	int pos;
+
+	if (s[i] == '>')
+	{
+		// output
+		if (s[i + 1] == '>')
+		{
+			// append
+			process->append = true;
+			i++;
+		}
+		i = skip_spaces(s, i + 1);
+		pos = i + locate_chars(&s[i], "<> ");
+		if (pos < i)
+			pos = ft_strlen(s);
+		if (process->output)
+			free(process->output);
+		process->output = eval(ft_substr(s, i, pos - i), data);
+	}
+	else
+	{
+		if (s[i + 1] == '<')
+		{
+			// heredoc
+			i++;
+			i = skip_spaces(s, i + 1);
+			pos = i + locate_chars(&s[i], "<> ");
+			if (pos < i)
+				pos = ft_strlen(s);
+			if (process->heredoc)
+				free(process->heredoc);
+			process->heredoc = eval(ft_substr(s, i, pos - i), data);
+		}
+		else
+		{
+			// input
+			i = skip_spaces(s, i + 1);
+			pos = i + locate_chars(&s[i], "<> ");
+			if (pos < i)
+				pos = ft_strlen(s);
+			if (process->input)
+				free(process->input);
+			process->input = eval(ft_substr(s, i, pos - i), data);
+		}
+	}
+	return (pos);
 }
 
 char	*scan_single_quoted(char *s, int *i)
@@ -218,99 +289,36 @@ void	init_process(t_process *process)
 	process->fd_output = -1;
 }
 
-int		locate_redirection_char(char *s)
-{
-	int pos;
-	int tmp;
-
-	pos = ft_strlen(s);
-	tmp = locate_char(s, '<');
-	if (tmp != -1)
-		pos = tmp;
-	tmp = locate_char(s, '>');
-	if (tmp != -1 && tmp < pos)
-		pos = tmp;
-	return (pos);
-}
-
-bool	parse_params(char *s, t_process *process, t_data *data)
-{
-	int i;
-
-	process->params = split(s, ' ');
-	if (process->params == NULL)
-		return (false);
-
-	i = 0;
-	while (process->params[i])
-	{
-		process->params[i] = eval(process->params[i], data);
-		i++;
-	}
-
-	return (true);
-}
-
-void	parse_redirections(char *s, t_process *process, t_data *data)
-{
-	int i;
-	int tmp;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '>')
-		{
-			// output
-			if (s[i + 1] == '>')
-			{
-				// append
-				process->append = true;
-				i++;
-			}
-			tmp = locate_redirection_char(&s[i + 1]);
-			process->output = eval(ft_substr(&s[i + 1], 0, tmp), data);
-		}
-		else
-		{
-			if (s[i + 1] == '<')
-			{
-				// heredoc
-				i++;
-				tmp = locate_redirection_char(&s[i + 1]);
-				process->heredoc = eval(ft_substr(&s[i + 1], 0, tmp), data);
-			}
-			else
-			{
-				// input
-				tmp = locate_redirection_char(&s[i + 1]);
-				process->input = eval(ft_substr(&s[i + 1], 0, tmp), data);
-			}
-		}
-		i += tmp + 1;
-	}
-}
-
 bool	parse_process(char *s, t_process *process, t_data *data)
 {
-	int tmp;
-	char *params;
-	char *redirections;
+	int		i;
+	int		j;
+	int		next_pos;
+	int		current_pos;
+	char	current_delimiter;
 
 	init_process(process);
-	tmp = locate_redirection_char(s);
-	params = ft_substr(s, 0, tmp);
-	redirections = ft_substr(s, tmp, ft_strlen(s) - tmp);
-
-	if (!parse_params(params, process, data))
+	current_pos = -1;
+	current_delimiter = ' ';
+	process->params = (char **)malloc(MAX_ALLOC * sizeof(char *));
+	memset(process->params, 0, MAX_ALLOC * sizeof(char *));
+	i = 0;
+	j = 0;
+	while (i < (int)ft_strlen(s))
 	{
-		free(params);
-		free(redirections);
-		return (false);
+		if (is_char_in(current_delimiter, "<>"))
+			next_pos = parse_redirection(s, current_pos, process, data);
+		else
+		{
+			next_pos = i + locate_chars(&s[i], "<> ");
+			if (next_pos < i)
+				next_pos = ft_strlen(s);
+			if (next_pos - current_pos > 1)
+				process->params[j++] = eval(ft_substr(s, current_pos + 1, next_pos - current_pos - 1), data);
+		}
+		current_pos = next_pos; // TODO: current_pos can replaced with i - 1, or i can be replaced with current_pos + 1
+		current_delimiter = s[current_pos]; // current_delimiter can be replaced with s[current_pos]
+		i = current_pos + 1;
 	}
-	parse_redirections(redirections, process, data);
-	free(params);
-	free(redirections);
-
 	return (true);
 }

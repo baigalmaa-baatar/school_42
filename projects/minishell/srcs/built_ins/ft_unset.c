@@ -19,13 +19,9 @@ int	check_env(char *s)
 	i = 0;
 	while(s[i])
 	{
-		if ((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= '0' && s[i] <= '9') || s[i] == '_')
-		{
-			i++;
-			continue;
-		}
-		else
+		if (!((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9') || s[i] == '_'))
 			return (0);
+		i++;
 	}
 	return (1);
 }

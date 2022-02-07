@@ -24,41 +24,41 @@ char	**dup_envp(char *envp[])
 	my_envp[i] = NULL;
 	return (my_envp);
 }
-/*
-void	set_data(t_data *data)
-{
-	data->line = NULL;
-	data->path = NULL;
-	data->my_envp = NULL;
-	data->process = NULL;
-}
-*/
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*prompt;
+	char	*input;
+	char	**lines;
+	int		i = 0;
 	t_data	data;
 
 	if (argc != 1)		// ---> we could add an error msg
 		return (0);
 	(void)argv;
 	g_exit_status = 0;
-//	set_data(&data);
 	data.my_envp = dup_envp(envp);
 //	data.my_envp = envp;
 	data.path = find_path(data.my_envp);
 	prompt = "\033[96mminishell > \033[0m"; // prompt (colored)
 	while (1)
 	{
-		data.line = readline(prompt);
-		if (*data.line)
+		input = readline(prompt);
+		lines = split(input, ';');
+		free(input);
+		i = 0;
+		while (lines[i])
 		{
+			data.line = lines[i];
 			add_history(data.line);
 			parse(&data);
-			free(data.line);
+			data.line = NULL;
+			i++;
 		}
-		data.line = NULL;
+		ft_free_tab(lines);
 	}
-	// rl_clear_history();  //Marwa, I couldn't compile, so I commented out. 
-	free_data(&data);
+	// rl_clear_history();  //Marwa, I couldn't compile, so I commented out.
+	ft_free_tab(data.my_envp);
+	ft_free_tab(data.path);
 	return (0);
 }
