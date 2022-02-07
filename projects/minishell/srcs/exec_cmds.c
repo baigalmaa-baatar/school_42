@@ -56,7 +56,7 @@ void	exec_cmds(t_data *data)
 		else if (built_in == 5)
 			printf("ft_export\n");  //not implemented yet
 		else if (built_in == 6)
-			printf("ft_unset\n");  //not implemented yet
+			ft_unset(data->process[0].params, data);
 		else if (built_in == 7)
 		{
 			printf("exit\n");

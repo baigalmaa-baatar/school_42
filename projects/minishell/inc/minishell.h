@@ -73,6 +73,7 @@ void	ft_pwd(char **my_envp);
 void	ft_env(char **complete_cmd, char **my_envp);
 void	ft_cd(char **complete_cmd, t_data *data);
 void	ft_exit(char **complete_cmd);
+void	ft_unset(char **complete_cmd, t_data *data);
 char	**find_path(char **my_envp);
 char	**find_cmds(char **complete_cmd, t_data *data);
 char	*test_cmd_path(char **path, char *cmd);
@@ -82,21 +83,19 @@ void	exec_pipes(t_data *data, int nb_pipes);
 void	change_env_value(t_data *data, char *var, char *new_value);
 void	free_data(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
+void	remove_env(t_data *data, char *var);
 /* parsing */
 int		str_err(char *err, int i);
 int		skip_spaces(char	*str, int i);
-// char	**split_param(char *s, t_data *data); //deleted
 bool	parse_process(char *s, t_process *process, t_data *data);
 char	**split(char *s, char delimiter);
 char	*resolve_env(char *s, t_data *data);
 int		find_pos(const char *haystack, const char *needle, int len);
 char	*strjoin(char const *s1, char const *s2);
-// char	**split_pipe(char *s, int *nb_processes); //deleted
 char	**alloc_t(void);
 void	free_t(char **arr);
 int		count_elements(void **arr);
 char	*eval(char *s, t_data *data);
-
 /* redirections */
 int     prepare_redirections(t_data *data);
 void    close_redirection_fds(t_data *data);

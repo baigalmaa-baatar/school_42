@@ -14,8 +14,8 @@ NAME		=	minishell
 
 CC			=	clang
 
-#CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+# CFLAGS		=	-Wall -Wextra -Werror
 
 LIBFT		=	libft.a
 
@@ -23,7 +23,7 @@ LIBFT_DIR	=	libft
 
 SRCS		=	main.c find_built_ins.c \
 				built_ins/ft_echo.c built_ins/ft_env.c built_ins/ft_pwd.c \
-				built_ins/ft_cd.c built_ins/ft_exit.c \
+				built_ins/ft_cd.c built_ins/ft_exit.c built_ins/ft_unset.c \
 				find_cmds.c find_path.c exec_cmds.c exec_pipes.c error_fct.c \
 				free_data.c my_getenv.c change_env_value.c \
 				parse.c parse/parse_process.c parse/resolve_env.c \

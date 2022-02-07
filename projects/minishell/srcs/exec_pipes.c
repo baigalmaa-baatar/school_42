@@ -141,9 +141,9 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			else if (elements.built_in[i] == 4)
 				ft_cd(data->process[i].params, data);
 			/*else if (elements.built_in[i] == 5)  //not implemented yet
-				ft_export();
+				ft_export(); */
 			else if (elements.built_in[i] == 6)
-				ft_unset();*/
+				ft_unset(data->process[i].params, data);
 			else if (elements.built_in[i] == 7)
 				ft_exit(data->process[i].params);
 			else if (execve(data->process[i].params[0], data->process[i].params, data->my_envp) == -1)
