@@ -34,6 +34,8 @@
 # include <stdbool.h>
 
 # define NF ": command not found"
+# define ISD ": is a directory"
+# define NSFD ": No such file or directory"
 # define MAX_ALLOC 1000
 # define ERR_OPE "Operation error!\n"
 
@@ -68,22 +70,27 @@ typedef struct s_data
 
 void	parse(t_data *data);
 char	*my_getenv(char *name, char **my_envp);
+char	**dup_envp(char *envp[]);
 void	ft_echo(char **complete_cmd);
 void	ft_pwd(char **my_envp);
 void	ft_env(char **complete_cmd, char **my_envp);
 void	ft_cd(char **complete_cmd, t_data *data);
 void	ft_exit(char **complete_cmd);
 void	ft_unset(char **complete_cmd, t_data *data);
+void	ft_export(char **complete_cmd, t_data *data);
+void	sort_print(t_data *data);
+void	ft_sort_params(char **tab, int size);
+int		check_env(char *s);
 char	**find_path(char **my_envp);
 char	**find_cmds(char **complete_cmd, t_data *data);
-char	*test_cmd_path(char **path, char *cmd);
+char	*test_cmd_path(char **path, char *cmd, int *dir);
 int		find_built_ins(char *cmd);
 void	exec_cmds(t_data *data);
 void	exec_pipes(t_data *data, int nb_pipes);
 void	change_env_value(t_data *data, char *var, char *new_value);
 void	free_data(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
-void	remove_env(t_data *data, char *var);
+void	remove_env(char *var, t_data *data);
 /* parsing */
 int		str_err(char *err, int i);
 int		skip_spaces(char	*str, int i);

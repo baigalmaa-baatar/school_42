@@ -16,17 +16,20 @@ int	check_env(char *s)
 {
 	int	i;
 
-	i = 0;
+	if (!((s[0] >= 'A' && s[0] <= 'Z') || (s[0] >= 'a' && s[0] <= 'z') || s[0] == '_'))
+		return (0);
+	i = 1;
 	while(s[i])
 	{
-		if (!((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9') || s[i] == '_'))
+		if (!((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z')
+			|| (s[i] >= '0' && s[i] <= '9') || s[i] == '_'))
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-void	remove_env(t_data *data, char *var)
+void	remove_env(char *var, t_data *data)
 {
 	int		i;
 	int		size;
@@ -68,7 +71,7 @@ void	ft_unset(char **cmd, t_data *data)
 			i++;
 			continue;
 		}
-		remove_env(data, cmd[i]);
+		remove_env(cmd[i], data);
 		i++;
 	}
 	g_exit_status = 0;

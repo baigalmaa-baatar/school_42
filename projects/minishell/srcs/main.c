@@ -1,7 +1,14 @@
 #include "../inc/minishell.h"
 
 int	g_exit_status;
-
+/*
+void sig_handler(int signum)
+{
+	printf("\nInside handler function\n");
+	printf("signum = %d\n", signum);
+//	signal(SIGINT, SIG_DFL);
+}
+*/
 char	**dup_envp(char *envp[])
 {
 	int		i;
@@ -25,6 +32,36 @@ char	**dup_envp(char *envp[])
 	return (my_envp);
 }
 
+/*
+void	set_data(t_data *data)
+{
+	data->line = NULL;
+	data->path = NULL;
+	data->my_envp = NULL;
+	data->process = NULL;
+}
+
+void	init_termcaps()
+{
+	int		i;
+	char *bp = malloc(sizeof(char) * 2048);
+	char *area = NULL;
+
+	i = 0;
+	if (tgetent(bp, getenv("TERM")) != 1)
+		return (-1);
+	printf("return tgetflag = %d\n", tgetflag("li"));
+	printf("return tgetnum = %d\n", tgetnum("co"));
+	char	*ret1 = tgetstr("md", &area);
+	char	*ret2 = tgetstr("me", &area);
+//	tputs(tgoto(tgetstr("cm", NULL), 20, 20), 1, ft_putchar);
+		tputs(ret1, 1, ft_putchar);
+
+		tputs(ret2, 1, ft_putchar);
+	}
+}
+*/
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*prompt;
@@ -40,6 +77,7 @@ int	main(int argc, char *argv[], char *envp[])
 	data.my_envp = dup_envp(envp);
 //	data.my_envp = envp;
 	data.path = find_path(data.my_envp);
+//	init_termcaps();
 	prompt = "\033[96mminishell > \033[0m"; // prompt (colored)
 	while (1)
 	{
@@ -62,3 +100,4 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_free_tab(data.path);
 	return (0);
 }
+

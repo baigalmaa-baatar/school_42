@@ -140,8 +140,8 @@ void	exec_pipes(t_data *data, int nb_pipes)
 				ft_pwd(data->my_envp);
 			else if (elements.built_in[i] == 4)
 				ft_cd(data->process[i].params, data);
-			/*else if (elements.built_in[i] == 5)  //not implemented yet
-				ft_export(); */
+			else if (elements.built_in[i] == 5)
+				ft_export(data->process[i].params, data);
 			else if (elements.built_in[i] == 6)
 				ft_unset(data->process[i].params, data);
 			else if (elements.built_in[i] == 7)
