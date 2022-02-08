@@ -1,14 +1,16 @@
 #include "../inc/minishell.h"
 
 int	g_exit_status;
-/*
-void sig_handler(int signum)
+
+void	main_sigint_handler(int signum)
 {
-	printf("\nInside handler function\n");
-	printf("signum = %d\n", signum);
-//	signal(SIGINT, SIG_DFL);
+	g_exit_status = signum + 128;
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
-*/
+
 char	**dup_envp(char *envp[])
 {
 	int		i;
@@ -40,60 +42,88 @@ void	set_data(t_data *data)
 	data->my_envp = NULL;
 	data->process = NULL;
 }
+*/
+/*
+int	ft_putchar(int c)
+{
+	char a = c;
+	write(1, &a, 1);
+	return (0);
+}
 
 void	init_termcaps()
 {
 	int		i;
-	char *bp = malloc(sizeof(char) * 2048);
-	char *area = NULL;
+//	char 	*bp;
+	//char 	*area = NULL;
 
 	i = 0;
-	if (tgetent(bp, getenv("TERM")) != 1)
-		return (-1);
+//	bp = malloc(sizeof(char) * 2048);
+//	if (!bp)
+//		error_fct(NULL, "minishell: Malloc failure", 2);
+	if (tgetent(NULL, getenv("TERM")) != 1)
+	{
+//		free(bp);
+		return ;
+	}
 	printf("return tgetflag = %d\n", tgetflag("li"));
 	printf("return tgetnum = %d\n", tgetnum("co"));
-	char	*ret1 = tgetstr("md", &area);
-	char	*ret2 = tgetstr("me", &area);
+//	char	*ret1 = tgetstr("ce", &area);
+//	char	*ret2 = tgetstr("md", &area);
 //	tputs(tgoto(tgetstr("cm", NULL), 20, 20), 1, ft_putchar);
-		tputs(ret1, 1, ft_putchar);
-
-		tputs(ret2, 1, ft_putchar);
-	}
+//	tputs(ret1, 1, ft_putchar);
+//	tputs(ret2, 1, ft_putchar);
 }
 */
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*prompt;
-	char	*input;
+/*	char	*input;
 	char	**lines;
-	int		i = 0;
+	int		i = 0;*/
 	t_data	data;
+	struct sigaction sigint;
+	struct sigaction sigquit;
 
+	sigquit.sa_handler = SIG_IGN;
+	sigint.sa_handler = &main_sigint_handler;
+	sigaction(SIGINT, &sigint, NULL);
+	sigaction(SIGQUIT, &sigquit, NULL);
 	if (argc != 1)		// ---> we could add an error msg
-		return (0);
+		return (1);
 	(void)argv;
 	g_exit_status = 0;
-	data.my_envp = dup_envp(envp);
-//	data.my_envp = envp;
-	data.path = find_path(data.my_envp);
 //	init_termcaps();
+	data.my_envp = dup_envp(envp);
+	data.path = find_path(data.my_envp);
 	prompt = "\033[96mminishell > \033[0m"; // prompt (colored)
 	while (1)
 	{
-		input = readline(prompt);
+	/*	input = readline(prompt);
 		lines = split(input, ';');
 		free(input);
 		i = 0;
 		while (lines[i])
 		{
-			data.line = lines[i];
 			add_history(data.line);
 			parse(&data);
+			free(data.line);
 			data.line = NULL;
-			i++;
 		}
 		ft_free_tab(lines);
+		*/
+		data.line = readline(prompt);
+		if (data.line && *data.line)
+		{
+			if (!ft_strfind(' ', data.line))  // if there are only spaces in line, it's not added to history
+				add_history(data.line);
+			parse(&data);
+			free(data.line);
+			data.line = NULL;
+		}
+		else if (!data.line)
+			break ;
 	}
 	// rl_clear_history();  //Marwa, I couldn't compile, so I commented out.
 	ft_free_tab(data.my_envp);

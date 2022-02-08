@@ -1,8 +1,23 @@
 #include "../inc/minishell.h"
 
+void child_sigint_handler(int signum)
+{
+	g_exit_status = signum + 128;
+	exit(g_exit_status);
+}
+
+void child_sigquit_handler(int signum)
+{
+	g_exit_status = signum + 128;
+	ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+	exit(g_exit_status);
+}
+
 void	exec_no_built_in(t_data *data)
 {
 	int	child;
+	struct sigaction sig;
+	struct sigaction sigquit;
 
 	data->process[0].params = find_cmds(data->process[0].params, data);
 	if (!data->process[0].params)
@@ -12,17 +27,28 @@ void	exec_no_built_in(t_data *data)
 		error_fct(data, "minishell: Fork failure", 6);
 	if (!child)   // child process, executes commands that are not built-ins
 	{
-		if (execve(data->process[0].params[0], data->process[0].params, data->my_envp) == -1)
-			error_fct(data, "minishell: Execve failure", 7);
+		sig.sa_handler = &child_sigint_handler;
+		sigaction(SIGINT, &sig, NULL);
+		sigquit.sa_handler = &child_sigquit_handler;
+		sigaction(SIGQUIT, &sigquit, NULL);
+		if (data->process[0].params)
+		{
+			if (execve(data->process[0].params[0], data->process[0].params, data->my_envp) == -1)
+				error_fct(data, "minishell: Execve failure", 7);
+		}
 		free_data(data);
 		exit(g_exit_status);
 	}
+	sig.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &sig, NULL);
 	waitpid(child, &g_exit_status, 0);
+	sig.sa_handler = &main_sigint_handler;
+	sigaction(SIGINT, &sig, NULL);
 	if (WIFEXITED(g_exit_status))
 		g_exit_status = WEXITSTATUS(g_exit_status);
 	if (WIFSIGNALED(g_exit_status))
 		g_exit_status = WTERMSIG(g_exit_status);
-	printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", g_exit_status); //temp
+//	printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", g_exit_status); //temp
 }
 
 void	exec_cmds(t_data *data)
@@ -31,6 +57,8 @@ void	exec_cmds(t_data *data)
 	int stdin_copy;
 	int stdout_copy;
 
+	if (!data->process[0].params[0])
+		return ;
 	if (data->process[0].fd_input > -1)
 	{
 		stdin_copy = dup(0);
@@ -62,7 +90,7 @@ void	exec_cmds(t_data *data)
 			printf("exit\n");
 			ft_exit(data->process[0].params);
 		}
-		printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", g_exit_status); //temp
+	//	printf("\033[3;35;40m---EXIT STATUS = %d---\033[0m\n", g_exit_status); //temp
 	}
 	else
 		exec_no_built_in(data);

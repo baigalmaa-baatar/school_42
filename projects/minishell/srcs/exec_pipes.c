@@ -66,11 +66,13 @@ int	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes)
 	i = 0;
 	while (i <= nb_pipes)
 	{
+		if (!data->process[i].params[0])
+			return (0);
 		elements->built_in[i] = find_built_ins(data->process[i].params[0]);
 		if (!elements->built_in[i])
 			data->process[i].params = find_cmds(data->process[i].params, data);
-		if (!data->process[i].params)
-			return (0);
+		//if (!data->process[i].params)
+		//	return (0);
 		i++;
 	}
 	return (1);
@@ -81,6 +83,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 	int			i;
 	int			x;
 	t_elements	elements;
+	struct sigaction sig;
 //	int saved_stdout = dup(STDOUT_FILENO);
 //	int	saved_stdin = dup(STDIN_FILENO);
 
@@ -99,9 +102,11 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			error_fct(data, "minishell: Fork failure", 6);
 		if (!elements.child[i])
 		{
+			sig.sa_handler = &child_sigint_handler;
+			sigaction(SIGINT, &sig, NULL);
 			if (!i)
 			{
-				printf("\033[3;32;40m-----------FIRST PROCESS------------\033[0m\n");
+			//	printf("\033[3;32;40m-----------FIRST PROCESS------------\033[0m\n");
 				if (data->process[i].fd_input > -1)
 					dup2(data->process[i].fd_input, 0);
 				if (data->process[i].fd_output > -1)
@@ -111,7 +116,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			}
 			else if (i == nb_pipes)
 			{
-				printf("\033[3;31;40m------------LAST PROCESS------------\033[0m\n");
+			//	printf("\033[3;31;40m------------LAST PROCESS------------\033[0m\n");
 				if (data->process[i].fd_input > -1)
 					dup2(data->process[i].fd_input, 0);
 				else
@@ -121,7 +126,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			}
 			else
 			{
-				printf("\033[3;33;40m-----------MIDDLE PROCESS-----------\033[0m\n");
+			//	printf("\033[3;33;40m-----------MIDDLE PROCESS-----------\033[0m\n");
 				if (data->process[i].fd_input > -1)
 					dup2(data->process[i].fd_input, 0);
 				else
@@ -146,8 +151,11 @@ void	exec_pipes(t_data *data, int nb_pipes)
 				ft_unset(data->process[i].params, data);
 			else if (elements.built_in[i] == 7)
 				ft_exit(data->process[i].params);
-			else if (execve(data->process[i].params[0], data->process[i].params, data->my_envp) == -1)
-				error_fct(data, "minishell: Execve failure", 7);
+			else if (data->process[i].params)
+			{
+				if (execve(data->process[i].params[0], data->process[i].params, data->my_envp) == -1)
+					error_fct(data, "minishell: Execve failure", 7);
+			}
 			free_elements(&elements, nb_pipes);
 			exit(g_exit_status);
 		}
@@ -155,6 +163,8 @@ void	exec_pipes(t_data *data, int nb_pipes)
 	}
 	close_fds(data, elements.pipe_fd, nb_pipes);
 	close_redirection_fds(data);
+	sig.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &sig, NULL);
 	while (x <= nb_pipes)
 	{
 		waitpid(elements.child[x], &g_exit_status, 0);
@@ -162,9 +172,10 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			g_exit_status = WEXITSTATUS(g_exit_status);
 		if (WIFSIGNALED(g_exit_status))
 			g_exit_status = WTERMSIG(g_exit_status);
-	//	g_exit_status = WEXITSTATUS(g_exit_status);
-		printf("\033[3;35;40m---EXIT STATUS OF PROCESS N°%d = %d---\033[0m\n", x, g_exit_status);
+	//	printf("\033[3;35;40m---EXIT STATUS OF PROCESS N°%d = %d---\033[0m\n", x, g_exit_status);
 		x++;
 	}
+	sig.sa_handler = &main_sigint_handler;
+	sigaction(SIGINT, &sig, NULL);
 	free_elements(&elements, nb_pipes);
 }

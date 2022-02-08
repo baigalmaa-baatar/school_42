@@ -90,6 +90,9 @@ void	exec_pipes(t_data *data, int nb_pipes);
 void	change_env_value(t_data *data, char *var, char *new_value);
 void	free_data(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
+int		ft_strfind(char c, char *s);
+void	main_sigint_handler(int signum);
+void	child_sigint_handler(int signum);
 void	remove_env(char *var, t_data *data);
 /* parsing */
 int		str_err(char *err, int i);
