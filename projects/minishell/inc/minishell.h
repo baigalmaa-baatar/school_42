@@ -28,14 +28,14 @@
 # include <sys/time.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/errno.h>
 # include <termcap.h>
 # include <termios.h>
 # include <unistd.h>
 # include <stdbool.h>
 
 # define NF ": command not found"
-# define ISD ": is a directory"
-# define NSFD ": No such file or directory"
+# define ISD ": Is a directory"
 # define MAX_ALLOC 1000
 # define ERR_OPE "Operation error!\n"
 
@@ -61,21 +61,24 @@ typedef struct s_elements
 
 typedef struct s_data
 {
-	char		*line;
-	char		**path;
-	char		**my_envp;
-	t_process	*process;
-	int			nb_processes;
-}				t_data;
+	char				*line;
+	char				**path;
+	char				**my_envp;
+	t_process			*process;
+	int					nb_processes;
+	struct sigaction	sigint;
+	struct sigaction	sigquit;
+}						t_data;
 
 void	parse(t_data *data);
+void	init_process(t_process *process);
 char	*my_getenv(char *name, char **my_envp);
 char	**dup_envp(char *envp[]);
 void	ft_echo(char **complete_cmd);
 void	ft_pwd(char **my_envp);
 void	ft_env(char **complete_cmd, char **my_envp);
 void	ft_cd(char **complete_cmd, t_data *data);
-void	ft_exit(char **complete_cmd);
+void	ft_exit(char **complete_cmd, t_data *data);
 void	ft_unset(char **complete_cmd, t_data *data);
 void	ft_export(char **complete_cmd, t_data *data);
 void	sort_print(t_data *data);
@@ -83,19 +86,23 @@ void	ft_sort_params(char **tab, int size);
 int		check_env(char *s);
 char	**find_path(char **my_envp);
 char	**find_cmds(char **complete_cmd, t_data *data);
-char	*test_cmd_path(char **path, char *cmd, int *dir);
+char	*test_cmd_path(char **path, char *cmd);
 int		find_built_ins(char *cmd);
 void	exec_cmds(t_data *data);
 void	exec_pipes(t_data *data, int nb_pipes);
 void	change_env_value(t_data *data, char *var, char *new_value);
 void	free_data(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
+void	error_fct2(char *msg, int exit_value);
+void	error_fct3(char *msg, char *err_str, int exit_value);
+void	error_fct4(char *msg, int exit_value);
 int		ft_strfind(char c, char *s);
 void	main_sigint_handler(int signum);
-void	child_sigint_handler(int signum);
+void	child_sigquit_handler(int signum);
 void	remove_env(char *var, t_data *data);
 /* parsing */
 int		str_err(char *err, int i);
+char	*new_string(int capacity);
 int		skip_spaces(char	*str, int i);
 bool	parse_process(char *s, t_process *process, t_data *data);
 char	**split(char *s, char delimiter);
@@ -107,7 +114,7 @@ void	free_t(char **arr);
 int		count_elements(void **arr);
 char	*eval(char *s, t_data *data);
 /* redirections */
-int     prepare_redirections(t_data *data);
-void    close_redirection_fds(t_data *data);
+int		prepare_redirections(t_data *data);
+void	close_redirection_fds(t_data *data);
 
 #endif

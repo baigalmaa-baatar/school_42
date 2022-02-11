@@ -83,12 +83,13 @@ void	exec_pipes(t_data *data, int nb_pipes)
 	int			i;
 	int			x;
 	t_elements	elements;
-	struct sigaction sig;
+	struct sigaction child_sigquit;
 //	int saved_stdout = dup(STDOUT_FILENO);
 //	int	saved_stdin = dup(STDIN_FILENO);
 
 	i = 0;
 	x = 0;
+	ft_memset(&child_sigquit, 0, sizeof(child_sigquit));
 	malloc_elements(data, &elements, nb_pipes);
 	if (!check_all_cmds(data, &elements, nb_pipes))
 	{
@@ -102,8 +103,8 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			error_fct(data, "minishell: Fork failure", 6);
 		if (!elements.child[i])
 		{
-			sig.sa_handler = &child_sigint_handler;
-			sigaction(SIGINT, &sig, NULL);
+			child_sigquit.sa_handler = &child_sigquit_handler;
+			sigaction(SIGQUIT, &child_sigquit, NULL);
 			if (!i)
 			{
 			//	printf("\033[3;32;40m-----------FIRST PROCESS------------\033[0m\n");
@@ -150,7 +151,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 			else if (elements.built_in[i] == 6)
 				ft_unset(data->process[i].params, data);
 			else if (elements.built_in[i] == 7)
-				ft_exit(data->process[i].params);
+				ft_exit(data->process[i].params, data);
 			else if (data->process[i].params)
 			{
 				if (execve(data->process[i].params[0], data->process[i].params, data->my_envp) == -1)
@@ -163,19 +164,26 @@ void	exec_pipes(t_data *data, int nb_pipes)
 	}
 	close_fds(data, elements.pipe_fd, nb_pipes);
 	close_redirection_fds(data);
-	sig.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &sig, NULL);
+	data->sigint.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &data->sigint, NULL);
 	while (x <= nb_pipes)
 	{
 		waitpid(elements.child[x], &g_exit_status, 0);
 		if (WIFEXITED(g_exit_status))
 			g_exit_status = WEXITSTATUS(g_exit_status);
-		if (WIFSIGNALED(g_exit_status))
-			g_exit_status = WTERMSIG(g_exit_status);
+		else if (WIFSIGNALED(g_exit_status))
+		{
+			g_exit_status = WTERMSIG(g_exit_status) + 128;
+			if (g_exit_status == 130)
+				ft_putstr_fd("\n", STDERR_FILENO);
+			else if (g_exit_status == 131)
+				ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			break ;
+		}
 	//	printf("\033[3;35;40m---EXIT STATUS OF PROCESS N°%d = %d---\033[0m\n", x, g_exit_status);
 		x++;
 	}
-	sig.sa_handler = &main_sigint_handler;
-	sigaction(SIGINT, &sig, NULL);
+	data->sigint.sa_handler = &main_sigint_handler;
+	sigaction(SIGINT, &data->sigint, NULL);
 	free_elements(&elements, nb_pipes);
 }

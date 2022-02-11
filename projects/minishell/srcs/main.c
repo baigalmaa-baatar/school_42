@@ -5,7 +5,7 @@ int	g_exit_status;
 void	main_sigint_handler(int signum)
 {
 	g_exit_status = signum + 128;
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -76,43 +76,32 @@ void	init_termcaps()
 }
 */
 
+void	init_signals(t_data *data)
+{
+	ft_memset(&data->sigint, 0, sizeof(data->sigint));
+	data->sigint.sa_handler = &main_sigint_handler;
+	sigaction(SIGINT, &data->sigint, NULL);
+	ft_memset(&data->sigquit, 0, sizeof(data->sigquit));
+	data->sigquit.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &data->sigquit, NULL);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*prompt;
-/*	char	*input;
-	char	**lines;
-	int		i = 0;*/
 	t_data	data;
-	struct sigaction sigint;
-	struct sigaction sigquit;
 
-	sigquit.sa_handler = SIG_IGN;
-	sigint.sa_handler = &main_sigint_handler;
-	sigaction(SIGINT, &sigint, NULL);
-	sigaction(SIGQUIT, &sigquit, NULL);
 	if (argc != 1)		// ---> we could add an error msg
 		return (1);
 	(void)argv;
 	g_exit_status = 0;
+	init_signals(&data);
 //	init_termcaps();
 	data.my_envp = dup_envp(envp);
 	data.path = find_path(data.my_envp);
 	prompt = "\033[96mminishell > \033[0m"; // prompt (colored)
 	while (1)
 	{
-	/*	input = readline(prompt);
-		lines = split(input, ';');
-		free(input);
-		i = 0;
-		while (lines[i])
-		{
-			add_history(data.line);
-			parse(&data);
-			free(data.line);
-			data.line = NULL;
-		}
-		ft_free_tab(lines);
-		*/
 		data.line = readline(prompt);
 		if (data.line && *data.line)
 		{
@@ -120,14 +109,17 @@ int	main(int argc, char *argv[], char *envp[])
 				add_history(data.line);
 			parse(&data);
 			free(data.line);
-			data.line = NULL;
 		}
+		else if (data.line && !*data.line)
+			free(data.line);
 		else if (!data.line)
+		{
+			printf("exit\n");
 			break ;
+		}
 	}
-	// rl_clear_history();  //Marwa, I couldn't compile, so I commented out.
+	rl_clear_history();
 	ft_free_tab(data.my_envp);
 	ft_free_tab(data.path);
-	return (0);
+	return (g_exit_status);
 }
-

@@ -59,7 +59,7 @@ int	check_nb(char *str, long long *nb)
 	return (1);
 }
 
-void	ft_exit(char **complete_cmd)
+void	ft_exit(char **complete_cmd, t_data *data)
 {
 	long long	nb;
 
@@ -77,13 +77,16 @@ void	ft_exit(char **complete_cmd)
 			ft_mtp_putendl_fd(STDERR_FILENO, "minishell: exit: ",
 				complete_cmd[1], ": numeric argument required");
 			g_exit_status = 2;
+			free_data(data);
 			exit(g_exit_status);
 		}
 		else
 		{
 			g_exit_status = nb;
+			free_data(data);
 			exit(g_exit_status);
 		}
 	}
+	free_data(data);
 	exit(g_exit_status);
 }

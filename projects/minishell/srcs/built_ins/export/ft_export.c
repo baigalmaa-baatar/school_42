@@ -91,6 +91,7 @@ void	ft_export(char **cmd, t_data *data)
 	int	i;
 	int	pos;
 
+	g_exit_status = 0;
 	if(!cmd[1])
 	{
 		sort_print(data);
@@ -112,5 +113,4 @@ void	ft_export(char **cmd, t_data *data)
 			add_env(cmd[i], data, pos);
 		i++;
 	}
-	g_exit_status = 0;
 }

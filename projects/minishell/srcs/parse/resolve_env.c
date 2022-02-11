@@ -19,7 +19,7 @@ char	*find_env(char *s)
 	int flag;
 	char	*res = NULL;
 
-	res = malloc(MAX_ALLOC * sizeof(char));
+	res  = new_string(ft_strlen(s));
 	i = 0;
 	j = 0;
 	flag = 0;
@@ -30,8 +30,12 @@ char	*find_env(char *s)
 			i++;
 			flag++;
 			res[j++] = '$';
-			while ((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z')
-					|| (s[i] >= '0' && s[i] <= '9') || s[i] == '_')
+			if ((s[i] >= '0' && s[i] <= '9') || s[i] == '?')
+			{
+				res[j] = s[i];
+				return (res);
+			}
+			while ((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9') || s[i] == '_')
 			{
 				res[j] = s[i];
 				j++;
@@ -41,7 +45,6 @@ char	*find_env(char *s)
 		else
 			i++;
 	}
-	res[j] = '\0';
 	if (j < 2)
 	{
 		free(res);
@@ -81,7 +84,10 @@ char	*resolve_env(char *s, t_data *data)
 	result = ft_strdup(s);
 	while((env = find_env(result)))
 	{
-		env_val = my_getenv(&env[1], data->my_envp);
+		if (!ft_strncmp(env, "$?\0", 3))
+			env_val = ft_itoa(g_exit_status);
+		else
+			env_val = my_getenv(&env[1], data->my_envp);
 		if (!env_val)
 			env_val = "";
 		tmp = result;

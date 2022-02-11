@@ -11,5 +11,5 @@ void	free_data(t_data *data)
 	while (i < data->nb_processes)	//changed i to nb_processes
 		ft_free_tab(data->process[i++].params);
 	free(data->process);
-	// rl_clear_history();   //Marwa, I couldn't compile, so I commented out. 
+	rl_clear_history();   //Marwa, I couldn't compile, so I commented out. 
 }

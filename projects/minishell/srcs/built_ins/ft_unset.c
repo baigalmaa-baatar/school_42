@@ -57,6 +57,7 @@ void	ft_unset(char **cmd, t_data *data)
 {
 	int	i;
 
+	g_exit_status = 0;
 	if(!cmd[1])
 		return ;
 	i = 1;
@@ -74,5 +75,4 @@ void	ft_unset(char **cmd, t_data *data)
 		remove_env(cmd[i], data);
 		i++;
 	}
-	g_exit_status = 0;
 }

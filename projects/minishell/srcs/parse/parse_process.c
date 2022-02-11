@@ -109,6 +109,11 @@ char	**split(char *s, char delimiter)
 		}
 		else if (pos > 0)
 			result[j++] = ft_substr(&s[i], 0, pos);
+		else
+		{
+			ft_free_tab(result);
+			return (0);
+		}
 		i += pos + 1;
 	}
 	return (result);
@@ -258,15 +263,30 @@ char	*eval(char *s, t_data *data)
 		if (s[i] == '\'')
 		{
 			tmp = scan_single_quoted(s, &i);
+			if (!tmp)
+			{
+				free(s);
+				free(result);
+				error_fct3("Unclosed quote `", "\'\'\n", 2);
+				return (0);
+			}
 			copy_then_free(result, &j, tmp);
 		}
 		else if (s[i] == '"')
 		{
 			tmp = scan_double_quoted(s, &i);
+			if (!tmp)
+			{
+				free(s);
+				free(result);
+				error_fct3("Unclosed quote `", "\"\'\n", 2);
+				return (0);
+			}
 			resolved_tmp = resolve_env(tmp, data);
 			copy_then_free(result, &j, resolved_tmp);
 			free(tmp);
-		} else
+		}
+		else
 		{
 			tmp = scan_unquoted(s, &i);
 			resolved_tmp = resolve_env(tmp, data);
@@ -297,7 +317,7 @@ bool	parse_process(char *s, t_process *process, t_data *data)
 	int		current_pos;
 	char	current_delimiter;
 
-	init_process(process);
+	// init_process(process);
 	current_pos = -1;
 	current_delimiter = ' ';
 	process->params = (char **)malloc(MAX_ALLOC * sizeof(char *));
@@ -314,7 +334,15 @@ bool	parse_process(char *s, t_process *process, t_data *data)
 			if (next_pos < i)
 				next_pos = ft_strlen(s);
 			if (next_pos - current_pos > 1)
-				process->params[j++] = eval(ft_substr(s, current_pos + 1, next_pos - current_pos - 1), data);
+			{
+				process->params[j] = eval(ft_substr(s, current_pos + 1, next_pos - current_pos - 1), data);
+				if (!process->params[j])
+				{
+					free_t(process->params);
+					return (false);
+				}
+				j++;
+			}
 		}
 		current_pos = next_pos; // TODO: current_pos can replaced with i - 1, or i can be replaced with current_pos + 1
 		current_delimiter = s[current_pos]; // current_delimiter can be replaced with s[current_pos]
