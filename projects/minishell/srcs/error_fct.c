@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error_fct.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/11 16:22:49 by mkhabou           #+#    #+#             */
+/*   Updated: 2022/02/11 16:22:50 by mkhabou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 void	error_fct(t_data *data, char *msg, int exit_value)
 {
-	perror(msg);
+	if (msg)
+		perror(msg);
 	if (data)
 		free_data(data);
 	exit(exit_value);

@@ -72,25 +72,11 @@ typedef struct s_data
 
 void	parse(t_data *data);
 void	init_process(t_process *process);
+void	init_signals(t_data *data);
 char	*my_getenv(char *name, char **my_envp);
 char	**dup_envp(char *envp[]);
-void	ft_echo(char **complete_cmd);
-void	ft_pwd(char **my_envp);
-void	ft_env(char **complete_cmd, char **my_envp);
-void	ft_cd(char **complete_cmd, t_data *data);
-void	ft_exit(char **complete_cmd, t_data *data);
-void	ft_unset(char **complete_cmd, t_data *data);
-void	ft_export(char **complete_cmd, t_data *data);
-void	sort_print(t_data *data);
-void	ft_sort_params(char **tab, int size);
-int		check_env(char *s);
 char	**find_path(char **my_envp);
-char	**find_cmds(char **complete_cmd, t_data *data);
 char	*test_cmd_path(char **path, char *cmd);
-int		find_built_ins(char *cmd);
-void	exec_cmds(t_data *data);
-void	exec_pipes(t_data *data, int nb_pipes);
-void	change_env_value(t_data *data, char *var, char *new_value);
 void	free_data(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
 void	error_fct2(char *msg, int exit_value);
@@ -99,7 +85,23 @@ void	error_fct4(char *msg, int exit_value);
 int		ft_strfind(char c, char *s);
 void	main_sigint_handler(int signum);
 void	child_sigquit_handler(int signum);
+void	change_env_value(t_data *data, char *var, char *new_value);
+/* built-ins */
+void	ft_echo(char **complete_cmd);
+void	ft_pwd(char **my_envp);
+void	ft_env(char **complete_cmd, char **my_envp);
+void	ft_cd(char **complete_cmd, t_data *data);
+void	ft_unset(char **complete_cmd, t_data *data);
+void	ft_export(char **complete_cmd, t_data *data);
+void	ft_exit(char **complete_cmd, t_data *data);
+void	sort_print(t_data *data);
+void	ft_sort_params(char **tab, int size);
+int		check_env(char *s);
 void	remove_env(char *var, t_data *data);
+void	add_env(char *var, t_data *data, int pos_equal);
+int		check_env_ex(char *s);
+char	**alloc_envs(int size, char **envs);
+
 /* parsing */
 int		str_err(char *err, int i);
 char	*new_string(int capacity);
@@ -113,8 +115,35 @@ char	**alloc_t(void);
 void	free_t(char **arr);
 int		count_elements(void **arr);
 char	*eval(char *s, t_data *data);
+int		ft_strcmp(char *s1, char *s2);
+char	*scan_single_quoted(char *s, int *i);
+char	*scan_double_quoted(char *s, int *i);
+char	*scan_unquoted(char *s, int *i);
+bool	is_char_in(char ch, char *delimiters);
+int		locate_chars(char *s, char *delimiters);
+int		locate_char(char *s, char delimiter);
+char	*eval(char *s, t_data *data);
+void	trim_right(char *s);
+void	copy_then_free(char *src, int *i, char *dst);
+
 /* redirections */
+int		parse_redirection(char *s, int i, t_process *process, t_data *data);
 int		prepare_redirections(t_data *data);
 void	close_redirection_fds(t_data *data);
+int		prepare_heredoc(t_data *data, char *filename, char *end);
+void	end_heredoc(char *end);
+
+/* execution */
+int		find_built_ins(char *cmd);
+char	**find_cmds(char **complete_cmd, t_data *data);
+void	exec_cmds(t_data *data);
+void	exec_pipes(t_data *data, int nb_pipes);
+void	malloc_elements(t_data *data, t_elements *elements, int nb_pipes);
+int		check_all_cmds(t_data *data, t_elements *elements, int nb_pipes);
+void	free_elements(t_elements *elements, int nb_pipes);
+void	close_fds(t_data *data, int **pipe_fd, int index);
+void	first_process(t_data *data, t_elements *elements, int i);
+void	middle_process(t_data *data, t_elements *elements, int i);
+void	last_process(t_data *data, t_elements *elements, int i);
 
 #endif

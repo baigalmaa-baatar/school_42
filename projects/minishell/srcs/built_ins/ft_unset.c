@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:42:35 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/07 14:42:37 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 16:10:45 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@ int	check_env(char *s)
 {
 	int	i;
 
-	if (!((s[0] >= 'A' && s[0] <= 'Z') || (s[0] >= 'a' && s[0] <= 'z') || s[0] == '_'))
+	if (!((s[0] >= 'A' && s[0] <= 'Z') || (s[0] >= 'a'
+				&& s[0] <= 'z') || s[0] == '_'))
 		return (0);
 	i = 1;
-	while(s[i])
+	while (s[i])
 	{
 		if (!((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z')
-			|| (s[i] >= '0' && s[i] <= '9') || s[i] == '_'))
+				|| (s[i] >= '0' && s[i] <= '9') || s[i] == '_'))
 			return (0);
 		i++;
 	}
@@ -31,8 +32,8 @@ int	check_env(char *s)
 
 void	remove_env(char *var, t_data *data)
 {
-	int		i;
-	int		size;
+	int	i;
+	int	size;
 
 	size = count_elements((void **)data->my_envp);
 	i = 0;
@@ -58,7 +59,7 @@ void	ft_unset(char **cmd, t_data *data)
 	int	i;
 
 	g_exit_status = 0;
-	if(!cmd[1])
+	if (!cmd[1])
 		return ;
 	i = 1;
 	while (cmd[i])
@@ -70,7 +71,7 @@ void	ft_unset(char **cmd, t_data *data)
 			ft_putstr_fd("': not a valid identifier\n", 2);
 			g_exit_status = 1;
 			i++;
-			continue;
+			continue ;
 		}
 		remove_env(cmd[i], data);
 		i++;

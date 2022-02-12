@@ -59,6 +59,13 @@ int	check_nb(char *str, long long *nb)
 	return (1);
 }
 
+void	exit_nb(t_data *data, long long nb)
+{
+	g_exit_status = nb;
+	free_data(data);
+	exit(g_exit_status);
+}
+
 void	ft_exit(char **complete_cmd, t_data *data)
 {
 	long long	nb;
@@ -81,11 +88,7 @@ void	ft_exit(char **complete_cmd, t_data *data)
 			exit(g_exit_status);
 		}
 		else
-		{
-			g_exit_status = nb;
-			free_data(data);
-			exit(g_exit_status);
-		}
+			exit_nb(data, nb);
 	}
 	free_data(data);
 	exit(g_exit_status);

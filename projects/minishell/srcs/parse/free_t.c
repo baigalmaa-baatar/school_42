@@ -6,15 +6,15 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 14:02:18 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/31 14:02:20 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 03:41:13 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void free_t(char **arr)
+void	free_t(char **arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < MAX_ALLOC)
@@ -23,5 +23,5 @@ void free_t(char **arr)
 		i++;
 	}
 	free(arr);
-	return;
+	return ;
 }

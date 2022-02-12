@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:18:00 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/04 00:06:26 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 03:43:17 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,10 @@ static int	ft_find(char *haystack, char *needle, int l, int len_i)
 int	find_pos(const char *haystack, const char *needle, int len)
 {
 	int	i;
-	int		l;
+	int	l;
 
 	i = 0;
 	l = ft_strlen(needle);
-
 	while (haystack[i] && i < len)
 	{
 		if (haystack[i] != needle[0])

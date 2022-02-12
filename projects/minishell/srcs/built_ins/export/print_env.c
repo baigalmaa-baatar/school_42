@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort_print.c                                       :+:      :+:    :+:   */
+/*   print_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 13:59:59 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/08 14:00:03 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 15:40:47 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	print_env(char **envs)
 	int	open_quote;
 
 	i = 0;
-	while(envs[i])
+	while (envs[i])
 	{
 		open_quote = 0;
 		ft_putstr_fd("declare -x ", 1);
 		j = 0;
-		while(envs[i][j])
+		while (envs[i][j])
 		{
 			write(1, &envs[i][j], 1);
 			if (envs[i][j] == '=' && !open_quote)

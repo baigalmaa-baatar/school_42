@@ -6,15 +6,15 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 08:15:03 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/02/16 08:17:11 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 15:40:18 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/minishell.h"
 
-int		ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s1[i] != '\0' || s2[i] != '\0')
@@ -28,7 +28,7 @@ int		ft_strcmp(char *s1, char *s2)
 
 void	ft_swap(char **a, char **b)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = *a;
 	*a = *b;
@@ -37,9 +37,9 @@ void	ft_swap(char **a, char **b)
 
 void	ft_sort_params(char **tab, int size)
 {
-	int i;
-	int j;
-	int min_index;
+	int	i;
+	int	j;
+	int	min_index;
 
 	i = 0;
 	while (i < size)

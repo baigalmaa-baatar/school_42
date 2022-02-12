@@ -66,11 +66,11 @@ void	ft_echo(char **complete_cmd)
 		while (complete_cmd[i])
 		{
 			if (newline && !complete_cmd[i + 1])
-				printf("%s\n", complete_cmd[i]);
+				ft_putendl_fd(complete_cmd[i], STDOUT_FILENO);
 			else if (!newline && !complete_cmd[i + 1])
-				printf("%s", complete_cmd[i]);
+				ft_putstr_fd(complete_cmd[i], STDOUT_FILENO);
 			else
-				printf("%s ", complete_cmd[i]);
+				ft_mtp_putstr_fd(complete_cmd[i], " ", NULL, STDOUT_FILENO);
 			i++;
 		}
 	}

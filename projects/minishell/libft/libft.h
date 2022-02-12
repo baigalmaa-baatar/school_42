@@ -98,5 +98,6 @@ char				**ft_tab_str_join(char **tab, char *str);
 //	Minishell
 int					ft_isspace(int c);
 int					ft_nb_occurences(char c, char *s);
+void				ft_mtp_putstr_fd(char *s1, char *s2, char *s3, int fd);
 
 #endif

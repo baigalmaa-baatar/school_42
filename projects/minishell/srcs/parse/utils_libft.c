@@ -6,13 +6,11 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/29 02:12:47 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/29 02:12:50 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 03:42:16 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-#define ERR_OPE "Operation error!\n"
 
 size_t	ft_strlen(const	char *s)
 {
@@ -61,7 +59,7 @@ char	*strjoin(char const *s1, char const *s2)
 	unsigned int	length;
 
 	if (!s1 || !s2)
-		return (0);	
+		return (0);
 	length = ft_strlen(s1) + ft_strlen(s2);
 	res = (char *)malloc(sizeof(char) * (length + 1));
 	if (!res)
