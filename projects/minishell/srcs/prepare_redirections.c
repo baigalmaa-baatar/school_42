@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 00:19:17 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 16:43:28 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 22:42:34 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,9 @@ void	end_heredoc(char *end)
 	}
 }
 
-char	*tmp_file_name(char *format, int id)
-{
-	char	*id_str;
-	char	*result;
-
-	id_str = ft_itoa(id);
-	result = ft_strjoin(format, id_str);
-	free(id_str);
-	return (result);
-}
-
 void	close_redirection_fds(t_data *data)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (i < data->nb_processes)
@@ -67,36 +56,10 @@ int	prepare_redirections(t_data *data)
 	i = data->nb_processes - 1;
 	while (i >= 0)
 	{
-		if (!data->process[i].input && data->process[i].heredoc)
-		{
-			data->process[i].input = tmp_file_name("/tmp/minishell.", i);
-			if (!prepare_heredoc(data, data->process[i].input,
-					data->process[i].heredoc))
-				error = true;
-		}
-		if (data->process[i].input)
-		{
-			data->process[i].fd_input = open(data->process[i].input, O_RDONLY);
-			if (data->process[i].fd_input < 0)
-			{
-				error = true;
-				error_fct2(data->process[i].input, 1);
-			}
-		}
-		if (data->process[i].output)
-		{
-			if (data->process[i].append)
-				data->process[i].fd_output = open(data->process[i].output,
-						O_CREAT | O_RDWR | O_APPEND, 0644);
-			else
-				data->process[i].fd_output = open(data->process[i].output,
-						O_CREAT | O_RDWR | O_TRUNC, 0644);
-			if (data->process[i].fd_output < 0)
-			{
-				error = true;
-				error_fct2(data->process[i].output, 1);
-			}
-		}
+		if (!prepare_inputs(data, i))
+			error = true;
+		if (!prepare_outputs(data, i))
+			error = true;
 		i--;
 	}
 	if (error)

@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_tab.c                                      :+:      :+:    :+:   */
+/*   only_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/15 15:09:21 by mkhabou           #+#    #+#             */
-/*   Updated: 2021/09/15 15:09:24 by mkhabou          ###   ########.fr       */
+/*   Created: 2022/02/13 00:51:14 by bbaatar           #+#    #+#             */
+/*   Updated: 2022/02/13 00:51:16 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/minishell.h"
 
-void	ft_free_tab(char **tab)
+bool	only_redir(char *s)
 {
-	int	i;
+	size_t	size;
 
-	i = 0;
-	if (tab)
-	{
-		while (tab[i])
-		{
-			free(tab[i]);
-			tab[i] = NULL;
-			i++;
-		}
-		free(tab[i]);
-		tab[i] = NULL;
-		free(tab);
-		tab = NULL;
-	}
+	size = ft_strlen(s);
+	if ((s[size - 1] == '<' || s[size - 1] == '>') && s[size] == '\0')
+		return (true);
+	return (false);
 }

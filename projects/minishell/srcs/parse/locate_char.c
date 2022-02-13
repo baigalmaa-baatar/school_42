@@ -23,6 +23,15 @@ bool	is_char_in(char ch, char *delimiters)
 	return (false);
 }
 
+char	check_open(char open, char c)
+{
+	if (open == 0)
+		open = c;
+	else if (open == c)
+		open = 0;
+	return (open);
+}
+
 int	locate_chars(char *s, char *delimiters)
 {
 	int		i;
@@ -41,14 +50,7 @@ int	locate_chars(char *s, char *delimiters)
 			continue ;
 		}
 		if (s[i] == '"' || s[i] == '\'')
-		{
-			if (open == 0)
-				open = s[i];
-			else if (open == s[i])
-				open = 0;
-		}
-		else if (s[i] == '\\')
-			escape = true;
+			open = check_open(open, s[i]);
 		else if (open == 0 && is_char_in(s[i], delimiters))
 			return (i);
 		i++;

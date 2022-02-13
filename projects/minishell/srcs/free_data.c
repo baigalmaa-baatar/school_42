@@ -12,19 +12,18 @@
 
 #include "../inc/minishell.h"
 
-void	free_processes(t_data *data);
-
 void	free_data(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	ft_free_tab(data->path);
+	data->path = NULL;
 	ft_free_tab(data->my_envp);
+	data->my_envp = NULL;
 	free(data->line);
-/*	while (i < data->nb_processes)
-		ft_free_tab(data->process[i++].params);*/
+	data->line = NULL;
 	free_processes(data);
-	//free(data->process);
+	data->process = NULL;
 	rl_clear_history();
 }

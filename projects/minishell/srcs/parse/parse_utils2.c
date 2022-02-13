@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 14:48:02 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 14:48:04 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/13 04:29:11 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,18 @@ void	copy_then_free(char *src, int *i, char *dst)
 	while (dst[j])
 		src[(*i)++] = dst[j++];
 	free(dst);
+}
+
+bool	env_char(char c)
+{
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
+		|| (c >= '0' && c <= '9') || c == '_')
+		return (true);
+	return (false);
+}
+
+char	*free_res(char *res)
+{
+	free(res);
+	return (0);
 }

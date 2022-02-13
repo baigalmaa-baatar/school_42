@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 14:42:04 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 14:42:05 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/12 22:49:51 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,40 +20,31 @@ int	parse_redirection(char *s, int i, t_process *process, t_data *data)
 	{
 		if (s[i + 1] == '>')
 		{
-			process->append = true;
+			array_append(&process->output, (void *) 1);
 			i++;
 		}
+		else
+			array_append(&process->output, (void *) 0);
 		i = skip_spaces(s, i + 1);
 		pos = i + locate_chars(&s[i], "<> ");
 		if (pos < i)
 			pos = ft_strlen(s);
-		if (process->output)
-			free(process->output);
-		process->output = eval(ft_substr(s, i, pos - i), data);
+		array_append(&process->output, eval(ft_substr(s, i, pos - i), data));
 	}
 	else
 	{
 		if (s[i + 1] == '<')
 		{
+			array_append(&process->input, (void *) 1);
 			i++;
-			i = skip_spaces(s, i + 1);
-			pos = i + locate_chars(&s[i], "<> ");
-			if (pos < i)
-				pos = ft_strlen(s);
-			if (process->heredoc)
-				free(process->heredoc);
-			process->heredoc = eval(ft_substr(s, i, pos - i), data);
 		}
 		else
-		{
-			i = skip_spaces(s, i + 1);
-			pos = i + locate_chars(&s[i], "<> ");
-			if (pos < i)
-				pos = ft_strlen(s);
-			if (process->input)
-				free(process->input);
-			process->input = eval(ft_substr(s, i, pos - i), data);
-		}
+			array_append(&process->input, (void *) 0);
+		i = skip_spaces(s, i + 1);
+		pos = i + locate_chars(&s[i], "<> ");
+		if (pos < i)
+			pos = ft_strlen(s);
+		array_append(&process->input, eval(ft_substr(s, i, pos - i), data));
 	}
 	return (pos);
 }

@@ -6,7 +6,7 @@
 /*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 13:41:46 by mkhabou           #+#    #+#             */
-/*   Updated: 2022/02/06 13:41:51 by mkhabou          ###   ########.fr       */
+/*   Updated: 2022/02/12 22:43:31 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,18 @@
 
 extern int	g_exit_status;
 
+typedef struct s_array
+{
+	size_t	length;
+	size_t	capacity;
+	void	**elements;
+}			t_array;
+
 typedef struct s_process
 {
 	char	**params;
-	char	*input;
-	char	*output;
-	char	*heredoc;
-	bool	append;
+	t_array	input;
+	t_array	output;
 	int		fd_input;
 	int		fd_output;
 }			t_process;
@@ -78,14 +83,18 @@ char	**dup_envp(char *envp[]);
 char	**find_path(char **my_envp);
 char	*test_cmd_path(char **path, char *cmd);
 void	free_data(t_data *data);
+void	free_processes(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
 void	error_fct2(char *msg, int exit_value);
 void	error_fct3(char *msg, char *err_str, int exit_value);
 void	error_fct4(char *msg, int exit_value);
-int		ft_strfind(char c, char *s);
 void	main_sigint_handler(int signum);
 void	child_sigquit_handler(int signum);
 void	change_env_value(t_data *data, char *var, char *new_value);
+int		special_putendl(char *s, int fd);
+int		special_putstr(char *s, int fd);
+int		special_mtp_putstr(char *s1, char *s2, char *s3, int fd);
+
 /* built-ins */
 void	ft_echo(char **complete_cmd);
 void	ft_pwd(char **my_envp);
@@ -125,13 +134,20 @@ int		locate_char(char *s, char delimiter);
 char	*eval(char *s, t_data *data);
 void	trim_right(char *s);
 void	copy_then_free(char *src, int *i, char *dst);
+bool	env_char(char c);
+char	*free_res(char *res);
 
 /* redirections */
+bool	only_redir(char *s);
 int		parse_redirection(char *s, int i, t_process *process, t_data *data);
 int		prepare_redirections(t_data *data);
 void	close_redirection_fds(t_data *data);
 int		prepare_heredoc(t_data *data, char *filename, char *end);
 void	end_heredoc(char *end);
+bool	all_space(char *s);
+int		validate_redir(t_process *process);
+int		prepare_outputs(t_data *data, int process_id);
+int		prepare_inputs(t_data *data, int process_id);
 
 /* execution */
 int		find_built_ins(char *cmd);
@@ -145,5 +161,10 @@ void	close_fds(t_data *data, int **pipe_fd, int index);
 void	first_process(t_data *data, t_elements *elements, int i);
 void	middle_process(t_data *data, t_elements *elements, int i);
 void	last_process(t_data *data, t_elements *elements, int i);
+
+/* array */
+t_array	new_array(void);
+void	array_append(t_array *arr, void *new_element);
+void	delete_array(t_array *arr);
 
 #endif
