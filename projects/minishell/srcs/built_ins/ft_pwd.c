@@ -30,7 +30,13 @@ void	ft_pwd(char **my_envp)
 		}
 		pathname = ft_strdup(env_pwd);
 	}
-	printf("%s\n", pathname);
+	if (!special_putendl(pathname, STDOUT_FILENO))
+	{
+		perror("minishell: pwd: write error: ");
+		g_exit_status = 1;
+		free(pathname);
+		return ;
+	}
 	free(pathname);
 	g_exit_status = 0;
 }

@@ -18,7 +18,7 @@ void	start_minishell(t_data *data)
 {
 	char	*prompt;
 
-	prompt = "\033[96mminishell > \033[0m";
+	prompt = "\001\033[96m\002minishell >\001\033[0m\002 ";
 	while (1)
 	{
 		data->line = readline(prompt);
@@ -33,7 +33,7 @@ void	start_minishell(t_data *data)
 			free(data->line);
 		else if (!data->line)
 		{
-			printf("exit\n");
+			ft_putstr_fd("exit\n", STDOUT_FILENO);
 			break ;
 		}
 	}
@@ -44,6 +44,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_data	data;
 
 	if (argc != 1)
+		return (1);
+	if (!isatty(STDIN_FILENO))
 		return (1);
 	(void)argv;
 	g_exit_status = 0;

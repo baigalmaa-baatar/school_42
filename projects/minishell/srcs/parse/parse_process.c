@@ -6,11 +6,20 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 00:21:59 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 14:58:51 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/13 19:06:13 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
+void	*new_memory(size_t size)
+{
+	void	*result;
+
+	result = malloc(size);
+	ft_memset(result, 0, size);
+	return (result);
+}
 
 char	**split(char *s, char delimiter)
 {
@@ -19,8 +28,7 @@ char	**split(char *s, char delimiter)
 	int		pos;
 	char	**result;
 
-	result = (char **)malloc(MAX_ALLOC * sizeof(char *));
-	ft_memset(result, 0, MAX_ALLOC * sizeof(char *));
+	result = new_memory(MAX_ALLOC * sizeof(char *));
 	i = 0;
 	j = 0;
 	while (s[i])
@@ -31,53 +39,53 @@ char	**split(char *s, char delimiter)
 			result[j++] = ft_strdup(&s[i]);
 			break ;
 		}
-		else if (pos > 0)
-			result[j++] = ft_substr(&s[i], 0, pos);
-		else
+		if (pos == 0)
 		{
 			ft_free_tab(result);
 			return (0);
 		}
+		result[j++] = ft_substr(&s[i], 0, pos);
 		i += pos + 1;
 	}
 	return (result);
 }
 
+int	parse_param(char *s, int pos, char **process, t_data *data)
+{
+	int		next_pos;
+
+	next_pos = pos + 1 + locate_chars(&s[pos + 1], "<> ");
+	if (next_pos < pos + 1)
+		next_pos = ft_strlen(s);
+	if (next_pos - pos > 1)
+	{
+		*process = eval(ft_substr(s, pos + 1, next_pos - pos - 1), data);
+		if (!*process)
+			return (-1);
+	}
+	return (next_pos);
+}
+
 bool	parse_process(char *s, t_process *process, t_data *data)
 {
-	int		i;
 	int		j;
-	int		next_pos;
-	int		current_pos;
-	char	current_delimiter;
+	int		pos;
 
-	current_pos = -1;
-	current_delimiter = ' ';
-	process->params = (char **)malloc(MAX_ALLOC * sizeof(char *));
-	ft_memset(process->params, 0, MAX_ALLOC * sizeof(char *));
-	i = 0;
+	pos = -1;
+	process->params = new_memory(MAX_ALLOC * sizeof(char *));
 	j = 0;
-	while (i < (int)ft_strlen(s))
+	while (pos + 1 < (int)ft_strlen(s))
 	{
-		if (is_char_in(current_delimiter, "<>"))
-			next_pos = parse_redirection(s, current_pos, process, data);
-		else
+		if (pos >= 0 && is_char_in(s[pos], "<>"))
 		{
-			next_pos = i + locate_chars(&s[i], "<> ");
-			if (next_pos < i)
-				next_pos = ft_strlen(s);
-			if (next_pos - current_pos > 1)
-			{
-				process->params[j] = eval(ft_substr(s, current_pos + 1,
-							next_pos - current_pos - 1), data);
-				if (!process->params[j])
-					return (false);
-				j++;
-			}
+			pos = parse_redirection(s, pos, process, data);
+			continue ;
 		}
-		current_pos = next_pos;
-		current_delimiter = s[current_pos];
-		i = current_pos + 1;
+		pos = parse_param(s, pos, &process->params[j], data);
+		if (pos < 0)
+			return (false);
+		if (process->params[j])
+			j++;
 	}
 	return (true);
 }

@@ -33,8 +33,10 @@ static void	exec_built_in(t_data *data, t_elements *elements, int i)
 void	wait_for_childs(t_data *data, t_elements *elements, int nb_pipes)
 {
 	int	x;
+	int	count;
 
 	x = 0;
+	count = 0;
 	data->sigint.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &data->sigint, NULL);
 	while (x <= nb_pipes)
@@ -42,14 +44,14 @@ void	wait_for_childs(t_data *data, t_elements *elements, int nb_pipes)
 		waitpid(elements->child[x], &g_exit_status, 0);
 		if (WIFEXITED(g_exit_status))
 			g_exit_status = WEXITSTATUS(g_exit_status);
-		else if (WIFSIGNALED(g_exit_status))
+		if (WIFSIGNALED(g_exit_status))
 		{
 			g_exit_status = WTERMSIG(g_exit_status) + 128;
-			if (g_exit_status == 130)
+			if (g_exit_status == 130 && !count)
 				ft_putstr_fd("\n", STDERR_FILENO);
-			else if (g_exit_status == 131)
+			else if (g_exit_status == 131 && !count)
 				ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-			break ;
+			count++;
 		}
 		x++;
 	}
@@ -67,7 +69,7 @@ static void	exec_child(t_data *data, t_elements *elements, int nb_pipes, int i)
 	close_redirection_fds(data);
 	if (elements->built_in[i])
 		exec_built_in(data, elements, i);
-	else if (data->process[i].params)
+	else if (data->process[i].params && data->process[i].params[0])
 	{
 		if (execve(data->process[i].params[0],
 				data->process[i].params, data->my_envp) == -1)

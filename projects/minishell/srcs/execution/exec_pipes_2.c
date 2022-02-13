@@ -48,7 +48,11 @@ int	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes)
 	while (i <= nb_pipes)
 	{
 		if (!data->process[i].params[0])
-			return (0);
+		{
+			elements->built_in[i] = 0;
+			i++;
+			continue ;
+		}
 		elements->built_in[i] = find_built_ins(data->process[i].params[0]);
 		if (!elements->built_in[i])
 			data->process[i].params = find_cmds(data->process[i].params, data);

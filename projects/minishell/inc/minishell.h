@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <dirent.h>
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -22,15 +21,10 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/ioctl.h>
-# include <sys/resource.h>
 # include <sys/stat.h>
-# include <sys/time.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <sys/errno.h>
-# include <termcap.h>
-# include <termios.h>
 # include <unistd.h>
 # include <stdbool.h>
 
@@ -112,6 +106,7 @@ int		check_env_ex(char *s);
 char	**alloc_envs(int size, char **envs);
 
 /* parsing */
+int		trim(char *s);
 int		str_err(char *err, int i);
 char	*new_string(int capacity);
 int		skip_spaces(char	*str, int i);
@@ -142,7 +137,7 @@ bool	only_redir(char *s);
 int		parse_redirection(char *s, int i, t_process *process, t_data *data);
 int		prepare_redirections(t_data *data);
 void	close_redirection_fds(t_data *data);
-int		prepare_heredoc(t_data *data, char *filename, char *end);
+int		prepare_heredoc(t_data *data, char *filename, char *end, bool do_eval);
 void	end_heredoc(char *end);
 bool	all_space(char *s);
 int		validate_redir(t_process *process);

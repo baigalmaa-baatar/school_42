@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-int	check_cases(char **complete_cmd, int i, int newline);
+int	check_cases(char **complete_cmd, int i, int newline, int save_index);
 
 int	option_n(char **complete_cmd, int *index)
 {
@@ -45,15 +45,26 @@ void	ft_echo(char **complete_cmd)
 {
 	int	i;
 	int	newline;
+	int	save_index;
 
 	if (complete_cmd[1])
 	{		
 		newline = option_n(complete_cmd, &i);
+		save_index = i;
 		while (complete_cmd[i])
 		{
-			if (check_cases(complete_cmd, i, newline) == -1)
+			if (check_cases(complete_cmd, i, newline, save_index) == -1)
 				return ;
 			i++;
+		}
+	}
+	else
+	{
+		if (!special_putstr("\n", STDOUT_FILENO))
+		{
+			perror("minishell: echo: write error: ");
+			g_exit_status = 1;
+			return ;
 		}
 	}
 	g_exit_status = 0;

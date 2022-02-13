@@ -43,13 +43,7 @@ char	*scan_double_quoted(char *s, int *i)
 	j = 0;
 	while (s[*i])
 	{
-		if (s[*i] == '\\')
-		{
-			if (s[*i + 1] == '$' || s[*i + 1] == '`' || s[*i + 1] == '"'
-				|| s[*i + 1] == '\\')
-				(*i)++;
-		}
-		else if (s[*i] == '"')
+		if (s[*i] == '"')
 		{
 			(*i)++;
 			return (result);
@@ -71,8 +65,6 @@ char	*scan_unquoted(char *s, int *i)
 	{
 		if (s[*i] == '\'' || s[*i] == '"')
 			return (result);
-		else if (s[*i] == '\\' && s[*i + 1] != 0)
-			(*i)++;
 		result[j++] = s[(*i)++];
 	}
 	return (result);

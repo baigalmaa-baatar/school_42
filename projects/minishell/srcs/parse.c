@@ -105,7 +105,10 @@ void	parse(t_data *data)
 	if (!data->process)
 		return ;
 	if (!prepare_redirections(data))
+	{
+		free_processes(data);
 		return ;
+	}
 	if (data->nb_processes == 1)
 		exec_cmds(data);
 	else

@@ -36,19 +36,11 @@ int	locate_chars(char *s, char *delimiters)
 {
 	int		i;
 	char	open;
-	bool	escape;
 
 	i = 0;
 	open = 0;
-	escape = false;
 	while (s[i])
 	{
-		if (escape)
-		{
-			escape = false;
-			i++;
-			continue ;
-		}
 		if (s[i] == '"' || s[i] == '\'')
 			open = check_open(open, s[i]);
 		else if (open == 0 && is_char_in(s[i], delimiters))

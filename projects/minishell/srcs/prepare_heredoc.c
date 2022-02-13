@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 16:22:28 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 16:22:30 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/13 19:04:04 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	exec_heredoc(t_data *data, char *end, bool do_eval, int fd)
 		free_data(data);
 		rl_clear_history();
 		exit(g_exit_status);
-	}	
+	}
 	data->sigint.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &data->sigint, NULL);
 	waitpid(child, &g_exit_status, 0);
@@ -85,18 +85,12 @@ void	exec_heredoc(t_data *data, char *end, bool do_eval, int fd)
 	close(fd);
 }
 
-int	prepare_heredoc(t_data *data, char *filename, char *end)
+int	prepare_heredoc(t_data *data, char *filename, char *end, bool do_eval)
 {
 	int		fd;
 	int		len;
-	bool	do_eval;
 
 	len = ft_strlen(end);
-	do_eval = false;
-	if (len > 2 && end[len - 2] == '"' && end[len - 1] == '"')
-		end[len - 2] = 0;
-	else
-		do_eval = true;
 	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:18:00 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 03:43:17 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/13 19:05:57 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@ int	str_err(char *err, int i)
 {
 	write(1, err, ft_strlen(err));
 	return (i);
+}
+
+int	trim(char *s)
+{
+	int	result;
+
+	result = skip_spaces(s, 0);
+	trim_right(s);
+	return (result);
 }
 
 int	skip_spaces(char	*str, int i)

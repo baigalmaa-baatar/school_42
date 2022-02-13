@@ -6,52 +6,60 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:19:34 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 14:21:33 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/13 19:05:33 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+bool	is_env_name_char(char ch, bool extended)
+{
+	if (ch >= 'A' && ch <= 'Z')
+		return (true);
+	if (ch >= 'a' && ch <= 'z')
+		return (true);
+	if (ch >= '0' && ch <= '9')
+		return (true);
+	if (ch == '_')
+		return (true);
+	if (extended)
+		if (ch == '?')
+			return (true);
+	return (false);
+}
+
+bool	is_number(char ch)
+{
+	if (ch >= '0' && ch <= '9')
+		return (true);
+	return (false);
+}
+
 char	*find_env(char *s)
 {
-	int		i;
-	int		j;
-	int		flag;
-	char	*res;
+	int		start;
+	int		len;
 
-	res = new_string(ft_strlen(s));
-	i = 0;
-	j = 0;
-	flag = 0;
-	while (s[i])
+	len = 1;
+	start = 0;
+	while (s[start])
 	{
-		if (flag == 0 && s[i] == '$')
-		{
-			i++;
-			flag++;
-			res[j++] = '$';
-			if ((s[i] >= '0' && s[i] <= '9') || s[i] == '?')
-			{
-				res[j] = s[i];
-				return (res);
-			}
-			while ((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z')
-				|| (s[i] >= '0' && s[i] <= '9') || s[i] == '_')
-			{
-				res[j] = s[i];
-				j++;
-				i++;
-			}
-		}
-		else
-			i++;
+		if (s[start] == '$' && is_env_name_char(s[start + 1], true))
+			break ;
+		start++;
 	}
-	if (j < 2)
-	{
-		free(res);
+	if (!s[start])
 		return (0);
+	if (is_number(s[start + len]) || s[start + len] == '?')
+		len++;
+	else
+	{
+		while (is_env_name_char(s[start + len], false))
+			len++;
 	}
-	return (res);
+	if (len < 2)
+		return (0);
+	return (ft_substr(s, start, len));
 }
 
 char	*replace_env(char *haystack, char *needle, char *env)

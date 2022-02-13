@@ -45,13 +45,17 @@ int	case1(char *arg)
 	return (0);
 }
 
-int	check_cases(char **complete_cmd, int i, int newline)
+int	check_cases(char **complete_cmd, int i, int newline, int save_index)
 {
 	if (newline && !complete_cmd[i + 1])
 	{
 		if (case1(complete_cmd[i]) == -1)
 			return (-1);
 	}
+	else if (!newline && !complete_cmd[i + 1]
+		&& ft_strfind('n', &complete_cmd[i][1])
+		&& complete_cmd[i][0] == '-' && i == save_index)
+		return (0);
 	else if (!newline && !complete_cmd[i + 1])
 	{
 		if (case2(complete_cmd[i]) == -1)

@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 00:28:26 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/13 00:53:43 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/13 19:04:22 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,17 @@ int	validate_redir(t_process *process)
 	i = 0;
 	while (i < process->input.length / 2)
 	{
-		if (all_space(process->input.elements[i * 2 + 1]))
-			return (0);
+		if (process->input.elements[i * 2 + 1])
+			if (all_space(process->input.elements[i * 2 + 1]))
+				return (0);
 		i++;
 	}
 	i = 0;
-	while (i < process->input.length / 2)
+	while (i < process->output.length / 2)
 	{
-		if (all_space(process->input.elements[i * 2 + 1]))
-			return (0);
+		if (process->output.elements[i * 2 + 1])
+			if (all_space(process->output.elements[i * 2 + 1]))
+				return (0);
 		i++;
 	}
 	return (1);
