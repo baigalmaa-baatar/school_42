@@ -71,13 +71,18 @@ int	eval_double_quoted(t_data *data, t_eval_params eval_params)
 
 void	eval_unquoted(t_data *data, t_eval_params eval_params)
 {
+	int		i;
 	char	*tmp;
 	char	*resolved_tmp;
+	char	*space_emit;
 
 	tmp = scan_unquoted(eval_params.input, eval_params.input_pos);
 	resolved_tmp = resolve_env(tmp, data);
-	copy_then_free(eval_params.output, eval_params.output_pos, resolved_tmp);
+	i = skip_spaces(resolved_tmp, 0);
+	space_emit = ft_substr(resolved_tmp, i, ft_strlen(resolved_tmp) - i);
+	copy_then_free(eval_params.output, eval_params.output_pos, space_emit);
 	free(tmp);
+	free(resolved_tmp);
 }
 
 char	*eval(char *s, t_data *data)

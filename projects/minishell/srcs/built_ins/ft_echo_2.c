@@ -16,7 +16,7 @@ int	case3(char *arg)
 {
 	if (!special_mtp_putstr(arg, " ", NULL, STDOUT_FILENO))
 	{
-		perror("minishell: echo: write error: ");
+		perror("minishell: echo: write error");
 		g_exit_status = 1;
 		return (-1);
 	}
@@ -27,7 +27,7 @@ int	case2(char *arg)
 {
 	if (!special_putstr(arg, STDOUT_FILENO))
 	{
-		perror("minishell: echo: write error: ");
+		perror("minishell: echo: write error");
 		g_exit_status = 1;
 		return (-1);
 	}
@@ -38,7 +38,7 @@ int	case1(char *arg)
 {
 	if (!special_putendl(arg, STDOUT_FILENO))
 	{
-		perror("minishell: echo: write error: ");
+		perror("minishell: echo: write error");
 		g_exit_status = 1;
 		return (-1);
 	}

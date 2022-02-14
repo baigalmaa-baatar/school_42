@@ -62,7 +62,7 @@ void	ft_echo(char **complete_cmd)
 	{
 		if (!special_putstr("\n", STDOUT_FILENO))
 		{
-			perror("minishell: echo: write error: ");
+			perror("minishell: echo: write error");
 			g_exit_status = 1;
 			return ;
 		}

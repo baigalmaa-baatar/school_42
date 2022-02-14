@@ -12,6 +12,13 @@
 
 #include "../inc/minishell.h"
 
+int	special_putchar(char c, int fd)
+{
+	if (write(1, &c, fd) == -1)
+		return (0);
+	return (1);
+}
+
 int	special_putendl(char *s, int fd)
 {
 	int		i;

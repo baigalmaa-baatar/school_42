@@ -32,7 +32,7 @@ void	ft_pwd(char **my_envp)
 	}
 	if (!special_putendl(pathname, STDOUT_FILENO))
 	{
-		perror("minishell: pwd: write error: ");
+		perror("minishell: pwd: write error");
 		g_exit_status = 1;
 		free(pathname);
 		return ;

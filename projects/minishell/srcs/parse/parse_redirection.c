@@ -32,16 +32,16 @@ int	parse_output(char *s, int i, t_process *process, t_data *data)
 
 	if (s[i + 1] == '>')
 	{
-		array_append(&process->output, (void *) 1);
+		array_append(&process->redirs, (void *) 4);
 		i++;
 	}
 	else
-		array_append(&process->output, (void *) 0);
+		array_append(&process->redirs, (void *) 3);
 	i = skip_spaces(s, i + 1);
 	pos = i + locate_chars(&s[i], "<> ");
 	if (pos < i)
 		pos = ft_strlen(s);
-	array_append(&process->output, eval(ft_substr(s, i, pos - i), data));
+	array_append(&process->redirs, eval(ft_substr(s, i, pos - i), data));
 	return (pos);
 }
 
@@ -52,20 +52,20 @@ int	parse_input(char *s, int i, t_process *process, t_data *data)
 
 	if (s[i + 1] == '<')
 	{
-		array_append(&process->input, (void *) 1);
+		array_append(&process->redirs, (void *) 1);
 		i++;
 	}
 	else
-		array_append(&process->input, (void *) 0);
+		array_append(&process->redirs, (void *) 0);
 	i = skip_spaces(s, i + 1);
 	pos = i + locate_chars(&s[i], "<> ");
 	if (pos < i)
 		pos = ft_strlen(s);
 	filename = ft_substr(s, i, pos - i);
-	if (process->input.elements[process->input.length - 1])
+	if (process->redirs.elements[process->redirs.length - 1])
 		if (is_expandable(filename))
-			process->input.elements[process->input.length - 1] = (void *) 2;
-	array_append(&process->input, eval(filename, data));
+			process->redirs.elements[process->redirs.length - 1] = (void *) 2;
+	array_append(&process->redirs, eval(filename, data));
 	return (pos);
 }
 

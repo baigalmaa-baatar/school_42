@@ -45,8 +45,7 @@ typedef struct s_array
 typedef struct s_process
 {
 	char	**params;
-	t_array	input;
-	t_array	output;
+	t_array	redirs;
 	int		fd_input;
 	int		fd_output;
 }			t_process;
@@ -85,6 +84,7 @@ void	error_fct4(char *msg, int exit_value);
 void	main_sigint_handler(int signum);
 void	child_sigquit_handler(int signum);
 void	change_env_value(t_data *data, char *var, char *new_value);
+int		special_putchar(char c, int fd);
 int		special_putendl(char *s, int fd);
 int		special_putstr(char *s, int fd);
 int		special_mtp_putstr(char *s1, char *s2, char *s3, int fd);
@@ -141,8 +141,7 @@ int		prepare_heredoc(t_data *data, char *filename, char *end, bool do_eval);
 void	end_heredoc(char *end);
 bool	all_space(char *s);
 int		validate_redir(t_process *process);
-int		prepare_outputs(t_data *data, int process_id);
-int		prepare_inputs(t_data *data, int process_id);
+int		prepare_redirs(t_data *data, int process_id);
 
 /* execution */
 int		find_built_ins(char *cmd);

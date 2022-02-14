@@ -84,7 +84,7 @@ static void	exec_built_in(int built_in, t_data *data)
 		ft_unset(data->process[0].params, data);
 	else if (built_in == 7)
 	{
-		printf("exit\n");
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 		ft_exit(data->process[0].params, data);
 	}
 }

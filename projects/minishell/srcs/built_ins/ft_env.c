@@ -29,7 +29,7 @@ void	ft_env(char **complete_cmd, char **my_envp)
 		{
 			if (!special_putendl(my_envp[i], STDOUT_FILENO))
 			{
-				perror("minishell: env: write error: ");
+				perror("minishell: env: write error");
 				g_exit_status = 1;
 				return ;
 			}

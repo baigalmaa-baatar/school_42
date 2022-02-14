@@ -12,33 +12,49 @@
 
 #include "../../../inc/minishell.h"
 
-void	print_env(char **envs)
+int	check_char(char **envs, int *open_quote, int i)
+{
+	int	j;
+
+	j = 0;
+	while (envs[i][j])
+	{
+		if (!special_putchar(envs[i][j], 1))
+			return (0);
+		if (envs[i][j] == '=' && !*open_quote)
+		{
+			if (!special_putstr("\"", 1))
+				return (0);
+			*open_quote = 1;
+		}
+		j++;
+	}
+	return (1);
+}
+
+int	print_env(char **envs)
 {
 	int	i;
-	int	j;
 	int	open_quote;
 
 	i = 0;
 	while (envs[i])
 	{
 		open_quote = 0;
-		ft_putstr_fd("declare -x ", 1);
-		j = 0;
-		while (envs[i][j])
-		{
-			write(1, &envs[i][j], 1);
-			if (envs[i][j] == '=' && !open_quote)
-			{
-				write(1, "\"", 1);
-				open_quote = 1;
-			}
-			j++;
-		}
+		if (!special_putstr("declare -x ", 1))
+			return (0);
+		if (!check_char(envs, &open_quote, i))
+			return (0);
 		if (open_quote)
-			write(1, "\"", 1);
-		write(1, "\n", 1);
+		{
+			if (!special_putstr("\"", 1))
+				return (0);
+		}
+		if (!special_putstr("\n", 1))
+			return (0);
 		i++;
 	}
+	return (1);
 }
 
 void	sort_print(t_data *data)
@@ -47,6 +63,12 @@ void	sort_print(t_data *data)
 
 	envs = dup_envp(data->my_envp);
 	ft_sort_params(envs, count_elements((void **)data->my_envp));
-	print_env(envs);
+	if (!print_env(envs))
+	{
+		perror("minishell: export: write error");
+		g_exit_status = 1;
+		ft_free_tab(envs);
+		return ;
+	}
 	ft_free_tab(envs);
 }

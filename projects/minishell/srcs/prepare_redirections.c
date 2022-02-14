@@ -56,9 +56,7 @@ int	prepare_redirections(t_data *data)
 	i = data->nb_processes - 1;
 	while (i >= 0)
 	{
-		if (!prepare_inputs(data, i))
-			error = true;
-		if (!prepare_outputs(data, i))
+		if (!prepare_redirs(data, i))
 			error = true;
 		i--;
 	}

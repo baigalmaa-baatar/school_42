@@ -15,8 +15,7 @@
 void	init_process(t_process *process)
 {
 	process->params = NULL;
-	process->input = new_array();
-	process->output = new_array();
+	process->redirs = new_array();
 	process->fd_input = -1;
 	process->fd_output = -1;
 }
@@ -32,19 +31,12 @@ void	free_processes(t_data *data)
 		if (data->process[i].params)
 			ft_free_tab(data->process[i].params);
 		j = 0;
-		while (j < data->process[i].input.length / 2)
+		while (j < data->process[i].redirs.length / 2)
 		{
-			free(data->process[i].input.elements[j * 2 + 1]);
+			free(data->process[i].redirs.elements[j * 2 + 1]);
 			j++;
 		}
-		delete_array(&data->process[i].input);
-		j = 0;
-		while (j < data->process[i].output.length / 2)
-		{
-			free(data->process[i].output.elements[j * 2 + 1]);
-			j++;
-		}
-		delete_array(&data->process[i].output);
+		delete_array(&data->process[i].redirs);
 		i++;
 	}
 	free(data->process);
@@ -81,18 +73,10 @@ int	validate_redir(t_process *process)
 	size_t	i;
 
 	i = 0;
-	while (i < process->input.length / 2)
+	while (i < process->redirs.length / 2)
 	{
-		if (process->input.elements[i * 2 + 1])
-			if (all_space(process->input.elements[i * 2 + 1]))
-				return (0);
-		i++;
-	}
-	i = 0;
-	while (i < process->output.length / 2)
-	{
-		if (process->output.elements[i * 2 + 1])
-			if (all_space(process->output.elements[i * 2 + 1]))
+		if (process->redirs.elements[i * 2 + 1])
+			if (all_space(process->redirs.elements[i * 2 + 1]))
 				return (0);
 		i++;
 	}
