@@ -6,7 +6,7 @@
 #    By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/01 13:00:27 by mkhabou           #+#    #+#              #
-#    Updated: 2022/02/12 22:59:54 by bbaatar          ###   ########.fr        #
+#    Updated: 2022/02/15 21:02:49 by bbaatar          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,9 @@ NAME		=	minishell
 
 CC			=	clang
 
-# CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address -I/usr/local/opt/readline/include
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address -I/usr/local/opt/readline/include
 # CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
-CFLAGS		=	-Wall -Wextra -Werror
+# CFLAGS		=	-Wall -Wextra -Werror
 
 LIBFT		=	libft.a
 
@@ -53,7 +53,7 @@ all		:	${NAME}
 
 $(NAME)	:	${OBJS}
 			make -C ${LIBFT_DIR}
-			${CC} $(CFLAGS) -o $(NAME) $(OBJS) -L ${LIBFT_DIR} -lft -lreadline
+			${CC} $(CFLAGS) -o $(NAME) $(OBJS) -L ${LIBFT_DIR} -lft -lreadline -L/usr/local/opt/readline/lib
 
 clean	:
 			make fclean -C ${LIBFT_DIR}
