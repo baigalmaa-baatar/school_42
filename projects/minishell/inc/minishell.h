@@ -48,6 +48,7 @@ typedef struct s_process
 	t_array	redirs;
 	int		fd_input;
 	int		fd_output;
+	bool	error;
 }			t_process;
 
 typedef struct s_elements
@@ -76,6 +77,7 @@ char	**dup_envp(char *envp[]);
 char	**find_path(char **my_envp);
 char	*test_cmd_path(char **path, char *cmd);
 void	free_data(t_data *data);
+void	free_process(t_data *data, int i);
 void	free_processes(t_data *data);
 void	error_fct(t_data *data, char *msg, int exit_value);
 void	error_fct2(char *msg, int exit_value);
@@ -136,13 +138,14 @@ char	*free_res(char *res);
 /* redirections */
 bool	only_redir(char *s);
 int		parse_redirection(char *s, int i, t_process *process, t_data *data);
-int		prepare_redirections(t_data *data);
+void	prepare_redirections(t_data *data);
 void	close_redirection_fds(t_data *data);
 int		prepare_heredoc(t_data *data, char *filename, char *end, bool do_eval);
 void	end_heredoc(char *end);
 bool	all_space(char *s);
 int		validate_redir(t_process *process);
 int		prepare_redirs(t_data *data, int process_id);
+void	remove_faulty_processes(t_data *data);
 
 /* execution */
 int		find_built_ins(char *cmd);

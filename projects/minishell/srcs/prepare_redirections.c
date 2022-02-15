@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 00:19:17 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/15 01:15:45 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/16 00:30:33 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,15 @@ void	close_redirection_fds(t_data *data)
 	}
 }
 
-int	prepare_redirections(t_data *data)
+void	prepare_redirections(t_data *data)
 {
 	int		i;
-	bool	error;
 
-	error = false;
-	i = data->nb_processes - 1;
-	while (i >= 0)
+	i = 0;
+	while (i < data->nb_processes)
 	{
 		if (!prepare_redirs(data, i))
-			error = true;
-		i--;
+			data->process[i].error = true;
+		i++;
 	}
-	if (error)
-	{
-		close_redirection_fds(data);
-		return (0);
-	}
-	return (1);
 }

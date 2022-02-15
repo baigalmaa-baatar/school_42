@@ -6,7 +6,7 @@
 /*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 17:07:35 by mkhabou           #+#    #+#             */
-/*   Updated: 2022/02/13 00:57:49 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/16 00:31:14 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,11 @@ void	parse(t_data *data)
 	data->process = from_line_to_processes(data);
 	if (!data->process)
 		return ;
-	if (!prepare_redirections(data))
-	{
-		free_processes(data);
-		return ;
-	}
+	prepare_redirections(data);
+	remove_faulty_processes(data);
 	if (data->nb_processes == 1)
 		exec_cmds(data);
-	else
+	else if (data->nb_processes > 1)
 		exec_pipes(data, data->nb_processes - 1);
 	free_processes(data);
 }
