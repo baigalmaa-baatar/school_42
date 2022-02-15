@@ -6,7 +6,7 @@
 /*   By: mkhabou <mkhabou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 16:22:49 by mkhabou           #+#    #+#             */
-/*   Updated: 2022/02/11 16:22:50 by mkhabou          ###   ########.fr       */
+/*   Updated: 2022/02/15 01:16:37 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@ void	error_fct(t_data *data, char *msg, int exit_value)
 	if (data)
 		free_data(data);
 	exit(exit_value);
+}
+
+void	*my_malloc(size_t size)
+{
+	void	*result;
+
+	result = malloc(size);
+	if (!result)
+		exit (2);
+	return (result);
 }
 
 void	error_fct2(char *msg, int exit_value)

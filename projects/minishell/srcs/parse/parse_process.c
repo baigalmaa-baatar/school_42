@@ -16,7 +16,7 @@ void	*new_memory(size_t size)
 {
 	void	*result;
 
-	result = malloc(size);
+	result = my_malloc(size);
 	ft_memset(result, 0, size);
 	return (result);
 }

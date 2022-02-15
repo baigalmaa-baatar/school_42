@@ -29,7 +29,7 @@ char	*new_string(int capacity)
 	char	*result;
 
 	capacity += 1;
-	result = (char *)malloc(capacity * sizeof(char));
+	result = (char *)my_malloc(capacity * sizeof(char));
 	ft_memset(result, 0, capacity * sizeof(char));
 	return (result);
 }

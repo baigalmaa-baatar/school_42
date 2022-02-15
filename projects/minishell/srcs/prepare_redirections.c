@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 00:19:17 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/12 22:42:34 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/15 01:15:45 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	end_heredoc(char *end)
 
 void	close_redirection_fds(t_data *data)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < data->nb_processes)

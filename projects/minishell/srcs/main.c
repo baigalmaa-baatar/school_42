@@ -24,13 +24,16 @@ void	start_minishell(t_data *data)
 		data->line = readline(prompt);
 		if (data->line && *data->line)
 		{
-			if (!ft_strfind(' ', data->line))
-				add_history(data->line);
+			add_history(data->line);
 			parse(data);
 			free(data->line);
+			data->line = NULL;
 		}
 		else if (data->line && !*data->line)
+		{
 			free(data->line);
+			data->line = NULL;
+		}
 		else if (!data->line)
 		{
 			ft_putstr_fd("exit\n", STDOUT_FILENO);
@@ -45,17 +48,16 @@ int	main(int argc, char *argv[], char *envp[])
 
 	if (argc != 1)
 		return (1);
-	if (!isatty(STDIN_FILENO))
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 		return (1);
 	(void)argv;
 	g_exit_status = 0;
 	ft_memset(&data, 0, sizeof(t_data));
+	data.process = NULL;
 	init_signals(&data);
 	data.my_envp = dup_envp(envp);
 	data.path = find_path(data.my_envp);
 	start_minishell(&data);
-	rl_clear_history();
-	ft_free_tab(data.my_envp);
-	ft_free_tab(data.path);
+	free_data(&data);
 	return (g_exit_status);
 }

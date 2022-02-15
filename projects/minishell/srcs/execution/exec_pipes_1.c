@@ -111,11 +111,7 @@ void	exec_pipes(t_data *data, int nb_pipes)
 
 	ft_memset(&elements, 0, sizeof(t_elements));
 	malloc_elements(data, &elements, nb_pipes);
-	if (!check_all_cmds(data, &elements, nb_pipes))
-	{
-		free_elements(&elements, nb_pipes);
-		return ;
-	}
+	check_all_cmds(data, &elements, nb_pipes);
 	exec_processes(data, &elements, nb_pipes);
 	data->sigint.sa_handler = &main_sigint_handler;
 	sigaction(SIGINT, &data->sigint, NULL);

@@ -40,7 +40,7 @@ void	malloc_elements(t_data *data, t_elements *elements, int nb_pipes)
 	}
 }
 
-int	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes)
+void	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes)
 {
 	int	i;
 
@@ -58,7 +58,6 @@ int	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes)
 			data->process[i].params = find_cmds(data->process[i].params, data);
 		i++;
 	}
-	return (1);
 }
 
 void	free_elements(t_elements *elements, int nb_pipes)

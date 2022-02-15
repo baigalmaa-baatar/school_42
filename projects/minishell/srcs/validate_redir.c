@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 00:28:26 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/13 19:04:22 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/15 01:16:05 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@ void	free_processes(t_data *data)
 		while (j < data->process[i].redirs.length / 2)
 		{
 			free(data->process[i].redirs.elements[j * 2 + 1]);
+			data->process[i].redirs.elements[j * 2 + 1] = NULL;
 			j++;
 		}
 		delete_array(&data->process[i].redirs);
 		i++;
 	}
 	free(data->process);
+	data->process = NULL;
 }
 
 int	count_elements(void **arr)

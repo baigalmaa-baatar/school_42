@@ -90,6 +90,5 @@ void	ft_exit(char **complete_cmd, t_data *data)
 		else
 			exit_nb(data, nb);
 	}
-	free_data(data);
-	exit(g_exit_status);
+	exit_nb(data, g_exit_status);
 }

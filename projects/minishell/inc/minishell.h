@@ -81,6 +81,7 @@ void	error_fct(t_data *data, char *msg, int exit_value);
 void	error_fct2(char *msg, int exit_value);
 void	error_fct3(char *msg, char *err_str, int exit_value);
 void	error_fct4(char *msg, int exit_value);
+void	*my_malloc(size_t size);
 void	main_sigint_handler(int signum);
 void	child_sigquit_handler(int signum);
 void	change_env_value(t_data *data, char *var, char *new_value);
@@ -149,12 +150,14 @@ char	**find_cmds(char **complete_cmd, t_data *data);
 void	exec_cmds(t_data *data);
 void	exec_pipes(t_data *data, int nb_pipes);
 void	malloc_elements(t_data *data, t_elements *elements, int nb_pipes);
-int		check_all_cmds(t_data *data, t_elements *elements, int nb_pipes);
+void	check_all_cmds(t_data *data, t_elements *elements, int nb_pipes);
 void	free_elements(t_elements *elements, int nb_pipes);
 void	close_fds(t_data *data, int **pipe_fd, int index);
 void	first_process(t_data *data, t_elements *elements, int i);
 void	middle_process(t_data *data, t_elements *elements, int i);
 void	last_process(t_data *data, t_elements *elements, int i);
+void	dup_fds(t_data *data, int *stdin_copy, int *stdout_copy);
+void	restore_fds(int stdin_copy, int stdout_copy);
 
 /* array */
 t_array	new_array(void);

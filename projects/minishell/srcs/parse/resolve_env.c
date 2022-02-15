@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/28 04:19:34 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/02/13 19:05:33 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/15 01:18:38 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ char	*resolve_env(char *s, t_data *data)
 	char	*env_val;
 	char	*tmp;
 
-	(void)data;
 	result = ft_strdup(s);
 	env = find_env(result);
 	while (env)

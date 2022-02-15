@@ -22,9 +22,11 @@ void	heredoc_sigint_handler(int signum)
 void	exit_sigint(int fd, char *line, t_data *data)
 {
 	free(line);
+	line = NULL;
 	rl_clear_history();
-	free_data(data);
 	close(fd);
+	close_redirection_fds(data);
+	free_data(data);
 	exit(g_exit_status);
 }
 
@@ -45,6 +47,7 @@ void	show_heredoc(t_data *data, char *end, int do_eval, int fd)
 		if (ft_strcmp(line, end) == 0)
 		{
 			free(line);
+			line = NULL;
 			break ;
 		}
 		if (do_eval)
@@ -71,6 +74,7 @@ void	exec_heredoc(t_data *data, char *end, bool do_eval, int fd)
 		sigaction(SIGINT, &heredoc_sigint, NULL);
 		show_heredoc(data, end, do_eval, fd);
 		close(fd);
+		close_redirection_fds(data);
 		free_data(data);
 		rl_clear_history();
 		exit(g_exit_status);
@@ -82,7 +86,6 @@ void	exec_heredoc(t_data *data, char *end, bool do_eval, int fd)
 	sigaction(SIGINT, &data->sigint, NULL);
 	if (WIFEXITED(g_exit_status))
 		g_exit_status = WEXITSTATUS(g_exit_status);
-	close(fd);
 }
 
 int	prepare_heredoc(t_data *data, char *filename, char *end, bool do_eval)
@@ -96,5 +99,6 @@ int	prepare_heredoc(t_data *data, char *filename, char *end, bool do_eval)
 		return (0);
 	g_exit_status = 0;
 	exec_heredoc(data, end, do_eval, fd);
+	close(fd);
 	return (1);
 }

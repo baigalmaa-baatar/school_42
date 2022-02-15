@@ -12,12 +12,18 @@
 
 #include "../../inc/minishell.h"
 
-void	restore_fds(int stdin_copy, int stdout_copy, t_data *data)
+void	restore_fds(int stdin_copy, int stdout_copy)
 {
-	if (data->process[0].fd_input > -1)
-		dup2(stdin_copy, 0);
-	if (data->process[0].fd_output > -1)
-		dup2(stdout_copy, 1);
+	if (stdin_copy > -1)
+	{
+		dup2(stdin_copy, STDIN_FILENO);
+		close(stdin_copy);
+	}
+	if (stdout_copy > -1)
+	{
+		dup2(stdout_copy, STDOUT_FILENO);
+		close(stdout_copy);
+	}
 }
 
 static void	exec_child(int child, t_data *data)
@@ -29,6 +35,7 @@ static void	exec_child(int child, t_data *data)
 	{
 		child_sigquit.sa_handler = &child_sigquit_handler;
 		sigaction(SIGQUIT, &child_sigquit, NULL);
+		close_redirection_fds(data);
 		if (data->process[0].params)
 		{
 			if (execve(data->process[0].params[0],
@@ -95,25 +102,19 @@ void	exec_cmds(t_data *data)
 	int	stdin_copy;
 	int	stdout_copy;
 
-	stdin_copy = 0;
-	stdout_copy = 0;
+	stdin_copy = -1;
+	stdout_copy = -1;
 	if (!data->process[0].params[0])
+	{
+		close_redirection_fds(data);
 		return ;
-	if (data->process[0].fd_input > -1)
-	{
-		stdin_copy = dup(0);
-		dup2(data->process[0].fd_input, 0);
 	}
-	if (data->process[0].fd_output > -1)
-	{
-		stdout_copy = dup(1);
-		dup2(data->process[0].fd_output, 1);
-	}
+	dup_fds(data, &stdin_copy, &stdout_copy);
 	built_in = find_built_ins(data->process[0].params[0]);
 	if (built_in)
 		exec_built_in(built_in, data);
 	else
 		exec_no_built_in(data);
-	restore_fds(stdin_copy, stdout_copy, data);
+	restore_fds(stdin_copy, stdout_copy);
 	close_redirection_fds(data);
 }

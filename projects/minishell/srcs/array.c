@@ -29,7 +29,7 @@ void	array_stretch(t_array *arr)
 	size_t	i;
 
 	new_capacity = arr->capacity * 2 + 1;
-	new_elements = malloc(new_capacity * sizeof(void *));
+	new_elements = my_malloc(new_capacity * sizeof(void *));
 	i = 0;
 	while (i < arr->length)
 	{
@@ -55,5 +55,8 @@ void	delete_array(t_array *arr)
 	arr->length = 0;
 	arr->capacity = 0;
 	if (arr->elements)
+	{
 		free(arr->elements);
+		arr->elements = NULL;
+	}
 }

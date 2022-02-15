@@ -23,7 +23,10 @@ void	free_data(t_data *data)
 	data->my_envp = NULL;
 	free(data->line);
 	data->line = NULL;
-	free_processes(data);
-	data->process = NULL;
+	if (data->process)
+	{
+		close_redirection_fds(data);
+		free_processes(data);
+	}
 	rl_clear_history();
 }

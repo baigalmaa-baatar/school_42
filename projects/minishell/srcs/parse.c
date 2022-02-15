@@ -63,11 +63,6 @@ int	prepare_parse(char **tmp, t_data *data)
 		}
 		if (!data->process[i].params)
 			error_fct(data, "minishell: Malloc failure", 2);
-		/* for (int a = 0; data->process[i].params[a]; a++)
-			printf("pro.p[%d] = \"%s\"\n", a, data->process[i].params[a]);
-		printf("pro.redirection = %s, %s, %s, %d\n", 
-			data->process[i].input, data->process[i].output, 
-			data->process[i].heredoc, data->process[i].append); */
 		i++;
 	}
 	return (1);
