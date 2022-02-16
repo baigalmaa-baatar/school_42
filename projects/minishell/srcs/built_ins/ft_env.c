@@ -12,6 +12,21 @@
 
 #include "../../inc/minishell.h"
 
+int	check_write(char *my_var)
+{
+	errno = 0;
+	if (!special_putendl(my_var, STDOUT_FILENO))
+	{
+		perror("env: write error");
+		if (errno == ENOSPC)
+			g_exit_status = 125;
+		else
+			g_exit_status = 1;
+		return (0);
+	}
+	return (1);
+}
+
 void	ft_env(char **complete_cmd, char **my_envp)
 {
 	int	i;
@@ -27,12 +42,8 @@ void	ft_env(char **complete_cmd, char **my_envp)
 	{
 		while (my_envp[i])
 		{
-			if (!special_putendl(my_envp[i], STDOUT_FILENO))
-			{
-				perror("minishell: env: write error");
-				g_exit_status = 1;
+			if (!check_write(my_envp[i]))
 				return ;
-			}
 			i++;
 		}
 	}

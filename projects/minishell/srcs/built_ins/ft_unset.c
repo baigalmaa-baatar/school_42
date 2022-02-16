@@ -34,22 +34,24 @@ void	remove_env(char *var, t_data *data)
 {
 	int	i;
 	int	size;
+	int	var_len;
 
 	size = count_elements((void **)data->my_envp);
 	i = 0;
+	var_len = ft_strlen(var);
 	if (data->my_envp)
 	{
 		while (data->my_envp[i])
 		{
-			if (!ft_strnstr(data->my_envp[i], var, ft_strlen(data->my_envp[i])))
-				i++;
-			else
+			if (ft_strnstr(data->my_envp[i], var, var_len)
+				&& data->my_envp[i][var_len] == '=')
 			{
 				free(data->my_envp[i]);
 				data->my_envp[i] = data->my_envp[size - 1];
 				data->my_envp[size - 1] = NULL;
 				return ;
 			}
+			i++;
 		}
 	}
 }

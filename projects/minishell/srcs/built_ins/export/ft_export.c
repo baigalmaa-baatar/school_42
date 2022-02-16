@@ -19,40 +19,48 @@ void	print_err(char *cmd)
 	ft_putstr_fd("': not a valid identifier\n", 2);
 }
 
-int	check_empty(char *param, t_data *data)
+int	check_empty(char *param)
 {
 	if (!param || !ft_strcmp(param, ""))
-	{
-		sort_print(data);
 		return (1);
-	}
 	else
 		return (0);
+}
+
+void	export_set_env(char *cmd, t_data *data)
+{
+	int	pos;
+
+	pos = check_env_ex(cmd);
+	if (!pos)
+	{
+		print_err(cmd);
+		g_exit_status = 1;
+		return ;
+	}
+	if (pos > 0)
+		add_env(cmd, data, pos);
 }
 
 void	ft_export(char **cmd, t_data *data)
 {
 	int	i;
-	int	pos;
+	int	non_empty_args;
 
 	g_exit_status = 0;
-	if (check_empty(cmd[1], data))
-		return ;
+	non_empty_args = 0;
 	i = 1;
 	while (cmd[i])
 	{
-		if (check_empty(cmd[i], data))
-			return ;
-		pos = check_env_ex(cmd[i]);
-		if (!pos)
+		if (check_empty(cmd[i]))
 		{
-			print_err(cmd[i]);
-			g_exit_status = 1;
 			i++;
 			continue ;
 		}
-		if (pos > 0)
-			add_env(cmd[i], data, pos);
+		non_empty_args++;
+		export_set_env(cmd[i], data);
 		i++;
 	}
+	if (!non_empty_args)
+		sort_print(data);
 }

@@ -75,7 +75,6 @@ void	init_signals(t_data *data);
 char	*my_getenv(char *name, char **my_envp);
 char	**dup_envp(char *envp[]);
 char	**find_path(char **my_envp);
-char	*test_cmd_path(char **path, char *cmd);
 void	free_data(t_data *data);
 void	free_process(t_data *data, int i);
 void	free_processes(t_data *data);
@@ -149,6 +148,7 @@ void	remove_faulty_processes(t_data *data);
 
 /* execution */
 int		find_built_ins(char *cmd);
+char	*test_cmd_path(char **path, char *cmd, int slash);
 char	**find_cmds(char **complete_cmd, t_data *data);
 void	exec_cmds(t_data *data);
 void	exec_pipes(t_data *data, int nb_pipes);

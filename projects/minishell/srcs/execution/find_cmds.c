@@ -12,13 +12,12 @@
 
 #include "../../inc/minishell.h"
 
-char	*test_cmd_path(char **path, char *cmd)
+char	*test_cmd_path(char **path, char *cmd, int slash)
 {
 	int		i;
 	char	*cmd_path;
 
 	i = 0;
-	errno = 0;
 	if (path)
 	{
 		while (path[i])
@@ -33,7 +32,7 @@ char	*test_cmd_path(char **path, char *cmd)
 			}
 		}
 	}
-	if (access(cmd, X_OK) != -1 && (!ft_strncmp(cmd, "./", 2) || *cmd == '/'))
+	if (access(cmd, X_OK) != -1 && (!ft_strncmp(cmd, "./", 2) || slash))
 	{
 		errno = 0;
 		return (ft_strdup(cmd));
@@ -89,7 +88,8 @@ char	**find_cmds(char **complete_cmd, t_data *data)
 		slash = 1;
 	ft_free_tab(data->path);
 	data->path = find_path(data->my_envp);
-	tmp = test_cmd_path(data->path, complete_cmd[0]);
+	errno = 0;
+	tmp = test_cmd_path(data->path, complete_cmd[0], slash);
 	dir = check_if_dir(tmp);
 	if (!check_file(complete_cmd, tmp, slash, dir))
 	{
