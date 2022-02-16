@@ -33,29 +33,29 @@ void	exit_sigint(int fd, char *line, t_data *data)
 void	show_heredoc(t_data *data, char *end, int do_eval, int fd)
 {
 	char	*line;
+	char	*eval_line;
 
 	while (1)
 	{
 		line = readline("> ");
 		if (g_exit_status == 130)
 			exit_sigint(fd, line, data);
-		if (!line)
+		if (!line || ft_strcmp(line, end) == 0)
 		{
-			end_heredoc(end);
-			break ;
-		}
-		if (ft_strcmp(line, end) == 0)
-		{
-			free(line);
-			line = NULL;
+			if (line)
+				free(line);
+			else
+				end_heredoc(end);
 			break ;
 		}
 		if (do_eval)
-			line = eval(line, data);
-		write(fd, line, ft_strlen(line));
+			eval_line = resolve_env(line, data);
+		else
+			eval_line = ft_strdup(line);
+		write(fd, eval_line, ft_strlen(eval_line));
 		write(fd, "\n", 1);
 		free(line);
-		line = NULL;
+		free(eval_line);
 	}
 }
 

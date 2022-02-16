@@ -41,7 +41,7 @@ void	remove_env(char *var, t_data *data)
 	{
 		while (data->my_envp[i])
 		{
-			if (!ft_strnstr(data->my_envp[i], var, ft_strlen(var)))
+			if (!ft_strnstr(data->my_envp[i], var, ft_strlen(data->my_envp[i])))
 				i++;
 			else
 			{
