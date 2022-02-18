@@ -6,11 +6,11 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 12:20:09 by bbaatar           #+#    #+#             */
-/*   Updated: 2022/01/21 16:17:01 by bbaatar          ###   ########.fr       */
+/*   Updated: 2022/02/18 20:17:02 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse/parse.h"
+#include "libft.h"
 
 static int	ft_cnt_words(char *s, char c)
 {
