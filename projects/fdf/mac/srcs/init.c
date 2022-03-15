@@ -19,11 +19,11 @@ t_camera	*angle_init(void)
 	camera = (t_camera *) malloc(sizeof(t_camera));
 	if (!camera)
 		return (0);
-	camera->thetaX = 0;
-	camera->thetaY = 0;
-	camera->thetaZ = 0;
+	camera->thetax = 0;
+	camera->thetay = 0;
+	camera->thetaz = 0;
 	camera->depth = 1;
-	camera->zoom = 30;
+	camera->zoom = 40;
 	camera->move_x = 0;
 	camera->move_y = 0;
 	return (camera);

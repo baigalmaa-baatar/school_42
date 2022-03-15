@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 01:21:44 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/17 01:32:51 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/12/18 16:32:32 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,69 +22,65 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 void	plot_line_low(t_coord a, t_coord b, t_data *img)
 {
-	int	yi;
-	int	d;
-	int	x;
-	int	y;
+	int		yi;
+	int		d;
+	t_coord	curr;
 
 	yi = 1;
 	if (b.y < a.y)
 		yi = -1;
 	d = (2 * abs(b.y - a.y)) - b.x + a.x;
-	y = a.y;
-	x = a.x;
-	while (x < b.x)
+	curr.y = a.y;
+	curr.x = a.x;
+	while (curr.x < b.x)
 	{
-		if (0 <= x && x < W_WIDTH && 0 <= y && y < W_HEIGHT)
-			my_mlx_pixel_put(img, x, y, get_color());
+		if (0 <= curr.x && curr.x < W_WIDTH && 0 <= curr.y && curr.y < W_HEIGHT)
+			my_mlx_pixel_put(img, curr.x, curr.y, get_color_comb(a, b, curr));
 		if (d > 0)
 		{
-			y = y + yi;
+			curr.y = curr.y + yi;
 			d = d + (2 * (abs(b.y - a.y) - b.x + a.x));
 		}
 		else
 			d = d + 2 * abs(b.y - a.y);
-		x++;
+		curr.x++;
 	}
 }
 
 void	plot_line_high(t_coord a, t_coord b, t_data *img)
 {
-	int	xi;
-	int	d;
-	int	x;
-	int	y;
+	int		xi;
+	int		d;
+	t_coord	curr;
 
 	xi = 1;
 	if (b.x < a.x)
 		xi = -1;
 	d = (2 * abs(b.x - a.x)) - b.y + a.y;
-	y = a.y;
-	x = a.x;
-	while (y < b.y)
+	curr.y = a.y;
+	curr.x = a.x;
+	curr.color = a.color;
+	while (curr.y < b.y)
 	{
-		if (0 <= x && x < W_WIDTH && 0 <= y && y < W_HEIGHT)
-			my_mlx_pixel_put(img, x, y, 0x00f4c0ff);
+		if (0 <= curr.x && curr.x < W_WIDTH && 0 <= curr.y && curr.y < W_HEIGHT)
+			my_mlx_pixel_put(img, curr.x, curr.y, get_color_comb(a, b, curr));
 		if (d > 0)
 		{
-			x = x + xi;
+			curr.x = curr.x + xi;
 			d = d + (2 * (abs(b.x - a.x) - b.y + a.y));
 		}
 		else
 			d = d + 2 * abs(b.x - a.x);
-		y++;
+		curr.y++;
 	}
 }
 
-void	plot_line(t_coord a, t_coord b, t_data *img, int percentage)
+void	plot_line(t_coord a, t_coord b, t_data *img)
 {
 	if (abs(b.y - a.y) < abs(b.x - a.x))
 	{
 		if (a.x > b.x)
-		{
-			a.color = get_color(data->min, data->max, percentage);
 			plot_line_low(b, a, img);
-		}
 		else
 			plot_line_low(a, b, img);
 	}

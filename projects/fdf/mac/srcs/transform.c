@@ -6,7 +6,7 @@
 /*   By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 01:18:43 by bbaatar           #+#    #+#             */
-/*   Updated: 2021/12/17 01:42:00 by bbaatar          ###   ########.fr       */
+/*   Updated: 2021/12/18 16:34:04 by bbaatar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_coord	transform_iso(t_coord coord)
 
 	result.x = (coord.x - coord.z) / sqrt(2);
 	result.y = (coord.x + 2 * coord.y + coord.z) / sqrt(6);
+	result.color = coord.color;
 	return (result);
 }
 
@@ -28,13 +29,13 @@ t_coord	transform(t_camera camera, t_coord coord)
 	coord.z *= (camera.zoom * camera.depth) / 2;
 	coord.x *= camera.zoom;
 	coord.y *= camera.zoom;
-	coord.x += 256;
-	coord.y += 144;
+	coord.x += 600;
+	coord.y += 100;
 	coord.x += camera.move_x;
 	coord.y += camera.move_y;
-	xaxis_rot(&coord.y, &coord.z, camera.thetaX);
-	yaxis_rot(&coord.x, &coord.z, camera.thetaY);
-	zaxis_rot(&coord.x, &coord.y, camera.thetaZ);
+	xaxis_rot(&coord.y, &coord.z, camera.thetax);
+	yaxis_rot(&coord.x, &coord.z, camera.thetay);
+	zaxis_rot(&coord.x, &coord.y, camera.thetaz);
 	result = transform_iso(coord);
 	return (result);
 }
@@ -43,7 +44,6 @@ void	calc_points_x(t_image *data, t_data img)
 {
 	int		x;
 	int		y;
-	int		percentage;
 	t_coord	a;
 	t_coord	b;
 
@@ -56,10 +56,11 @@ void	calc_points_x(t_image *data, t_data img)
 			a.x = x;
 			a.y = y;
 			a.z = data->points[y][x];
-			percentage = percent(data->min, data->max, a.z); //z point iin huvid, jishee ni 4->40% bolno.
+			a.color = get_z_color(data, a.z);
 			b.x = x + 1;
 			b.y = y;
 			b.z = data->points[y][x + 1];
+			b.color = get_z_color(data, b.z);
 			plot_line(transform(*data->camera, a),
 				transform(*data->camera, b), &img);
 			x++;
@@ -84,11 +85,11 @@ void	calc_points_y(t_image *data, t_data img)
 			a.x = x;
 			a.y = y;
 			a.z = data->points[y][x];
-			a.color = a.z;
+			a.color = get_z_color(data, a.z);
 			b.x = x;
 			b.y = y + 1;
 			b.z = data->points[y + 1][x];
-			b.color = b.z;
+			b.color = get_z_color(data, b.z);
 			plot_line(transform(*data->camera, a),
 				transform(*data->camera, b), &img);
 			y++;

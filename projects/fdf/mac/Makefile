@@ -34,6 +34,7 @@ SOURCES_DIRECTORY = ./srcs/
 SOURCES_LIST = main.c\
 				init.c\
 				get_numbers.c\
+				color.c\
 				keyboard.c\
 				mouse.c\
 				rotate.c\
@@ -78,51 +79,3 @@ fclean: clean
 re:
 	@$(MAKE) fclean
 	@$(MAKE) all
-# # **************************************************************************** #
-# #                                                                              #
-# #                                                         :::      ::::::::    #
-# #    Makefile                                           :+:      :+:    :+:    #
-# #                                                     +:+ +:+         +:+      #
-# #    By: bbaatar <marvin@42.fr>                     +#+  +:+       +#+         #
-# #                                                 +#+#+#+#+#+   +#+            #
-# #    Created: 2021/10/28 13:49:18 by bbaatar           #+#    #+#              #
-# #    Updated: 2021/10/28 13:49:21 by bbaatar          ###   ########.fr        #
-# #                                                                              #
-# # **************************************************************************** #
-
-# INC=/usr/include
-# INCLIB=$(INC)/../lib
-# LFLAGS = -Lmlx -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
-# INCLUDES = -I$(HEADERS_DIRECTORY) -I$(LIBFT_HEADERS) -I$(MINILIBX_HEADERS)
-
-# LIBFT = $(LIBFT_DIRECTORY)libft.a
-# LIBFT_DIRECTORY = ./libft/
-
-# NAME = fdf
-# SRCS =  srcs/main.c\
-# 		srcs/get_numbers.c
-
-# OBJS = $(SRCS:.c=.o)
-# CC		= gcc
-# RM		= rm -f
-# CFLAGS = -Wall -Wextra -Werror
-# %.o: %.c
-# 	$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx -Ilibft -O3 -c $< -o $@
-
-# $(NAME): $(LIBFT) $(OBJS)
-# 	$(CC) -o $(NAME) $(OBJS) $(LFLAGS)
-
-# all: $(NAME)
-
-# $(LIBFT):
-# 	@$(MAKE) -sC $(LIBFT_DIRECTORY)
-
-# clean:
-# 	@$(MAKE) -sC $(LIBFT_DIRECTORY) clean
-# 	$(RM) $(OBJS)
-
-# fclean:	clean
-# 	@rm -f $(LIBFT)
-# 	$(RM) $(NAME)
-
-# re:		fclean all
