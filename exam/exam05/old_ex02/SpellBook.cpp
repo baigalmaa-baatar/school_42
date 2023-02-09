@@ -1,6 +1,6 @@
 #include "SpellBook.hpp"
 
-SpellBook::SpellBook() : ASpell("SpellBook", "SpellBooked") {}
+SpellBook::SpellBook() {}
 
 SpellBook::~SpellBook()
 {
@@ -30,13 +30,10 @@ void SpellBook::forgetSpell(std::string const &spell_name)
     _spell_book.erase(spell_name);
 }
 
-ASpell *SpellBook::createSpell(std::string const &spell_name)
-{
+ASpell* SpellBook::createSpell(std::string const &spell_name){
     std::map<std::string, ASpell *>::iterator it;
-
     it = _spell_book.find(spell_name);
     if (it != _spell_book.end())
         return _spell_book[spell_name];
-
-    return NULL;
+    return 0;
 }

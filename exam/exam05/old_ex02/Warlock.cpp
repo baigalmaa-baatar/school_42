@@ -8,13 +8,6 @@ Warlock::Warlock(std::string name, std::string title) : _name(name), _title(titl
 Warlock::~Warlock()
 {
     std::cout << _name + ": " + " My job here is done!" << std::endl;
-    std::map<std::string, ASpell *>::iterator it;
-    for (it = _my_map.begin(); it != _my_map.end(); it++)
-    {
-        if (it->second)
-            delete it->second;
-    }
-    _my_map.clear();
 };
 
 Warlock::Warlock(Warlock const &obj)
@@ -42,22 +35,17 @@ void Warlock::introduce(void) const
 void Warlock::learnSpell(ASpell *obj)
 {
     if (obj)
-        _my_map.insert(std::pair<std::string, ASpell *>(obj->getName(), obj->clone()));
+        _book.learnSpell(obj);
 }
 
 void Warlock::forgetSpell(std::string spell_name)
 {
-    std::map<std::string, ASpell *>::iterator it;
-
-    it = _my_map.find(spell_name);
-    if (it != _my_map.end())
-		delete it->second;
-    _my_map.erase(spell_name);
+   _book.forgetSpell(spell_name);
 }
 
 void Warlock::launchSpell(std::string spell_name, ATarget const &target)
 {
-    ASpell *spell = _my_map[spell_name];
+    ASpell *spell = _book.createSpell(spell_name);
     if (spell)
         spell->launch(target);
 }

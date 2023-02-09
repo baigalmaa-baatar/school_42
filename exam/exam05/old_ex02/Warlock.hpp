@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include "ASpell.hpp"
+#include "SpellBook.hpp"
 #include "ATarget.hpp"
 
 class Warlock
@@ -15,7 +16,8 @@ private:
     Warlock() {}
     Warlock(Warlock const &obj);              // copy constructor
     Warlock &operator=(const Warlock &other); // operator
-    std::map<std::string, ASpell *> _my_map;
+    // std::map<std::string, ASpell *> _my_map;
+    SpellBook _book;
 
 public:
     Warlock(std::string name, std::string title);
