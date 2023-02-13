@@ -1,28 +1,25 @@
-#ifndef WARLOCK_H
-# define WARLOCK_H
+#ifndef WWARLOCK_H
+# define WWARLOCK_H
 
 # include <iostream>
 
-class Warlock
+class Warlock 
 {
-private:
-    std::string _name;
-    std::string _title;
+    private:
+        std::string     _name;
+        std::string     _title;
+        Warlock();
+        Warlock(Warlock const &obj);
+        Warlock &operator=(Warlock const &other);
 
-public:
-    Warlock();
-    Warlock(std::string name, std::string title);
-    Warlock(Warlock const & obj); //copy constructor
-    Warlock &operator=(const Warlock &other); //operator
+    public:
+        Warlock(std::string const &name, std::string const &title);
+        ~Warlock();
 
-    ~Warlock();
+        std::string const   &getName() const;
+        std::string const   &getTitle() const;
+        void                setTitle(std::string const &title);
 
-public:
-    const   std::string & getName(void) const;
-    const   std::string & getTitle(void) const;
-    void                setTitle(const std::string & title);
-
-    void introduce() const;
+        void introduce() const;
 };
-
 # endif

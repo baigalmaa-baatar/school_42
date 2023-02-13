@@ -1,17 +1,21 @@
 #include "Warlock.hpp"
 
-int main(void)
+int main()
 {
-    Warlock const richard("Richard", "Mistress of Magma");
-    richard.introduce();
-    std::cout << richard.getName() << " - " << richard.getTitle() << std::endl;
+  std::string lol;
+  Warlock const richard("Richard", "Mistress of Magma");
+  richard.introduce();
+  std::cout << richard.getName() << " - " << richard.getTitle() << std::endl;
 
-    Warlock *jack = new Warlock("Jack", "the Long");
-    jack->introduce();
-    jack->setTitle("the Mighty");
-    jack->introduce();
+  Warlock* jack = new Warlock("Jack", "the Long");
+  jack->introduce();
+  jack->setTitle("the Mighty");
+  jack->introduce();
 
-    delete jack;
+  if (jack->getName() == "Jack")
+    std::cout << "getName is const" << std::endl;
 
-    return (0);
+  delete jack;
+
+  return (0);
 }

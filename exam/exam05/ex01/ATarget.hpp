@@ -6,23 +6,20 @@
 
 class ASpell;
 
-class ATarget
+class ATarget 
 {
-private:
-    std::string     _type;
+    private:
+        std::string     _type;
+    public:
+        ATarget();
+        ATarget(std::string const &type);
+        virtual ~ATarget();
+        ATarget(ATarget const &obj);
+        ATarget &operator=(ATarget const &other);
 
-public:
-    ATarget();
-    ATarget(std::string _type);
-    ATarget(ATarget const & obj); //copy constructor
-    ATarget &operator=(ATarget const &other); //operator
-
-    virtual ~ATarget();
-
-public:
-    std::string const &getType(void) const;
-    void    getHitBySpell(const ASpell &obj) const;
-    virtual ATarget* clone() const = 0; //pure virtual abstract method
+        std::string const  &getType() const;
+        void                getHitBySpell(ASpell const &target) const ;
+        virtual ATarget*    clone() const = 0; //pure virtual method
 };
 
 # endif

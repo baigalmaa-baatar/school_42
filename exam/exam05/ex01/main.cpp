@@ -1,8 +1,28 @@
-#include "Warlock.hpp"
 #include "ASpell.hpp"
 #include "ATarget.hpp"
-#include "Fwoosh.hpp"
 #include "Dummy.hpp"
+#include "Fwoosh.hpp"
+#include "Warlock.hpp"
+
+// int main()
+// {
+//     Warlock richard("Richard", "the Titled");
+
+//     Dummy bob;
+//     Fwoosh *fwoosh = new Fwoosh();
+
+//     richard.learnSpell(fwoosh);
+
+//     richard.introduce();
+//     richard.launchSpell("Fwoosh", bob);
+
+//     richard.forgetSpell("Fwoosh");
+//     richard.launchSpell("Fwoosh", bob);
+
+//     delete fwoosh;
+
+//     return 0;
+// }
 
 int main()
 {
@@ -18,5 +38,6 @@ int main()
 
     richard.forgetSpell("Fwoosh");
     richard.launchSpell("Fwoosh", bob);
-    return 0;
+    
+    delete fwoosh;
 }

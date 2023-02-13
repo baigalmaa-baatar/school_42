@@ -6,25 +6,25 @@
 
 class ATarget;
 
-class ASpell
+class ASpell 
 {
-private:
-    std::string     _name;
-    std::string     _effects;
+    private:
+        std::string     _name;
+        std::string     _effects;
+        ASpell();
+        ASpell(ASpell const &obj);
+        ASpell &operator=(ASpell const &other);
 
-public:
-    ASpell();
-    ASpell(std::string name, std::string effects);
-    ASpell(ASpell const & obj); //copy constructor
-    ASpell &operator=(ASpell const &other); //operator
+    public:
+        ASpell(std::string const &name, std::string const &effects);
+        virtual ~ASpell();
 
-    virtual ~ASpell();
+        std::string const  &getName() const;
+        std::string const  &getEffects() const;
 
-public:
-    const   std::string & getName(void) const;
-    const   std::string & getEffects(void) const;
-    void    launch(ATarget const &obj) const;
-    virtual ASpell* clone() const = 0; //pure abstract method
+        void                launch(ATarget const &target) const;
+
+        virtual ASpell*     clone() const = 0; //pure virtual method
 };
 
 # endif

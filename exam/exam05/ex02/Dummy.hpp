@@ -1,14 +1,15 @@
 #ifndef DUMMY_H
-#define DUMMY_H
+# define DUMMY_H
 
-#include "ATarget.hpp"
+# include <iostream>
+# include "ATarget.hpp"
 
 class Dummy : public ATarget
 {
     public:
         Dummy();
         ~Dummy();
-        Dummy *clone() const;
+        virtual ATarget* clone() const;
 };
 
-#endif
+# endif

@@ -1,14 +1,15 @@
 #ifndef FIREBALL_H
-#define FIREBALL_H
+# define FIREBALL_H
 
-#include "ASpell.hpp"
+# include <iostream>
+# include "ASpell.hpp"
 
 class Fireball : public ASpell
 {
     public:
         Fireball();
         ~Fireball();
-        Fireball *clone() const;
+        virtual ASpell* clone() const;
 };
 
-#endif
+# endif
