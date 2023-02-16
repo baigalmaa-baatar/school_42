@@ -30,9 +30,14 @@ pthread_mutex_t	*resolve_f_fork(t_philo *philor)
 {
 	t_philo			*first_philor;
 
+	//avoid to data race:
+	//if philo is even number (philo_0 or philo2 etc)
+	//he will get the first fork. 
 	first_philor = philor - philor->pid;
 	if (philor->pid % 2 == 0)
 		return (&(philor->fork));
+	//in case of only 1 philo:
+	//he gets first fork first.
 	if (philor->pid == philor->in_v.philo_nbr - 1)
 		return (&first_philor->fork);
 	return (&(philor[1].fork));
