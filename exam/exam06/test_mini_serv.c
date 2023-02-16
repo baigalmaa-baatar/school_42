@@ -29,6 +29,53 @@ typedef struct s_client
 
 } t_client;
 
+int extract_message(char **buf, char **msg)
+{
+	char	*newbuf;
+	int	i;
+
+	*msg = 0;
+	if (*buf == 0)
+		return (0);
+	i = 0;
+	while ((*buf)[i])
+	{
+		if ((*buf)[i] == '\n')
+		{
+			newbuf = calloc(1, sizeof(*newbuf) * (strlen(*buf + i + 1) + 1));
+			if (newbuf == 0)
+				return (-1);
+			strcpy(newbuf, *buf + i + 1);
+			*msg = *buf;
+			(*msg)[i + 1] = 0;
+			*buf = newbuf;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+char *str_join(char *buf, char *add)
+{
+	char	*newbuf;
+	int		len;
+
+	if (buf == 0)
+		len = 0;
+	else
+		len = strlen(buf);
+	newbuf = malloc(sizeof(*newbuf) * (len + strlen(add) + 1));
+	if (newbuf == 0)
+		return (0);
+	newbuf[0] = 0;
+	if (buf != 0)
+		strcat(newbuf, buf);
+	free(buf);
+	strcat(newbuf, add);
+	return (newbuf);
+}
+
 void fatal(int id)
 {
     write(2, "Fatal error\n", strlen("Fatal error\n"));
@@ -46,7 +93,37 @@ void send_to_all_clients(t_server *s, t_client *client, char *text, int fd)
     }
 }
 
-client_message(t_server *s, t_client *start, t_client *connected_socket)
+t_client* client_disconnection(t_server *s, t_client *start, t_client *connected_socket)
+{
+    t_client *it;
+    t_client *prior;
+    char buffer[100];
+
+    it = start;
+    prior = 0;
+    sprintf(buffer, "server: client %d just left\n", connected_socket->id);
+    send_to_all_clients(s, start, buffer, connected_socket->fd);
+    while(it != 0)
+    {
+        if (it->id == connected_socket->fd)
+        {
+            if (prior == 0)
+                start = start->next;
+            else
+                prior->next = prior->next->next;
+            break;
+        }
+        prior = it;
+        it = it->next;
+    }
+    FD_CLR(connected_socket->fd, &s->sockets);
+    close(connected_socket->fd);
+    free(connected_socket->message_buff);
+    free(connected_socket);
+    return (start);
+}
+
+t_client* client_message(t_server *s, t_client *start, t_client *connected_socket)
 {
     char message[1000000];
     char buffer[1000000];
@@ -57,13 +134,10 @@ client_message(t_server *s, t_client *start, t_client *connected_socket)
 
     i = 0;
     l = 0;
-    if ((len = recv(connected_socket, buffer, sizeof(buffer), MSG_DONTWAIT)) == 0)
-    {
-        start = disconnet_client(s, connected_socket);
+    if ((len = recv(connected_socket->fd, message, sizeof(message) - 1, MSG_DONTWAIT)) == 0)
+        start = client_disconnection(s, start, connected_socket);
+    else if (len == -1)
         return (start);
-    }
-    if (len = -1)
-        fatal(6);
     else
     {
         message[len] = 0;
@@ -73,20 +147,31 @@ client_message(t_server *s, t_client *start, t_client *connected_socket)
             if (message[i] == '\n')
             {
                 line[l + 1] = 0;
-                if ()
-                else
+                if (connected_socket->message_buff != 0)
                 {
-                    sprintf(buffer, );
-                    send_to_all_clients();
+                    sprintf(buffer, "client %d: %s%s", connected_socket->id, connected_socket->message_buff, line);
+                    free(connected_socket->message_buff);
+                    connected_socket->message_buff = 0;
                 }
+                else
+                    sprintf(buffer, "client %d: %s", connected_socket->id, line);
+                send_to_all_clients(s, start, buffer, connected_socket->fd);
+                l = -1;
             }
             i++;
             l++;
         }
+        if (message[i - 1] != '\n')
+        {
+            line[l] = 0;
+            if ((connected_socket->message_buff = str_join(connected_socket->message_buff, line)) == 0)
+                fatal(6);
+        }
     }
+    return (start);
 }
 
-client_connection(t_server *s, t_client *client)
+t_client* client_connection(t_server *s, t_client *client)
 {
     int new_connection;
     char buffer[100];
@@ -158,7 +243,7 @@ void setup_server(t_server *s, int port_number)
     s->servaddr.sin_addr.s_addr = htonl(2130706433); // 127.0.0.1
     s->servaddr.sin_port = htons(port_number);
     // socket create and verification
-    if (s->server_socket = socket(AF_INET, SOCK_STREAM, 0) == -1)
+    if ((s->server_socket = socket(AF_INET, SOCK_STREAM, 0) == -1))
         fatal(1);
 
     // binding newly created socket to given IP and verification
